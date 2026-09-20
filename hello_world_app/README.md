@@ -58,6 +58,32 @@ A continuación, se muestran las diferentes facetas del contador funcionando con
 
 ---
 
+## Arquitectura
+
+La arquitectura representa la estructura y el funcionamiento principal de la aplicación Flutter.
+Fue generada con **Archify** a partir de los componentes reales del proyecto.
+
+## Arquitectura interactiva
+
+La arquitectura representa la estructura y el funcionamiento principal de la aplicación Flutter.
+Fue generada con **Archify** a partir de los componentes reales del proyecto.
+
+[Ver arquitectura interactiva](https://angeljdev.github.io/10A-DMI/hello_world_app/)
+
+## Tecnologías utilizadas
+
+- Flutter
+- Dart
+- Material Design
+- Architext
+- Archify
+
+## Resultado
+
+La aplicación permite modificar el contador correctamente y muestra de forma visual su estado mediante colores y una tipografía personalizada, cumpliendo con los requisitos establecidos para la práctica.
+
+---
+
 ## Enlace GitPages (Diagrama de Arquitectura)
 [Ver Diagrama en GitHub Pages](https://angeljdev.github.io/10A-DMI/hello_world_app/)
 *(Nota: Asegúrate de tener activado GitHub Pages en tu repositorio para que este enlace funcione correctamente).*
