@@ -5,8 +5,9 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "flutter",
-            "cwd": "flutter",
+            "name": "practica-03 (Yes No App)",
+            "cwd": "${workspaceFolder}/docs/practica-03",
+            "program": "${workspaceFolder}/docs/practica-03/lib/main.dart",
             "request": "launch",
             "type": "dart"
         },
