@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hello_world_app/presentation/screens/counter/counter_functions_screen.dart';
-import 'package:hello_world_app/presentation/screens/counter/counter_screen.dart';
+import 'package:hello_world_app/config/theme/app_theme.dart';
+import 'package:hello_world_app/presentation/chat/chat_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,8 +13,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(useMaterial3: true, colorSchemeSeed: Colors.lightBlue),
-      home: const CounterFunctionsScreen(),
+      theme: AppTheme(selectedColor: 0).theme(),
+      home: const ChatScreen(),
     );
   }
 }

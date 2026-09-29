@@ -1,379 +1,700 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Práctica 2 – Diagrama de Arquitectura | 10A-DMI</title>
-  <meta name="description" content="Diagrama de arquitectura de widgets de la app Flutter Contador, Práctica 2 de Desarrollo Móvil Integral." />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet" />
-  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>hello_world_app – Architecture | 10A-DMI</title>
+  <meta name="description" content="Diagrama de arquitectura de la app Flutter hello_world_app – Práctica 2, Desarrollo Móvil Integral.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    :root {
-      --bg: #0d1117;
-      --surface: #161b22;
-      --surface2: #21262d;
-      --border: #30363d;
-      --accent: #58a6ff;
-      --text: #e6edf3;
-      --text-muted: #8b949e;
-      --flutter-blue: #027DFD;
-      --flutter-sky: #54C5F8;
-    }
-
     body {
       font-family: 'Inter', sans-serif;
-      background: var(--bg);
-      color: var(--text);
+      background: #0d1117;
+      color: #e6edf3;
       min-height: 100vh;
       display: flex;
-      flex-direction: column;
-    }
-
-    header {
-      background: linear-gradient(135deg, #0d1117 0%, #161b22 100%);
-      border-bottom: 1px solid var(--border);
-      padding: 0 2rem;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    .header-inner {
-      max-width: 1100px;
-      margin: 0 auto;
-      height: 64px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: .6rem;
-      font-weight: 700;
-      font-size: 1rem;
-      color: var(--text);
-      text-decoration: none;
-    }
-
-    .logo-badge {
-      background: linear-gradient(135deg, var(--flutter-blue), var(--flutter-sky));
-      color: #fff;
-      font-size: .65rem;
-      font-weight: 700;
-      padding: .2rem .5rem;
-      border-radius: 999px;
-    }
-
-    .header-links { display: flex; gap: .8rem; }
-    .header-links a {
-      color: var(--text-muted);
-      font-size: .85rem;
-      text-decoration: none;
-      padding: .3rem .7rem;
-      border-radius: 6px;
-      transition: background .2s, color .2s;
-    }
-    .header-links a:hover { background: var(--surface2); color: var(--text); }
-
-    .hero {
-      text-align: center;
-      padding: 4rem 2rem 3rem;
-      background: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(88,166,255,.18), transparent);
-    }
-
-    .hero-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: .4rem;
-      background: rgba(88,166,255,.1);
-      border: 1px solid rgba(88,166,255,.25);
-      color: var(--accent);
-      font-size: .78rem;
-      font-weight: 600;
-      padding: .3rem .9rem;
-      border-radius: 999px;
-      margin-bottom: 1.2rem;
-      text-transform: uppercase;
-      letter-spacing: .05em;
-    }
-
-    .hero h1 {
-      font-size: clamp(1.8rem, 4vw, 2.8rem);
-      font-weight: 700;
-      line-height: 1.2;
-      margin-bottom: .8rem;
-      background: linear-gradient(135deg, var(--text) 40%, var(--accent));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .hero p {
-      color: var(--text-muted);
-      font-size: 1rem;
-      max-width: 560px;
-      margin: 0 auto 1.8rem;
-      line-height: 1.6;
-    }
-
-    .hero-meta {
-      display: flex;
+      align-items: flex-start;
       justify-content: center;
-      flex-wrap: wrap;
-      gap: .6rem;
-      margin-bottom: 2rem;
+      padding: 2.5rem 1.5rem;
     }
 
-    .chip {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      color: var(--text-muted);
-      font-size: .78rem;
-      padding: .25rem .7rem;
-      border-radius: 999px;
-    }
-
-    .chip strong { color: var(--text); }
-
-    main {
-      flex: 1;
-      max-width: 1100px;
+    /* ─── OUTER PANEL ─── */
+    .panel {
       width: 100%;
-      margin: 0 auto;
-      padding: 0 2rem 4rem;
+      max-width: 980px;
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 14px;
+      overflow: hidden;
     }
 
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 2rem;
-      margin-bottom: 2rem;
-      transition: border-color .25s;
-    }
-
-    .card:hover { border-color: rgba(88,166,255,.4); }
-
-    .card-header {
+    /* ─── DIAGRAM TOP BAR ─── */
+    .top-bar {
+      padding: 1.4rem 1.8rem 1rem;
       display: flex;
-      align-items: center;
-      gap: .7rem;
-      margin-bottom: 1.5rem;
+      align-items: flex-start;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: .8rem;
     }
+    .diag-title   { font-size: 1.55rem; font-weight: 700; line-height: 1.2; }
+    .diag-sub     { font-size: .8rem; color: #8b949e; margin-top: .25rem; }
+    .filter-right { text-align: right; }
+    .filter-hint  { font-size: .72rem; color: #8b949e; display: block; margin-bottom: .45rem; }
+    .filters      { display: flex; gap: .35rem; flex-wrap: wrap; justify-content: flex-end; }
 
-    .card-icon {
-      width: 36px; height: 36px;
-      border-radius: 8px;
-      display: grid;
-      place-items: center;
-      font-size: 1.1rem;
-      flex-shrink: 0;
+    .fbtn {
+      font-family: inherit; font-size: .7rem; font-weight: 600;
+      padding: .22rem .6rem; border-radius: 999px;
+      border: 1px solid #30363d; background: transparent;
+      color: #8b949e; cursor: pointer;
+      display: inline-flex; align-items: center; gap: .28rem;
+      transition: background .18s, color .18s, border-color .18s;
     }
+    .fbtn:hover { background: #21262d; color: #e6edf3; }
+    .fbtn.active { background: #21262d; color: #e6edf3; }
+    .fbtn .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
 
-    .icon-diagram { background: rgba(88,166,255,.15); }
-    .icon-feature { background: rgba(126,231,135,.15); }
-
-    .card-header h2 { font-size: 1.1rem; font-weight: 600; }
-
-    .diagram-wrapper {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 2rem 1rem;
-      overflow-x: auto;
-      text-align: center;
-    }
-
-    .mermaid { display: inline-block; min-width: 300px; }
-
-    .features {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    /* ─── DIAGRAM BODY ─── */
+    .diagram-body {
+      padding: 0 1.4rem 1.4rem;
+      display: flex;
       gap: 1rem;
-      margin-top: 1rem;
+      align-items: flex-start;
     }
 
-    .feature {
-      background: var(--surface2);
-      border: 1px solid var(--border);
+    /* ─── OUTER BOUNDARY BOX ─── */
+    .boundary {
+      flex: 1;
+      border: 1px solid #30363d;
       border-radius: 10px;
-      padding: 1.2rem;
-      transition: transform .2s, border-color .2s;
+      padding: 1rem;
+      position: relative;
+      background: rgba(255,255,255,.012);
+    }
+    .bdry-label {
+      position: absolute;
+      top: -9px; left: 14px;
+      font-size: .58rem; font-weight: 700;
+      letter-spacing: .1em; text-transform: uppercase;
+      color: #8b949e; background: #161b22;
+      padding: 0 .5rem;
     }
 
-    .feature:hover { transform: translateY(-3px); border-color: var(--accent); }
-    .feature-icon { font-size: 1.6rem; margin-bottom: .5rem; }
-    .feature h3 { font-size: .9rem; font-weight: 600; margin-bottom: .3rem; }
-    .feature p { font-size: .82rem; color: var(--text-muted); line-height: 1.5; }
-
-    .color-demo { display: flex; gap: .6rem; flex-wrap: wrap; margin-top: .8rem; }
-    .color-chip {
-      display: flex; align-items: center; gap: .4rem;
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 8px; padding: .4rem .8rem; font-size: .83rem;
+    /* Grid inside boundary: [Entry] [Presentation] [Domain] */
+    .bdry-grid {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: .85rem;
+      margin-top: .4rem;
+      align-items: start;
     }
 
-    .dot { width: 10px; height: 10px; border-radius: 50%; }
-    .dot-green { background: #4caf50; }
-    .dot-blue  { background: #2196f3; }
-    .dot-red   { background: #f44336; }
-
-    .cta-link {
-      display: inline-flex; align-items: center; gap: .5rem;
-      margin-top: 1.2rem; padding: .6rem 1.2rem;
-      border-radius: 8px; font-size: .88rem; font-weight: 600;
-      text-decoration: none;
-      background: linear-gradient(135deg, var(--flutter-blue), var(--flutter-sky));
-      color: #fff; transition: opacity .2s, transform .2s;
+    /* ─── INNER ZONES ─── */
+    .izone {
+      border: 1px dashed;
+      border-radius: 8px;
+      padding: .75rem .7rem .7rem;
+      position: relative;
+    }
+    .izone-label {
+      position: absolute;
+      top: -8px; left: 10px;
+      font-size: .58rem; font-weight: 700;
+      letter-spacing: .08em; text-transform: uppercase;
+      padding: 0 .4rem;
+      background: #161b22;
     }
 
-    .cta-link:hover { opacity: .85; transform: translateY(-1px); }
+    .iz-pres   { border-color: rgba(88,166,255,.3); }
+    .iz-pres .izone-label { color: #58a6ff; }
+    .iz-domain { border-color: rgba(63,185,80,.3); }
+    .iz-domain .izone-label { color: #3fb950; }
 
-    footer {
-      text-align: center; padding: 1.5rem;
-      border-top: 1px solid var(--border);
-      color: var(--text-muted); font-size: .8rem;
+    /* Presentation inner grid */
+    .pres-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: .65rem;
+      margin-top: .55rem;
     }
 
-    footer a { color: var(--accent); text-decoration: none; }
+    /* Sub zones inside presentation */
+    .szone {
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: 7px;
+      padding: .6rem .6rem .55rem;
+      position: relative;
+    }
+    .szone-label {
+      position: absolute;
+      top: -7px; left: 9px;
+      font-size: .55rem; font-weight: 700;
+      letter-spacing: .07em; text-transform: uppercase;
+      color: #8b949e; background: #161b22;
+      padding: 0 .35rem;
+    }
+    .szone-inner { margin-top: .5rem; display: flex; flex-direction: column; gap: .4rem; }
+
+    /* Domain inner */
+    .domain-stack { display: flex; flex-direction: column; gap: .45rem; margin-top: .55rem; }
+
+    /* ─── NODE CARDS ─── */
+    .nc {
+      border-radius: 8px;
+      padding: .55rem .75rem;
+      border: 1px solid;
+      cursor: pointer;
+      transition: transform .16s, box-shadow .16s;
+      position: relative;
+    }
+    .nc:hover { transform: translateY(-2px); box-shadow: 0 5px 18px rgba(0,0,0,.35); }
+    .nc-cat {
+      font-size: .55rem; font-weight: 700;
+      letter-spacing: .1em; text-transform: uppercase;
+      display: block; margin-bottom: .18rem; opacity: .75;
+    }
+    .nc-name { font-size: .88rem; font-weight: 700; display: block; line-height: 1.2; }
+    .nc-desc { font-size: .7rem; display: block; margin-top: .18rem; opacity: .7; }
+
+    /* Card colour variants */
+    .nc-entry  { background: rgba(2,125,253,.13); border-color: rgba(2,125,253,.38); }
+    .nc-entry .nc-cat  { color: #54c5f8; }
+    .nc-entry .nc-name { color: #e6edf3; }
+
+    .nc-screen { background: rgba(2,125,253,.08); border-color: rgba(2,125,253,.25); }
+    .nc-screen .nc-cat  { color: #54c5f8; }
+    .nc-screen .nc-name { color: #e6edf3; }
+
+    .nc-widget { background: rgba(63,185,80,.08); border-color: rgba(63,185,80,.25); }
+    .nc-widget .nc-cat  { color: #3fb950; }
+    .nc-widget .nc-name { color: #e6edf3; }
+
+    .nc-prov   { background: rgba(163,113,247,.13); border-color: rgba(163,113,247,.38); }
+    .nc-prov .nc-cat  { color: #a371f7; }
+    .nc-prov .nc-name { color: #d2a8ff; }
+
+    .nc-entity { background: rgba(63,185,80,.1); border-color: rgba(63,185,80,.32); }
+    .nc-entity .nc-cat  { color: #3fb950; }
+    .nc-entity .nc-name { color: #7ee787; }
+
+    .nc-enum   { background: rgba(63,185,80,.06); border-color: rgba(63,185,80,.2); }
+    .nc-enum .nc-cat  { color: #3fb950; }
+    .nc-enum .nc-name { color: #7ee787; }
+
+    .nc-config { background: rgba(240,136,62,.1); border-color: rgba(240,136,62,.32); }
+    .nc-config .nc-cat  { color: #f0883e; }
+    .nc-config .nc-name { color: #ffa657; }
+
+    .nc.selected { outline: 2px solid; outline-offset: 2px; }
+
+    /* ─── SVG ARROWS (overlay inside boundary) ─── */
+    .bdry-svg {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none; overflow: visible;
+    }
+
+    /* ─── EXTERNAL BOX (AppTheme, right of boundary) ─── */
+    .external-col {
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .35rem;
+    }
+    .ext-tag {
+      font-size: .56rem; font-weight: 700;
+      letter-spacing: .1em; text-transform: uppercase;
+      color: #8b949e;
+    }
+
+    /* ─── INFRA ROW (below boundary) ─── */
+    .infra-section { padding: 0 1.4rem 0; margin-top: .3rem; }
+    .infra-connectors {
+      display: flex; align-items: center;
+      padding: 0 0 .25rem;
+      font-size: .6rem; color: #8b949e;
+    }
+    .ic-spacer  { flex: 1; text-align: center; }
+    .ic-arrow   { width: 64px; text-align: center; flex-shrink: 0; color: #3d444d; }
+    .infra-row  { display: flex; align-items: stretch; gap: .5rem; }
+    .infra-node {
+      flex: 1;
+      border: 1px solid #21262d;
+      border-radius: 8px;
+      padding: .6rem .8rem;
+      cursor: pointer;
+      transition: border-color .18s, transform .16s;
+    }
+    .infra-node:hover { border-color: #58a6ff; transform: translateY(-2px); }
+    .in-cat  { font-size: .55rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #8b949e; display: block; margin-bottom: .2rem; }
+    .in-name { font-size: .85rem; font-weight: 700; display: block; }
+    .in-desc { font-size: .7rem; color: #8b949e; display: block; margin-top: .12rem; }
+
+    .infra-arr-col {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 0 .2rem; flex-shrink: 0;
+      gap: .2rem;
+    }
+    .ia-label { font-size: .58rem; color: #8b949e; white-space: nowrap; }
+    .ia-arrow { display: flex; align-items: center; }
+    .ia-line  { width: 22px; height: 1px; background: #3d444d; }
+    .ia-head  { color: #3d444d; font-size: .75rem; line-height: 1; }
+
+    /* ─── OVERVIEW BAR ─── */
+    .overview-bar {
+      background: #0d1117;
+      border-top: 1px solid #21262d;
+      padding: .85rem 1.8rem;
+      font-size: .78rem;
+      color: #8b949e;
+      line-height: 1.65;
+    }
+    .overview-bar strong { color: #e6edf3; }
+    .overview-bar code {
+      font-family: 'Fira Code', monospace;
+      font-size: .74rem;
+      background: rgba(88,166,255,.08);
+      border: 1px solid rgba(88,166,255,.18);
+      border-radius: 3px;
+      padding: .05rem .28rem;
+      color: #58a6ff;
+    }
+
+    /* ─── DETAIL PANEL ─── */
+    .detail-panel {
+      display: none;
+      margin: .6rem 1.4rem .2rem;
+      background: #21262d;
+      border: 1px solid #30363d;
+      border-radius: 9px;
+      padding: .9rem 1.1rem;
+    }
+    .detail-panel.show { display: block; }
+    .dp-title { font-size: .9rem; font-weight: 700; margin-bottom: .35rem; }
+    .dp-body  { font-size: .78rem; color: #8b949e; line-height: 1.6; }
+    .dp-body code {
+      font-family: 'Fira Code', monospace;
+      font-size: .72rem;
+      background: rgba(88,166,255,.08);
+      border: 1px solid rgba(88,166,255,.18);
+      border-radius: 3px;
+      padding: .05rem .25rem;
+      color: #58a6ff;
+    }
   </style>
 </head>
 <body>
 
-  <header>
-    <div class="header-inner">
-      <a href="https://github.com/AngelJdev/10A-DMI" class="logo">
-        <span class="logo-badge">10A-DMI</span>
-        Desarrollo Móvil Integral
-      </a>
-      <nav class="header-links">
-        <a href="https://github.com/AngelJdev/10A-DMI">GitHub</a>
-        <a href="https://github.com/AngelJdev/10A-DMI/tree/main/hello_world_app">Código</a>
-      </nav>
+<div class="panel">
+
+  <!-- ── TOP BAR ── -->
+  <div class="top-bar">
+    <div>
+      <div class="diag-title">hello_world_app Architecture</div>
+      <div class="diag-sub">Flutter Chat App · Widget hierarchy &amp; layer view</div>
     </div>
-  </header>
-
-  <section class="hero">
-    <div class="hero-tag">⚡ Práctica 2</div>
-    <h1>Diagrama de Arquitectura<br/>de Widgets Flutter</h1>
-    <p>Visualización de la jerarquía de componentes de la aplicación <strong>Contador Interactivo</strong> desarrollada con Flutter.</p>
-    <div class="hero-meta">
-      <span class="chip">👤 <strong>Angel de Jesus Baños Tellez</strong></span>
-      <span class="chip">👨‍🏫 M.T.I. Marco A. Ramírez Hernández</span>
-      <span class="chip">📅 Sep – Dic 2026</span>
-      <span class="chip">🏫 Grupo 10A</span>
-    </div>
-  </section>
-
-  <main>
-
-    <div class="card">
-      <div class="card-header">
-        <div class="card-icon icon-diagram">🗂️</div>
-        <h2>Árbol de Widgets – CounterFunctionsScreen</h2>
-      </div>
-      <div class="diagram-wrapper">
-        <div class="mermaid">
-graph TD
-    A["🟦 MaterialApp"] --> B["CounterFunctionsScreen\nStatefulWidget"]
-    B --> C["Scaffold"]
-    C --> D["AppBar"]
-    D --> E["Text: Counter Functions Screen"]
-    D --> F["IconButton Refresh"]
-    C --> G["Body: Center"]
-    G --> H["Column Central"]
-    H --> I["Text - Contador numerico\nColor dinamico"]
-    H --> J["Text - Click o Clicks"]
-    C --> K["floatingActionButton: Column"]
-    K --> L["CustomButton\nRefresh a 0"]
-    K --> M["CustomButton\nRestar -1"]
-    K --> N["CustomButton\nSumar +1"]
-    style A fill:#027DFD,color:#fff,stroke:#027DFD
-    style B fill:#1565C0,color:#fff,stroke:#1565C0
-    style C fill:#21262d,color:#e6edf3,stroke:#58a6ff
-    style D fill:#21262d,color:#e6edf3,stroke:#30363d
-    style G fill:#21262d,color:#e6edf3,stroke:#30363d
-    style H fill:#21262d,color:#e6edf3,stroke:#30363d
-    style K fill:#21262d,color:#e6edf3,stroke:#30363d
-    style I fill:#1B5E20,color:#fff,stroke:#4caf50
-    style J fill:#21262d,color:#e6edf3,stroke:#30363d
-    style L fill:#0D47A1,color:#fff,stroke:#2196f3
-    style M fill:#B71C1C,color:#fff,stroke:#f44336
-    style N fill:#1B5E20,color:#fff,stroke:#4caf50
-        </div>
-      </div>
-      <div style="text-align:center;">
-        <a class="cta-link" href="https://mermaid.live/edit#pako:eNqNVMtu2zAQ_BWCpzZgp-cWRYq2QA-F18C9S2EUW1xEJFImKddtEPjvXb2S0yZtUa8SZ2Z3Zoe7h1S3lGqm0X_T8o2Kih0zV26c6dlyQ1Uv_fLgU0sW81lM-iP4Xw4k8tVnN69XqP7W8kQ0C-fB1g7Fm8Dq4e365Qk3_mH-s308HhG2YjB6h2A-i1-Y7iU311o5Fk3Yf7-y-50Nn2B-i4G1wYlFm-DMIhZ5Y-aG7eJ2m7wZk2O-a0a1WjD6J4N3c5N96229oE7Gg3wH2tQZ7GZq8a4u6g_jMvjHq3w5i9c3pXgU-k2Z753wQ9G3Xl5n5O_p856ZpE7oO16sV5aY7bT5vX3D5Q-TzVj62Hh6J4o72yD3_mJ6K8z614K3K8lI42_J8N1aY9q5U59YhDk56zU9yR-u-c5E3fPZ5L_6J_y55g_3_H_wH4lV_B1P0fX6H8R1F2s" target="_blank" rel="noopener">
-          🔗 Editar en Mermaid Live
-        </a>
+    <div class="filter-right">
+      <span class="filter-hint">Click a component or flow category to inspect it</span>
+      <div class="filters">
+        <button class="fbtn active" data-f="all">
+          <span class="dot" style="background:#58a6ff"></span>All flows
+        </button>
+        <button class="fbtn" data-f="ui">
+          <span class="dot" style="background:#027DFD"></span>UI
+        </button>
+        <button class="fbtn" data-f="state">
+          <span class="dot" style="background:#a371f7"></span>State
+        </button>
+        <button class="fbtn" data-f="domain">
+          <span class="dot" style="background:#3fb950"></span>Domain
+        </button>
+        <button class="fbtn" data-f="dev" style="color:#79c0ff;border-color:#1f3a5a;">
+          <span class="dot" style="background:#1f6feb"></span>Dev
+        </button>
       </div>
     </div>
+  </div>
 
-    <div class="card">
-      <div class="card-header">
-        <div class="card-icon icon-feature">🚀</div>
-        <h2>Funcionalidades Implementadas</h2>
-      </div>
-      <div class="features">
-        <div class="feature">
-          <div class="feature-icon">🔢</div>
-          <h3>Contador Interactivo</h3>
-          <p>Incrementar, decrementar (incluyendo negativos) y reiniciar a cero.</p>
-        </div>
-        <div class="feature">
-          <div class="feature-icon">🎨</div>
-          <h3>Colores Dinámicos</h3>
-          <p>El color del número cambia según su valor:</p>
-          <div class="color-demo">
-            <div class="color-chip"><span class="dot dot-green"></span> &gt; 0 Verde</div>
-            <div class="color-chip"><span class="dot dot-blue"></span> = 0 Azul</div>
-            <div class="color-chip"><span class="dot dot-red"></span> &lt; 0 Rojo</div>
+  <!-- ── DIAGRAM BODY (boundary + external) ── -->
+  <div class="diagram-body">
+
+    <!-- OUTER BOUNDARY BOX -->
+    <div class="boundary" id="boundary">
+      <span class="bdry-label">FLUTTER APP BOUNDARY</span>
+
+      <div class="bdry-grid">
+
+        <!-- COL 1: Entry Point (like Mobile Client) -->
+        <div>
+          <div class="nc nc-entry" id="nc-entry" onclick="pick('entry')">
+            <span class="nc-cat">Entry Point</span>
+            <span class="nc-name">main() + MyApp</span>
+            <span class="nc-desc">StatelessWidget</span>
           </div>
         </div>
-        <div class="feature">
-          <div class="feature-icon">🔤</div>
-          <h3>Fuentes Personalizadas</h3>
-          <p>Tipografía <strong>Carter One</strong> vía google_fonts.</p>
-        </div>
-        <div class="feature">
-          <div class="feature-icon">🧩</div>
-          <h3>Widget CustomButton</h3>
-          <p>Componente reutilizable con StadiumBorder para los botones FAB.</p>
-        </div>
-        <div class="feature">
-          <div class="feature-icon">📝</div>
-          <h3>Pluralización Automática</h3>
-          <p>Cambia entre "Click" y "Clicks" según el valor del contador.</p>
-        </div>
+
+        <!-- COL 2: Presentation Layer (like Trusted App Network) -->
+        <div class="izone iz-pres" id="iz-pres">
+          <span class="izone-label">PRESENTATION LAYER</span>
+          <div class="pres-grid">
+
+            <!-- Screen sub-zone (like Auth Layer) -->
+            <div class="szone" id="sz-screen">
+              <span class="szone-label">SCREEN LAYER</span>
+              <div class="szone-inner">
+                <div class="nc nc-screen" id="nc-screen" onclick="pick('screen')">
+                  <span class="nc-cat">Screen</span>
+                  <span class="nc-name">ChatScreen</span>
+                  <span class="nc-desc">StatefulWidget</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Widget sub-zone (like Data Security Zone) -->
+            <div class="szone" id="sz-widget">
+              <span class="szone-label">WIDGET LAYER</span>
+              <div class="szone-inner">
+                <div class="nc nc-widget" id="nc-mymsg" onclick="pick('mymsg')">
+                  <span class="nc-cat">Widget</span>
+                  <span class="nc-name">MyMessageBubble</span>
+                  <span class="nc-desc">Mensaje propio</span>
+                </div>
+                <div class="nc nc-widget" id="nc-hermsg" onclick="pick('hermsg')">
+                  <span class="nc-cat">Widget</span>
+                  <span class="nc-name">HerMessageBubble</span>
+                  <span class="nc-desc">Mensaje recibido</span>
+                </div>
+                <div class="nc nc-widget" id="nc-msgbox" onclick="pick('msgbox')">
+                  <span class="nc-cat">Widget</span>
+                  <span class="nc-name">MessageFieldBox</span>
+                  <span class="nc-desc">Input de texto</span>
+                </div>
+              </div>
+            </div>
+
+          </div><!-- /pres-grid -->
+        </div><!-- /iz-pres -->
+
+        <!-- COL 3: State / Domain Zone (like Data Security Zone) -->
+        <div class="izone iz-domain" id="iz-domain">
+          <span class="izone-label">STATE / DOMAIN ZONE</span>
+          <div class="domain-stack">
+            <div class="nc nc-prov" id="nc-prov" onclick="pick('prov')">
+              <span class="nc-cat">Provider</span>
+              <span class="nc-name">ChatProvider</span>
+              <span class="nc-desc">ChangeNotifier</span>
+            </div>
+            <div class="nc nc-entity" id="nc-msg" onclick="pick('msg')">
+              <span class="nc-cat">Data Layer</span>
+              <span class="nc-name">Message</span>
+              <span class="nc-desc">text · imageUrl · fromWho</span>
+            </div>
+            <div class="nc nc-enum" id="nc-enum" onclick="pick('enum')">
+              <span class="nc-cat">Data Layer</span>
+              <span class="nc-name">FromWho</span>
+              <span class="nc-desc">mine · hers</span>
+            </div>
+          </div>
+        </div><!-- /iz-domain -->
+
+      </div><!-- /bdry-grid -->
+
+      <!-- SVG arrow overlay (inside boundary) -->
+      <svg class="bdry-svg" id="bdry-svg"></svg>
+
+    </div><!-- /boundary -->
+
+    <!-- EXTERNAL: AppTheme (like Leaflet/Maps External) -->
+    <div class="external-col">
+      <span class="ext-tag">External Services</span>
+      <div class="nc nc-config" id="nc-theme" onclick="pick('theme')">
+        <span class="nc-cat">Config</span>
+        <span class="nc-name">AppTheme</span>
+        <span class="nc-desc">selectedColor<br>Material 3</span>
       </div>
     </div>
 
-  </main>
+  </div><!-- /diagram-body -->
 
-  <footer>
-    Práctica 2 · <a href="https://github.com/AngelJdev/10A-DMI">AngelJdev / 10A-DMI</a> · Desarrollo Móvil Integral 2026
-  </footer>
+  <!-- ── INFRA ROW ── -->
+  <div class="infra-section">
+    <div class="infra-connectors">
+      <span class="ic-spacer">build tools</span>
+      <span class="ic-arrow">──────────▶</span>
+      <span class="ic-spacer">dependencies</span>
+      <span class="ic-arrow">──────────▶</span>
+      <span class="ic-spacer">version control</span>
+      <span class="ic-arrow">──────────▶</span>
+      <span class="ic-spacer">remote repository</span>
+    </div>
+    <div class="infra-row">
+      <div class="infra-node" id="ni-flutter" onclick="pick('flutter')">
+        <span class="in-cat">Build Tools</span>
+        <span class="in-name">Flutter SDK</span>
+        <span class="in-desc">Dart · framework</span>
+      </div>
+      <div class="infra-node" id="ni-pub" onclick="pick('pub')">
+        <span class="in-cat">Package Manager</span>
+        <span class="in-name">pub / pubspec</span>
+        <span class="in-desc">google_fonts · icons</span>
+      </div>
+      <div class="infra-node" id="ni-git" onclick="pick('git')">
+        <span class="in-cat">Source Control</span>
+        <span class="in-name">Git</span>
+        <span class="in-desc">Local version control</span>
+      </div>
+      <div class="infra-node" id="ni-github" onclick="pick('github')">
+        <span class="in-cat">Source Control</span>
+        <span class="in-name">GitHub</span>
+        <span class="in-desc">Remote · Pages</span>
+      </div>
+    </div>
+  </div>
 
-  <script>
-    mermaid.initialize({
-      startOnLoad: true,
-      theme: 'dark',
-      themeVariables: {
-        background: '#161b22',
-        primaryColor: '#027DFD',
-        primaryTextColor: '#e6edf3',
-        primaryBorderColor: '#30363d',
-        lineColor: '#58a6ff',
-        secondaryColor: '#21262d',
-        tertiaryColor: '#21262d'
-      }
+  <!-- ── DETAIL PANEL ── -->
+  <div class="detail-panel" id="detail-panel">
+    <div class="dp-title" id="dp-title"></div>
+    <div class="dp-body"  id="dp-body"></div>
+  </div>
+
+  <!-- ── OVERVIEW BAR ── -->
+  <div class="overview-bar">
+    <strong>Overview.</strong>
+    <code>MyApp</code> inicializa <code>MaterialApp</code> con <code>AppTheme</code> y establece <code>ChatScreen</code> como <code>home</code>.
+    <code>ChatScreen</code> renderiza <code>MyMessageBubble</code> o <code>HerMessageBubble</code> según el origen del mensaje,
+    y usa <code>MessageFieldBox</code> para capturar input. <code>ChatProvider</code> gestiona <code>List&lt;Message&gt;</code>
+    donde cada <code>Message</code> usa <code>enum FromWho</code> (mine · hers).
+  </div>
+
+</div><!-- /panel -->
+
+<script>
+  /* ── NODE DATA ── */
+  const DATA = {
+    entry:  { color:'#58a6ff', title:'main() + MyApp — Punto de entrada',
+      body:`Archivo: <code>lib/main.dart</code><br>
+<code>main()</code> llama <code>runApp(const MyApp())</code>.
+<code>MyApp</code> (<code>StatelessWidget</code>) retorna <code>MaterialApp</code> con <code>debugShowCheckedModeBanner:false</code>,
+aplica <code>AppTheme(selectedColor:0)</code> y define <code>ChatScreen</code> como <code>home</code>.` },
+
+    screen: { color:'#54c5f8', title:'ChatScreen — Pantalla principal',
+      body:`Archivo: <code>lib/presentation/chat/chat_screen.dart</code><br>
+<code>StatefulWidget</code>. Mantiene <code>List&lt;Map&gt; messages</code> y un <code>ScrollController</code>.
+El <code>AppBar</code> muestra <code>CircleAvatar</code> con imagen de red.
+El body usa <code>ListView.builder</code> que elige entre <code>MyMessageBubble</code> / <code>HerMessageBubble</code>
+según <code>isMine</code>. El método <code>_handleSendMessage()</code> agrega el mensaje y hace auto-scroll.` },
+
+    mymsg:  { color:'#3fb950', title:'MyMessageBubble — Burbuja propia',
+      body:`Archivo: <code>lib/presentation/widgets/chat/my_message_bubble.dart</code><br>
+<code>StatelessWidget</code>. Alineado a la <strong>derecha</strong> (<code>CrossAxisAlignment.end</code>).
+Usa <code>colors.primary</code> del tema, texto blanco, borde redondeado 20 px.` },
+
+    hermsg: { color:'#3fb950', title:'HerMessageBubble — Burbuja recibida',
+      body:`Archivo: <code>lib/presentation/widgets/chat/her_message_bubble.dart</code><br>
+<code>StatelessWidget</code>. Alineado a la <strong>izquierda</strong> (<code>CrossAxisAlignment.start</code>).
+Usa <code>colors.secondary</code> del tema, texto blanco, borde redondeado 20 px.` },
+
+    msgbox: { color:'#f0883e', title:'MessageFieldBox — Campo de entrada',
+      body:`Archivo: <code>lib/presentation/widgets/shared/message_field_box.dart</code><br>
+<code>StatefulWidget</code> con <code>TextEditingController</code> y <code>FocusNode</code>.
+El botón Send y la tecla <kbd>Enter</kbd> disparan <code>onValue(String)</code> en <code>ChatScreen</code>.` },
+
+    prov:   { color:'#a371f7', title:'ChatProvider — Gestor de estado',
+      body:`Archivo: <code>lib/presentation/providers/chat_provider.dart</code><br>
+Extiende <code>ChangeNotifier</code>. Expone <code>List&lt;Message&gt; messageList</code> con mensajes iniciales
+y el método <code>sendMessage(String text)</code> que agrega un <code>Message(fromWho: FromWho.mine)</code>
+y llama <code>notifyListeners()</code>.` },
+
+    msg:    { color:'#7ee787', title:'Message — Entidad de dominio',
+      body:`Archivo: <code>lib/domain/entities/message.dart</code><br>
+Clase con: <code>final String text</code>, <code>final String? imageUrl</code>, <code>final FromWho fromWho</code>.
+Representa un mensaje individual en la conversación.` },
+
+    enum:   { color:'#7ee787', title:'enum FromWho',
+      body:`Archivo: <code>lib/domain/entities/message.dart</code><br>
+<code>enum FromWho { mine, hers }</code>.
+Usado por <code>ChatScreen</code> para elegir el widget de burbuja correcto (izquierda / derecha).` },
+
+    theme:  { color:'#ffa657', title:'AppTheme — Configuración del tema',
+      body:`Archivo: <code>lib/config/theme/app_theme.dart</code><br>
+Recibe <code>selectedColor</code> (0–6) y retorna <code>ThemeData</code> con <code>useMaterial3:true</code>
+y <code>colorSchemeSeed</code>. Paleta: púrpura, azul, teal, verde, amarillo, naranja, rosa.` },
+
+    flutter:{ color:'#58a6ff', title:'Flutter SDK — Herramienta de build',
+      body:`SDK de Flutter. Compila el proyecto para Android, iOS, Web y Desktop. Usa el lenguaje Dart.
+Versión del SDK del entorno: <code>^3.13.2</code> (definido en <code>pubspec.yaml</code>).` },
+
+    pub:    { color:'#58a6ff', title:'pub / pubspec.yaml — Gestor de paquetes',
+      body:`Archivo: <code>hello_world_app/pubspec.yaml</code><br>
+Dependencias: <code>google_fonts ^6.2.1</code>, <code>cupertino_icons ^1.0.8</code>.
+Dev: <code>flutter_lints ^6.0.0</code>.` },
+
+    git:    { color:'#8b949e', title:'Git — Control de versiones local',
+      body:`Repositorio local Git. Gestiona el historial de cambios del proyecto.
+El archivo <code>.gitignore</code> excluye el directorio <code>build/</code> y artefactos generados.` },
+
+    github: { color:'#8b949e', title:'GitHub — Repositorio remoto',
+      body:`Repositorio remoto: <a href="https://github.com/AngelJdev/10A-DMI" style="color:#58a6ff">AngelJdev/10A-DMI</a><br>
+GitHub Pages publica el diagrama en <code>/docs/hello_world_app/</code> automáticamente desde la rama <code>main</code>.` },
+  };
+
+  /* ── SELECTION ── */
+  let cur = null;
+  function pick(key) {
+    if (cur) {
+      const el = document.getElementById('nc-' + cur) || document.getElementById('ni-' + cur);
+      if (el) { el.classList.remove('selected'); el.style.outlineColor = ''; }
+    }
+    cur = key;
+    const d = DATA[key]; if (!d) return;
+    const el = document.getElementById('nc-' + key) || document.getElementById('ni-' + key);
+    if (el) { el.classList.add('selected'); el.style.outlineColor = d.color + '99'; }
+
+    const panel = document.getElementById('detail-panel');
+    panel.classList.add('show');
+    panel.style.borderColor = d.color + '55';
+    document.getElementById('dp-title').innerHTML = `<span style="color:${d.color}">${d.title}</span>`;
+    document.getElementById('dp-body').innerHTML  = d.body;
+  }
+
+  /* ── FILTER BUTTONS ── */
+  document.querySelectorAll('.fbtn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.fbtn').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
     });
-  </script>
+  });
+
+  /* ── DRAW SVG ARROWS ── */
+  function drawArrows() {
+    const svg = document.getElementById('bdry-svg');
+    const bnd = document.getElementById('boundary');
+    if (!svg || !bnd) return;
+    svg.innerHTML = '';
+
+    const br = bnd.getBoundingClientRect();
+
+    function box(id) {
+      const el = document.getElementById(id);
+      if (!el) return null;
+      const r = el.getBoundingClientRect();
+      return {
+        cx: r.left - br.left + r.width  / 2,
+        cy: r.top  - br.top  + r.height / 2,
+        l:  r.left - br.left,
+        r:  r.left - br.left + r.width,
+        t:  r.top  - br.top,
+        b:  r.top  - br.top  + r.height,
+        w:  r.width, h: r.height
+      };
+    }
+
+    // Defs (markers)
+    const defs = document.createElementNS('http://www.w3.org/2000/svg','defs');
+    const palette = ['#58a6ff','#a371f7','#3fb950','#f0883e','#ffa657'];
+    palette.forEach(c => {
+      const m = document.createElementNS('http://www.w3.org/2000/svg','marker');
+      m.setAttribute('id', 'm'+c.slice(1));
+      m.setAttribute('markerWidth','7'); m.setAttribute('markerHeight','7');
+      m.setAttribute('refX','5'); m.setAttribute('refY','3');
+      m.setAttribute('orient','auto');
+      const p = document.createElementNS('http://www.w3.org/2000/svg','path');
+      p.setAttribute('d','M0,0 L6,3 L0,6 Z'); p.setAttribute('fill',c);
+      m.appendChild(p); defs.appendChild(m);
+    });
+    svg.appendChild(defs);
+
+    // Arrow definitions
+    const arrows = [
+      // Entry → ChatScreen (right→left)
+      { from:'nc-entry', fs:'r', to:'nc-screen', ts:'l',
+        color:'#58a6ff', label:'home: ChatScreen' },
+      // Entry → AppTheme — skip (external, hard to draw nicely)
+      // ChatScreen → ChatProvider (right→left)
+      { from:'nc-screen', fs:'r', to:'nc-prov', ts:'l',
+        color:'#a371f7', label:'uses / notifies' },
+      // ChatScreen → MyMessageBubble (bottom of screen → top of mymsg)
+      { from:'nc-screen', fs:'b', to:'nc-mymsg', ts:'t',
+        color:'#3fb950', label:'renders' },
+      // ChatProvider → Message (bottom→top)
+      { from:'nc-prov', fs:'b', to:'nc-msg', ts:'t',
+        color:'#3fb950', label:'List<Message>' },
+      // Message → FromWho (bottom→top)
+      { from:'nc-msg', fs:'b', to:'nc-enum', ts:'t',
+        color:'#3fb950', label:'uses enum' },
+    ];
+
+    function pt(b, side) {
+      if (side==='r') return [b.r, b.cy];
+      if (side==='l') return [b.l, b.cy];
+      if (side==='b') return [b.cx, b.b];
+      if (side==='t') return [b.cx, b.t];
+    }
+
+    arrows.forEach(a => {
+      const fb = box(a.from), tb = box(a.to);
+      if (!fb || !tb) return;
+      const [x1,y1] = pt(fb, a.fs);
+      let [x2,y2]   = pt(tb, a.ts);
+      // nudge arrowhead away
+      if (a.ts==='l') x2 -= 4;
+      if (a.ts==='t') y2 -= 4;
+
+      const mx = (x1+x2)/2, my = (y1+y2)/2;
+
+      let d;
+      if ((a.fs==='r'||a.fs==='l') && (a.ts==='r'||a.ts==='l')) {
+        d = `M${x1},${y1} C${x1+36},${y1} ${x2-36},${y2} ${x2},${y2}`;
+      } else if (a.fs==='b' && a.ts==='l') {
+        d = `M${x1},${y1} C${x1},${y1+24} ${x2-24},${y2} ${x2},${y2}`;
+      } else {
+        d = `M${x1},${y1} L${x2},${y2}`;
+      }
+
+      const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+      path.setAttribute('d', d);
+      path.setAttribute('fill','none');
+      path.setAttribute('stroke', a.color);
+      path.setAttribute('stroke-width','1.4');
+      path.setAttribute('opacity','0.7');
+      path.setAttribute('marker-end',`url(#m${a.color.slice(1)})`);
+      svg.appendChild(path);
+
+      // label background
+      const lw = a.label.length * 5.4;
+      const bg = document.createElementNS('http://www.w3.org/2000/svg','rect');
+      bg.setAttribute('x', mx - lw/2 - 3);
+      bg.setAttribute('y', my - 16);
+      bg.setAttribute('width', lw + 6);
+      bg.setAttribute('height', 13);
+      bg.setAttribute('rx','3');
+      bg.setAttribute('fill','#161b22');
+      bg.setAttribute('opacity','0.92');
+      svg.appendChild(bg);
+
+      const txt = document.createElementNS('http://www.w3.org/2000/svg','text');
+      txt.setAttribute('x', mx);
+      txt.setAttribute('y', my - 6);
+      txt.setAttribute('text-anchor','middle');
+      txt.setAttribute('font-size','9');
+      txt.setAttribute('font-family','Inter,sans-serif');
+      txt.setAttribute('font-weight','600');
+      txt.setAttribute('fill', a.color);
+      txt.setAttribute('opacity','0.9');
+      txt.textContent = a.label;
+      svg.appendChild(txt);
+    });
+  }
+
+  window.addEventListener('load', () => { drawArrows(); });
+  window.addEventListener('resize', () => { drawArrows(); });
+</script>
+
 </body>
 </html>

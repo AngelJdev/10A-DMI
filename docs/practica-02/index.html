@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Practica 02 — Arquitectura hello_world_app | 10A-DMI</title>
+  <meta name="description" content="Diagrama de arquitectura de la aplicacion Flutter hello_world_app. Practica 02, Desarrollo Movil Integral, Grupo 10A.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0d1117;
+      color: #e6edf3;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 3rem 2rem 4rem;
+    }
+
+    /* ─── PAGE HEADER ─── */
+    .page-header {
+      width: 100%;
+      max-width: 1200px;
+      margin-bottom: 2rem;
+    }
+    .page-header h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: -.01em;
+    }
+    .page-header .sub {
+      font-size: .9rem;
+      color: #8b949e;
+      margin-top: .4rem;
+    }
+    .meta-row {
+      display: flex;
+      gap: .8rem;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+    }
+    .meta-chip {
+      font-size: .75rem;
+      background: #21262d;
+      border: 1px solid #30363d;
+      color: #8b949e;
+      padding: .25rem .75rem;
+      border-radius: 6px;
+    }
+    .meta-chip strong { color: #e6edf3; font-weight: 500; }
+
+    /* ─── DIAGRAM PANEL ─── */
+    .panel {
+      width: 100%;
+      max-width: 1200px;
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,.5);
+    }
+
+    /* ─── TOP BAR ─── */
+    .top-bar {
+      padding: 1.5rem 2rem 1.2rem;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      border-bottom: 1px solid #21262d;
+    }
+    .diag-title { font-size: 1.2rem; font-weight: 600; }
+    .diag-sub   { font-size: .8rem; color: #8b949e; margin-top: .25rem; }
+
+    .filter-group { display: flex; flex-direction: column; align-items: flex-end; gap: .5rem; }
+    .filter-hint  { font-size: .75rem; color: #8b949e; }
+    .filters      { display: flex; gap: .4rem; flex-wrap: wrap; justify-content: flex-end; }
+
+    .fbtn {
+      font-family: inherit; font-size: .75rem; font-weight: 600;
+      padding: .25rem .7rem; border-radius: 6px;
+      border: 1px solid #30363d; background: transparent;
+      color: #8b949e; cursor: pointer;
+      display: inline-flex; align-items: center; gap: .35rem;
+      transition: background .15s, color .15s, border-color .15s;
+    }
+    .fbtn:hover  { background: #21262d; color: #e6edf3; }
+    .fbtn.active { background: #21262d; color: #e6edf3; border-color: #58a6ff33; }
+    .fbtn .dot   { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+
+    /* ─── DIAGRAM AREA ─── */
+    .diagram-area {
+      padding: 2rem;
+      display: flex;
+      gap: 1.5rem;
+      align-items: flex-start;
+    }
+
+    /* ─── OUTER BOUNDARY ─── */
+    .boundary {
+      flex: 1;
+      border: 1px solid #30363d;
+      border-radius: 10px;
+      padding: 1.8rem 1.5rem 1.5rem;
+      position: relative;
+      background: rgba(255,255,255,.015);
+    }
+    .bdry-label {
+      position: absolute;
+      top: -10px; left: 16px;
+      font-size: .65rem; font-weight: 700;
+      letter-spacing: .12em; text-transform: uppercase;
+      color: #8b949e; background: #161b22;
+      padding: 0 .6rem;
+    }
+    .bdry-grid {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 1.5rem;
+      align-items: start;
+    }
+
+    /* ─── INNER ZONES ─── */
+    .izone {
+      border: 1px dashed;
+      border-radius: 8px;
+      padding: 1.2rem 1.2rem 1rem;
+      position: relative;
+    }
+    .izone-label {
+      position: absolute;
+      top: -10px; left: 14px;
+      font-size: .65rem; font-weight: 700;
+      letter-spacing: .1em; text-transform: uppercase;
+      padding: 0 .5rem;
+      background: #161b22;
+    }
+    .iz-pres   { border-color: rgba(88,166,255,.28); }
+    .iz-pres   .izone-label { color: #58a6ff; }
+    .iz-domain { border-color: rgba(63,185,80,.28); }
+    .iz-domain .izone-label { color: #3fb950; }
+
+    .pres-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 1rem;
+    }
+
+    .szone {
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 8px;
+      padding: 1rem;
+      position: relative;
+    }
+    .szone-label {
+      position: absolute;
+      top: -9px; left: 12px;
+      font-size: .6rem; font-weight: 700;
+      letter-spacing: .1em; text-transform: uppercase;
+      color: #8b949e; background: #161b22;
+      padding: 0 .4rem;
+    }
+    .szone-inner  { display: flex; flex-direction: column; gap: .7rem; }
+    .domain-stack { display: flex; flex-direction: column; gap: .7rem; }
+
+    /* ─── NODE CARDS ─── */
+    .nc {
+      border-radius: 8px;
+      padding: .8rem 1rem;
+      border: 1px solid;
+      cursor: pointer;
+      transition: transform .15s, box-shadow .15s;
+      min-width: 150px;
+    }
+    .nc:hover { transform: translateY(-3px); box-shadow: 0 6px 18px rgba(0,0,0,.35); }
+    .nc-cat  {
+      font-size: .6rem; font-weight: 700;
+      letter-spacing: .1em; text-transform: uppercase;
+      display: block; margin-bottom: .25rem; opacity: .75;
+    }
+    .nc-name { font-size: .95rem; font-weight: 700; display: block; line-height: 1.25; }
+    .nc-desc { font-size: .75rem; display: block; margin-top: .25rem; opacity: .7; line-height: 1.3; }
+
+    .nc-entry  { background: rgba(2,125,253,.12); border-color: rgba(2,125,253,.35); }
+    .nc-entry  .nc-cat  { color: #54c5f8; }
+    .nc-entry  .nc-name { color: #e6edf3; }
+
+    .nc-screen { background: rgba(2,125,253,.07); border-color: rgba(2,125,253,.22); }
+    .nc-screen .nc-cat  { color: #54c5f8; }
+    .nc-screen .nc-name { color: #e6edf3; }
+
+    .nc-widget { background: rgba(63,185,80,.07); border-color: rgba(63,185,80,.22); }
+    .nc-widget .nc-cat  { color: #3fb950; }
+    .nc-widget .nc-name { color: #e6edf3; }
+
+    .nc-prov   { background: rgba(163,113,247,.12); border-color: rgba(163,113,247,.35); }
+    .nc-prov   .nc-cat  { color: #a371f7; }
+    .nc-prov   .nc-name { color: #d2a8ff; }
+
+    .nc-entity { background: rgba(63,185,80,.09); border-color: rgba(63,185,80,.28); }
+    .nc-entity .nc-cat  { color: #3fb950; }
+    .nc-entity .nc-name { color: #7ee787; }
+
+    .nc-enum   { background: rgba(63,185,80,.05); border-color: rgba(63,185,80,.18); }
+    .nc-enum   .nc-cat  { color: #3fb950; }
+    .nc-enum   .nc-name { color: #7ee787; }
+
+    .nc-config { background: rgba(240,136,62,.09); border-color: rgba(240,136,62,.28); }
+    .nc-config .nc-cat  { color: #f0883e; }
+    .nc-config .nc-name { color: #ffa657; }
+
+    .nc.selected { outline: 2px solid; outline-offset: 3px; }
+
+    /* ─── SVG OVERLAY ─── */
+    .bdry-svg {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none; overflow: visible;
+    }
+
+    /* ─── EXTERNAL BOX ─── */
+    .external-col {
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .5rem;
+    }
+    .ext-tag {
+      font-size: .65rem; font-weight: 700;
+      letter-spacing: .1em; text-transform: uppercase;
+      color: #8b949e;
+    }
+
+    /* ─── INFRA ROW ─── */
+    .infra-section { padding: 0 2rem 1.5rem; }
+    .infra-connectors {
+      display: flex; align-items: center;
+      font-size: .65rem; color: #8b949e;
+      padding-bottom: .4rem;
+    }
+    .ic-spacer { flex: 1; text-align: center; }
+    .ic-arrow  { width: 80px; text-align: center; flex-shrink: 0; color: #3d444d; font-size: .75rem; letter-spacing: -1px; }
+    .infra-row { display: flex; align-items: stretch; gap: 1rem; }
+    .infra-node {
+      flex: 1;
+      border: 1px solid #21262d;
+      border-radius: 8px;
+      padding: .8rem 1rem;
+      cursor: pointer;
+      transition: border-color .15s, transform .15s;
+    }
+    .infra-node:hover { border-color: #58a6ff55; transform: translateY(-3px); }
+    .in-cat  { font-size: .6rem; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: #8b949e; display: block; margin-bottom: .25rem; }
+    .in-name { font-size: .95rem; font-weight: 700; display: block; }
+    .in-desc { font-size: .75rem; color: #8b949e; display: block; margin-top: .2rem; }
+
+    /* ─── DETAIL PANEL ─── */
+    .detail-panel {
+      display: none;
+      margin: 1rem 2rem 1.5rem;
+      background: #21262d;
+      border: 1px solid #30363d;
+      border-radius: 10px;
+      padding: 1.2rem 1.5rem;
+      transition: border-color .2s;
+    }
+    .detail-panel.show { display: block; }
+    .dp-title { font-size: 1.05rem; font-weight: 700; margin-bottom: .5rem; }
+    .dp-body  { font-size: .85rem; color: #8b949e; line-height: 1.6; }
+    .dp-body code {
+      font-family: 'Fira Code', 'Consolas', monospace;
+      font-size: .8rem;
+      background: rgba(88,166,255,.08);
+      border: 1px solid rgba(88,166,255,.16);
+      border-radius: 4px;
+      padding: .1rem .3rem;
+      color: #58a6ff;
+    }
+    .dp-body a {
+      color: #58a6ff;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .dp-body a:hover {
+      text-decoration: underline;
+      opacity: 0.8;
+    }
+
+    /* ─── OVERVIEW BAR ─── */
+    .overview-bar {
+      background: #0d1117;
+      border-top: 1px solid #21262d;
+      padding: 1rem 2rem;
+      font-size: .85rem;
+      color: #8b949e;
+      line-height: 1.7;
+    }
+    .overview-bar strong { color: #c9d1d9; font-weight: 600; }
+    .overview-bar code {
+      font-family: 'Fira Code', 'Consolas', monospace;
+      font-size: .8rem;
+      background: rgba(88,166,255,.08);
+      border: 1px solid rgba(88,166,255,.16);
+      border-radius: 4px;
+      padding: .1rem .3rem;
+      color: #58a6ff;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <h1>Practica 02 — Diagrama de Arquitectura</h1>
+    <div class="sub">hello_world_app · Flutter · Desarrollo Movil Integral</div>
+    <div class="meta-row">
+      <span class="meta-chip"><strong>Alumno:</strong> Angel de Jesus Banos Tellez</span>
+      <span class="meta-chip"><strong>Docente:</strong> M.T.I. Marco A. Ramirez Hernandez</span>
+      <span class="meta-chip"><strong>Ciclo:</strong> Sep – Dic 2026</span>
+      <span class="meta-chip"><strong>Grupo:</strong> 10A</span>
+    </div>
+  </div>
+
+  <!-- DIAGRAM PANEL -->
+  <div class="panel">
+
+    <!-- TOP BAR -->
+    <div class="top-bar">
+      <div>
+        <div class="diag-title">hello_world_app — Architecture</div>
+        <div class="diag-sub">Flutter Chat App · Widget hierarchy and layer view</div>
+      </div>
+      <div class="filter-group">
+        <span class="filter-hint">Haz clic en un componente para inspeccionarlo</span>
+        <div class="filters">
+          <button class="fbtn active" data-f="all">
+            <span class="dot" style="background:#58a6ff"></span>All flows
+          </button>
+          <button class="fbtn" data-f="ui">
+            <span class="dot" style="background:#027DFD"></span>UI
+          </button>
+          <button class="fbtn" data-f="state">
+            <span class="dot" style="background:#a371f7"></span>State
+          </button>
+          <button class="fbtn" data-f="domain">
+            <span class="dot" style="background:#3fb950"></span>Domain
+          </button>
+          <button class="fbtn" data-f="dev" style="color:#79c0ff;">
+            <span class="dot" style="background:#1f6feb"></span>Dev
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- DIAGRAM AREA -->
+    <div class="diagram-area">
+
+      <!-- OUTER BOUNDARY -->
+      <div class="boundary" id="boundary">
+        <span class="bdry-label">APP / DART BOUNDARY</span>
+
+        <div class="bdry-grid">
+
+          <!-- Entry Point -->
+          <div>
+            <div class="nc nc-entry" id="nc-entry" onclick="pick('entry')">
+              <span class="nc-cat">Entry Point</span>
+              <span class="nc-name">main() + MyApp</span>
+              <span class="nc-desc">StatelessWidget</span>
+            </div>
+          </div>
+
+          <!-- Presentation Layer (inner zone) -->
+          <div class="izone iz-pres" id="iz-pres">
+            <span class="izone-label">PRESENTATION LAYER</span>
+            <div class="pres-grid">
+
+              <!-- Screen sub-zone -->
+              <div class="szone" id="sz-screen">
+                <span class="szone-label">SCREEN LAYER</span>
+                <div class="szone-inner">
+                  <div class="nc nc-screen" id="nc-screen" onclick="pick('screen')">
+                    <span class="nc-cat">Screen</span>
+                    <span class="nc-name">ChatScreen</span>
+                    <span class="nc-desc">StatefulWidget</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Widget sub-zone -->
+              <div class="szone" id="sz-widget">
+                <span class="szone-label">WIDGET LAYER</span>
+                <div class="szone-inner">
+                  <div class="nc nc-widget" id="nc-mymsg" onclick="pick('mymsg')">
+                    <span class="nc-cat">Widget</span>
+                    <span class="nc-name">MyMessageBubble</span>
+                    <span class="nc-desc">Mensaje propio</span>
+                  </div>
+                  <div class="nc nc-widget" id="nc-hermsg" onclick="pick('hermsg')">
+                    <span class="nc-cat">Widget</span>
+                    <span class="nc-name">HerMessageBubble</span>
+                    <span class="nc-desc">Mensaje recibido</span>
+                  </div>
+                  <div class="nc nc-widget" id="nc-msgbox" onclick="pick('msgbox')">
+                    <span class="nc-cat">Widget</span>
+                    <span class="nc-name">MessageFieldBox</span>
+                    <span class="nc-desc">Input de texto</span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- State / Domain Zone (inner zone) -->
+          <div class="izone iz-domain" id="iz-domain">
+            <span class="izone-label">STATE / DOMAIN ZONE</span>
+            <div class="domain-stack">
+              <div class="nc nc-prov" id="nc-prov" onclick="pick('prov')">
+                <span class="nc-cat">Provider</span>
+                <span class="nc-name">ChatProvider</span>
+                <span class="nc-desc">ChangeNotifier</span>
+              </div>
+              <div class="nc nc-entity" id="nc-msg" onclick="pick('msg')">
+                <span class="nc-cat">Data Layer</span>
+                <span class="nc-name">Message</span>
+                <span class="nc-desc">text · imageUrl · fromWho</span>
+              </div>
+              <div class="nc nc-enum" id="nc-enum" onclick="pick('enum')">
+                <span class="nc-cat">Data Layer</span>
+                <span class="nc-name">FromWho</span>
+                <span class="nc-desc">mine · hers</span>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /bdry-grid -->
+
+        <svg class="bdry-svg" id="bdry-svg"></svg>
+      </div><!-- /boundary -->
+
+      <!-- EXTERNAL: AppTheme -->
+      <div class="external-col">
+        <span class="ext-tag">External Services</span>
+        <div class="nc nc-config" id="nc-theme" onclick="pick('theme')">
+          <span class="nc-cat">Config</span>
+          <span class="nc-name">AppTheme</span>
+          <span class="nc-desc">selectedColor<br>Material 3</span>
+        </div>
+      </div>
+
+    </div><!-- /diagram-area -->
+
+    <!-- INFRA ROW -->
+    <div class="infra-section">
+      <div class="infra-connectors">
+        <span class="ic-spacer">build tools</span>
+        <span class="ic-arrow">-----------&gt;</span>
+        <span class="ic-spacer">dependencies</span>
+        <span class="ic-arrow">-----------&gt;</span>
+        <span class="ic-spacer">version control</span>
+        <span class="ic-arrow">-----------&gt;</span>
+        <span class="ic-spacer">remote repository</span>
+      </div>
+      <div class="infra-row">
+        <div class="infra-node" id="ni-flutter" onclick="pick('flutter')">
+          <span class="in-cat">Build Tools</span>
+          <span class="in-name">Flutter SDK</span>
+          <span class="in-desc">Dart framework</span>
+        </div>
+        <div class="infra-node" id="ni-pub" onclick="pick('pub')">
+          <span class="in-cat">Package Manager</span>
+          <span class="in-name">pub / pubspec</span>
+          <span class="in-desc">google_fonts · icons</span>
+        </div>
+        <div class="infra-node" id="ni-git" onclick="pick('git')">
+          <span class="in-cat">Source Control</span>
+          <span class="in-name">Git</span>
+          <span class="in-desc">Local version control</span>
+        </div>
+        <div class="infra-node" id="ni-github" onclick="pick('github')">
+          <span class="in-cat">Source Control</span>
+          <span class="in-name">GitHub</span>
+          <span class="in-desc">Remote · Pages</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- DETAIL PANEL -->
+    <div class="detail-panel" id="detail-panel">
+      <div class="dp-title" id="dp-title"></div>
+      <div class="dp-body"  id="dp-body"></div>
+    </div>
+
+    <!-- OVERVIEW BAR -->
+    <div class="overview-bar">
+      <strong>Overview.</strong>
+      <code>MyApp</code> inicializa <code>MaterialApp</code> con <code>AppTheme</code>
+      y establece <code>ChatScreen</code> como pantalla <code>home</code>.
+      <code>ChatScreen</code> renderiza <code>MyMessageBubble</code> o <code>HerMessageBubble</code>
+      segun el valor de <code>FromWho</code>.
+      <code>MessageFieldBox</code> captura el input del usuario.
+      <code>ChatProvider</code> gestiona <code>List&lt;Message&gt;</code> y expone <code>sendMessage()</code>.
+    </div>
+
+  </div><!-- /panel -->
+
+  <script>
+    const baseUrl = 'https://github.com/AngelJdev/10A-DMI/blob/main/hello_world_app/';
+
+    const DATA = {
+      entry: {
+        color: '#58a6ff',
+        title: 'main() + MyApp — Entry Point',
+        body: `Archivo: <a href="\${baseUrl}lib/main.dart" target="_blank" rel="noopener"><code>lib/main.dart</code></a><br><br>
+<code>main()</code> ejecuta <code>runApp(const MyApp())</code>.<br>
+<code>MyApp</code> es un <code>StatelessWidget</code> que retorna <code>MaterialApp</code>
+con <code>debugShowCheckedModeBanner: false</code>,
+tema de <code>AppTheme(selectedColor: 0)</code>
+y <code>home: const ChatScreen()</code>.`
+      },
+      screen: {
+        color: '#54c5f8',
+        title: 'ChatScreen — Pantalla principal',
+        body: `Archivo: <a href="\${baseUrl}lib/presentation/chat/chat_screen.dart" target="_blank" rel="noopener"><code>lib/presentation/chat/chat_screen.dart</code></a><br><br>
+<code>StatefulWidget</code> que mantiene <code>List&lt;Map&lt;String, dynamic&gt;&gt; messages</code>
+y un <code>ScrollController</code> para auto-scroll.<br>
+El <code>AppBar</code> muestra un <code>CircleAvatar</code> con imagen de red.<br>
+El body contiene un <code>ListView.builder</code> que elige entre
+<code>MyMessageBubble</code> / <code>HerMessageBubble</code> segun el campo <code>isMine</code>.`
+      },
+      mymsg: {
+        color: '#3fb950',
+        title: 'MyMessageBubble — Burbuja propia',
+        body: `Archivo: <a href="\${baseUrl}lib/presentation/widgets/chat/my_message_bubble.dart" target="_blank" rel="noopener"><code>lib/presentation/widgets/chat/my_message_bubble.dart</code></a><br><br>
+<code>StatelessWidget</code>. Columna alineada a la <strong>derecha</strong>
+(<code>CrossAxisAlignment.end</code>).<br>
+Usa <code>colors.primary</code> del tema activo, texto blanco, borde redondeado de 20 px.`
+      },
+      hermsg: {
+        color: '#3fb950',
+        title: 'HerMessageBubble — Burbuja recibida',
+        body: `Archivo: <a href="\${baseUrl}lib/presentation/widgets/chat/her_message_bubble.dart" target="_blank" rel="noopener"><code>lib/presentation/widgets/chat/her_message_bubble.dart</code></a><br><br>
+<code>StatelessWidget</code>. Columna alineada a la <strong>izquierda</strong>
+(<code>CrossAxisAlignment.start</code>).<br>
+Usa <code>colors.secondary</code> del tema activo, texto blanco, borde redondeado de 20 px.`
+      },
+      msgbox: {
+        color: '#f0883e',
+        title: 'MessageFieldBox — Campo de entrada',
+        body: `Archivo: <a href="\${baseUrl}lib/presentation/widgets/shared/message_field_box.dart" target="_blank" rel="noopener"><code>lib/presentation/widgets/shared/message_field_box.dart</code></a><br><br>
+<code>StatefulWidget</code> con <code>TextEditingController</code> y <code>FocusNode</code>.<br>
+El boton de enviar y la tecla Enter llaman al callback <code>onValue(String)</code>
+definido en <code>ChatScreen</code>.`
+      },
+      prov: {
+        color: '#a371f7',
+        title: 'ChatProvider — Gestor de estado',
+        body: `Archivo: <a href="\${baseUrl}lib/presentation/providers/chat_provider.dart" target="_blank" rel="noopener"><code>lib/presentation/providers/chat_provider.dart</code></a><br><br>
+Extiende <code>ChangeNotifier</code>. Expone <code>List&lt;Message&gt; messageList</code>
+con mensajes iniciales y el metodo <code>sendMessage(String text)</code>
+que agrega <code>Message(fromWho: FromWho.mine)</code> y llama <code>notifyListeners()</code>.`
+      },
+      msg: {
+        color: '#7ee787',
+        title: 'Message — Entidad de dominio',
+        body: `Archivo: <a href="\${baseUrl}lib/domain/entities/message.dart" target="_blank" rel="noopener"><code>lib/domain/entities/message.dart</code></a><br><br>
+Clase con tres campos:<br>
+<code>final String text</code><br>
+<code>final String? imageUrl</code> (nullable)<br>
+<code>final FromWho fromWho</code>.<br>
+Representa un mensaje individual en la conversacion.`
+      },
+      enum: {
+        color: '#7ee787',
+        title: 'enum FromWho',
+        body: `Archivo: <a href="\${baseUrl}lib/domain/entities/message.dart" target="_blank" rel="noopener"><code>lib/domain/entities/message.dart</code></a><br><br>
+<code>enum FromWho { mine, hers }</code>.<br>
+Determina el tipo de burbuja que <code>ChatScreen</code> renderiza:<br>
+<code>mine</code> → <code>MyMessageBubble</code> (derecha)<br>
+<code>hers</code> → <code>HerMessageBubble</code> (izquierda).`
+      },
+      theme: {
+        color: '#ffa657',
+        title: 'AppTheme — Configuracion del tema',
+        body: `Archivo: <a href="\${baseUrl}lib/config/theme/app_theme.dart" target="_blank" rel="noopener"><code>lib/config/theme/app_theme.dart</code></a><br><br>
+Recibe <code>selectedColor</code> (int, 0–6) y retorna <code>ThemeData</code>
+con <code>useMaterial3: true</code> y <code>colorSchemeSeed</code>.<br>
+Paleta disponible: purpura, azul, teal, verde, amarillo, naranja, rosa.`
+      },
+      flutter: {
+        color: '#58a6ff',
+        title: 'Flutter SDK — Herramienta de build',
+        body: `SDK de Flutter para compilar el proyecto a Android, iOS, Web y Desktop.<br>
+Lenguaje: Dart. Version del entorno: <code>sdk: ^3.13.2</code> (definido en <code>pubspec.yaml</code>).`
+      },
+      pub: {
+        color: '#58a6ff',
+        title: 'pub / pubspec.yaml — Gestor de paquetes',
+        body: `Archivo: <a href="\${baseUrl}pubspec.yaml" target="_blank" rel="noopener"><code>pubspec.yaml</code></a><br><br>
+Dependencias: <code>google_fonts ^6.2.1</code>, <code>cupertino_icons ^1.0.8</code>.<br>
+DevDependencies: <code>flutter_lints ^6.0.0</code>.`
+      },
+      git: {
+        color: '#8b949e',
+        title: 'Git — Control de versiones local',
+        body: `Repositorio local Git. Gestiona el historial de cambios del proyecto.<br>
+El archivo <code>.gitignore</code> excluye el directorio <code>build/</code> y artefactos generados por el compilador.`
+      },
+      github: {
+        color: '#8b949e',
+        title: 'GitHub — Repositorio remoto',
+        body: `Repositorio: <a href="https://github.com/AngelJdev/10A-DMI" target="_blank" rel="noopener"><code>AngelJdev/10A-DMI</code></a><br><br>
+GitHub Pages publica el diagrama desde <code>/docs/practica-02/</code> en la rama <code>main</code>.`
+      }
+    };
+
+    // Evaluate template literals in DATA bodies
+    for (let key in DATA) {
+      DATA[key].body = DATA[key].body.replace(/\$\{baseUrl\}/g, baseUrl);
+    }
+
+    let cur = null;
+
+    function pick(key) {
+      if (cur) {
+        const prev = document.getElementById('nc-' + cur) || document.getElementById('ni-' + cur);
+        if (prev) { prev.classList.remove('selected'); prev.style.outlineColor = ''; }
+      }
+      cur = key;
+      const d = DATA[key];
+      if (!d) return;
+      const el = document.getElementById('nc-' + key) || document.getElementById('ni-' + key);
+      if (el) { el.classList.add('selected'); el.style.outlineColor = d.color + '88'; }
+
+      const panel = document.getElementById('detail-panel');
+      panel.classList.add('show');
+      panel.style.borderColor = d.color + '44';
+      document.getElementById('dp-title').innerHTML =
+        `<span style="color:${d.color}">${d.title}</span>`;
+      document.getElementById('dp-body').innerHTML = d.body;
+    }
+
+    /* Filter buttons */
+    document.querySelectorAll('.fbtn').forEach(btn => {
+      btn.addEventListener('click', function () {
+        document.querySelectorAll('.fbtn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+
+    /* SVG Arrows */
+    function drawArrows() {
+      const svg = document.getElementById('bdry-svg');
+      const bnd = document.getElementById('boundary');
+      if (!svg || !bnd) return;
+      svg.innerHTML = '';
+
+      const br = bnd.getBoundingClientRect();
+
+      function box(id) {
+        const el = document.getElementById(id);
+        if (!el) return null;
+        const r = el.getBoundingClientRect();
+        return {
+          cx: r.left - br.left + r.width / 2,
+          cy: r.top  - br.top  + r.height / 2,
+          l:  r.left - br.left,
+          r:  r.left - br.left + r.width,
+          t:  r.top  - br.top,
+          b:  r.top  - br.top  + r.height
+        };
+      }
+
+      // Marker defs
+      const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+      ['#58a6ff', '#a371f7', '#3fb950', '#f0883e'].forEach(c => {
+        const m = document.createElementNS('http://www.w3.org/2000/svg', 'marker');
+        m.setAttribute('id', 'mk' + c.slice(1));
+        m.setAttribute('markerWidth', '7'); m.setAttribute('markerHeight', '7');
+        m.setAttribute('refX', '5');        m.setAttribute('refY', '3');
+        m.setAttribute('orient', 'auto');
+        const p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        p.setAttribute('d', 'M0,0 L6,3 L0,6 Z'); p.setAttribute('fill', c);
+        m.appendChild(p); defs.appendChild(m);
+      });
+      svg.appendChild(defs);
+
+      const arrows = [
+        { from: 'nc-entry',  fs: 'r', to: 'nc-screen', ts: 'l', color: '#58a6ff', label: 'home: ChatScreen' },
+        { from: 'nc-screen', fs: 'r', to: 'nc-prov',   ts: 'l', color: '#a371f7', label: 'uses / notifies'  },
+        { from: 'nc-screen', fs: 'b', to: 'nc-mymsg',  ts: 't', color: '#3fb950', label: 'renders'           },
+        { from: 'nc-prov',   fs: 'b', to: 'nc-msg',    ts: 't', color: '#3fb950', label: 'List<Message>'     },
+        { from: 'nc-msg',    fs: 'b', to: 'nc-enum',   ts: 't', color: '#3fb950', label: 'uses enum'         },
+      ];
+
+      function pt(b, s) {
+        if (s === 'r') return [b.r, b.cy];
+        if (s === 'l') return [b.l, b.cy];
+        if (s === 'b') return [b.cx, b.b];
+        if (s === 't') return [b.cx, b.t];
+      }
+
+      arrows.forEach(a => {
+        const fb = box(a.from), tb = box(a.to);
+        if (!fb || !tb) return;
+        const [x1, y1] = pt(fb, a.fs);
+        let [x2, y2]   = pt(tb, a.ts);
+        if (a.ts === 'l') x2 -= 4;
+        if (a.ts === 't') y2 -= 4;
+
+        const mx = (x1 + x2) / 2, my = (y1 + y2) / 2;
+
+        let d;
+        if ((a.fs==='r'||a.fs==='l') && (a.ts==='r'||a.ts==='l')) {
+          d = `M${x1},${y1} C${x1+40},${y1} ${x2-40},${y2} ${x2},${y2}`;
+        } else if (a.fs==='b' && a.ts==='l') {
+          d = `M${x1},${y1} C${x1},${y1+30} ${x2-30},${y2} ${x2},${y2}`;
+        } else {
+          d = `M${x1},${y1} L${x2},${y2}`;
+        }
+
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('d', d);
+        path.setAttribute('fill', 'none');
+        path.setAttribute('stroke', a.color);
+        path.setAttribute('stroke-width', '1.4');
+        path.setAttribute('opacity', '0.65');
+        path.setAttribute('marker-end', `url(#mk${a.color.slice(1)})`);
+        svg.appendChild(path);
+
+        // Label background
+        const lw = a.label.length * 5.5;
+        const bg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        bg.setAttribute('x', mx - lw/2 - 4); bg.setAttribute('y', my - 16);
+        bg.setAttribute('width', lw + 8);     bg.setAttribute('height', 14);
+        bg.setAttribute('rx', '3');           bg.setAttribute('fill', '#161b22');
+        bg.setAttribute('opacity', '0.93');
+        svg.appendChild(bg);
+
+        const txt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        txt.setAttribute('x', mx); txt.setAttribute('y', my - 5);
+        txt.setAttribute('text-anchor', 'middle');
+        txt.setAttribute('font-size', '9');
+        txt.setAttribute('font-family', 'Inter, sans-serif');
+        txt.setAttribute('font-weight', '600');
+        txt.setAttribute('fill', a.color);
+        txt.setAttribute('opacity', '0.9');
+        txt.textContent = a.label;
+        svg.appendChild(txt);
+      });
+    }
+
+    window.addEventListener('load',   drawArrows);
+    window.addEventListener('resize', drawArrows);
+  </script>
+
+</body>
+</html>
