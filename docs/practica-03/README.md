@@ -12,7 +12,7 @@
 ---
 
 <p align="center">
-  <a href="https://angeljdev.github.io/10A-DMI/practica-03/Docs/Architecture/yes_no_app_architecture.html"><strong>🌐 Diagrama interactivo · GitHub Pages</strong></a>
+  <a href="https://angeljdev.github.io/10A-DMI/practica-03/"><strong>🌐 Diagrama interactivo · GitHub Pages</strong></a>
 </p>
 
 ## 1. Objetivo de la práctica
@@ -94,7 +94,7 @@ La dependencia apunta hacia el dominio: `presentation → config / infrastructur
 
 ### Diagramas
 
-- [Arquitectura interactiva (Archify)](https://angeljdev.github.io/10A-DMI/practica-03/Docs/Architecture/yes_no_app_architecture.html)
+- [Arquitectura interactiva (Archify)](https://angeljdev.github.io/10A-DMI/practica-03/)
 - [Capas y dependencias](Docs/Architecture/01-layers.md)
 - [Secuencia de pregunta y respuesta](Docs/Architecture/02-question-sequence.md)
 - [Ciclo de vida del mensaje](Docs/Architecture/03-message-lifecycle.md)
