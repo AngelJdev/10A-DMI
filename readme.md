@@ -29,4 +29,4 @@
 
 #### Diagramas interactivos
 
-- [Práctica 03 — Arquitectura de Yes/No App](https://angeljdev.github.io/10A-DMI/practica-03/Docs/Architecture/yes_no_app_architecture.html)
+- [Práctica 03 — Arquitectura de Yes/No App](https://angeljdev.github.io/10A-DMI/practica-03/)
