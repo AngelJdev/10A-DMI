@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Arquitectura por capas · Yes No App</title>
+    <meta name="description" content="Diagrama interactivo de la arquitectura de Yes No App.">
+    <style>
+      :root { --bg:#07111f; --panel:#0d1a2c; --panel-2:#11243a; --line:#31516d; --ink:#e7f0fa; --muted:#91a6bc; --front:#18c9e6; --back:#31d09b; --domain:#ad75ff; --external:#9aa9bc; --focus:#ffd166; }
+      * { box-sizing:border-box; }
+      body { margin:0; min-width:320px; color:var(--ink); background:radial-gradient(circle at 50% 0,#102c49 0,var(--bg) 55%); font:14px/1.45 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif; }
+      header { display:flex; justify-content:space-between; align-items:center; gap:20px; max-width:1440px; margin:auto; padding:18px 28px; border-bottom:1px solid #17324d; }
+      h1 { margin:0; font-size:clamp(1.1rem,2.5vw,1.45rem); }
+      header p { margin:3px 0 0; color:var(--muted); font-size:.85rem; }
+      .tag { padding:6px 10px; color:#8df2ff; border:1px solid #1c7890; border-radius:7px; background:#092339; font-size:.75rem; white-space:nowrap; }
+      main { width:min(1370px,calc(100% - 32px)); margin:28px auto 48px; }
+      .legend { display:flex; flex-wrap:wrap; gap:16px; margin:0 0 16px; color:var(--muted); font-size:.8rem; }
+      .legend span::before { content:""; display:inline-block; width:9px; height:9px; margin-right:6px; border-radius:50%; background:var(--swatch); }
+      .board { overflow:auto; padding:25px; border:1px solid #153754; border-radius:13px; background:linear-gradient(135deg,#091727,#0a1524); box-shadow:0 20px 50px #0008; }
+      .canvas { position:relative; display:grid; grid-template-columns:repeat(4,minmax(190px,1fr)); gap:34px 56px; min-width:950px; padding:20px; }
+      .node { position:relative; z-index:1; width:100%; min-height:106px; padding:15px 16px; border:1px solid var(--color); border-radius:10px; background:linear-gradient(135deg,#10263a,#0b1829); color:var(--ink); cursor:pointer; text-align:left; box-shadow:inset 0 0 0 1px #ffffff08,0 6px 18px #0004; transition:transform .16s,box-shadow .16s,outline .16s; }
+      .node:hover,.node:focus { transform:translateY(-3px); box-shadow:0 0 0 2px var(--focus),0 12px 24px #0008; outline:0; }
+      .node::before { content:attr(data-layer); display:block; margin-bottom:9px; color:var(--color); font-size:.65rem; font-weight:800; letter-spacing:.09em; text-transform:uppercase; }
+      .node strong { display:block; font-size:.98rem; }
+      .node small { display:block; margin-top:6px; color:var(--muted); font-size:.76rem; }
+      .front { --color:var(--front); } .back { --color:var(--back); } .domain { --color:var(--domain); } .external { --color:var(--external); }
+      .arrow { position:absolute; z-index:0; height:2px; background:var(--line); transform-origin:left center; }
+      .arrow::after { content:""; position:absolute; right:-1px; top:-4px; border-top:5px solid transparent; border-bottom:5px solid transparent; border-left:8px solid var(--line); }
+      .a1 { left:24%; top:99px; width:10%; } .a2 { left:48%; top:99px; width:10%; } .a3 { left:73%; top:99px; width:10%; }
+      .a4 { left:36%; top:270px; width:18%; transform:rotate(90deg); } .a5 { left:61%; top:270px; width:18%; transform:rotate(90deg); }
+      .detail { display:grid; grid-template-columns:1.5fr 1fr; gap:16px; margin-top:22px; }
+      .card { min-height:125px; padding:19px; border:1px solid #1a3c59; border-radius:11px; background:var(--panel); }
+      .card h2 { margin:0 0 8px; color:#86eefd; font-size:1rem; } .card p { margin:0; color:var(--muted); }
+      .flow { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:22px; }
+      .flow div { padding:14px; border-top:3px solid var(--back); border-radius:8px; background:var(--panel-2); color:var(--muted); font-size:.82rem; }
+      .flow b { display:block; margin-bottom:4px; color:var(--ink); }
+      footer { max-width:1370px; margin:0 auto; padding:0 16px 30px; color:var(--muted); text-align:center; font-size:.8rem; }
+      code { color:#a9e6ff; }
+      @media (max-width:700px) { header { padding:16px; } .detail,.flow { grid-template-columns:1fr; } .board { padding:12px; } }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div>
+        <h1>Arquitectura por capas · Yes No App</h1>
+        <p>Práctica 03 · Desarrollo Móvil Integral · Angel de Jesus Baños Tellez · 230592</p>
+      </div>
+      <span class="tag">● INTERACTIVO</span>
+    </header>
+    <main>
+      <div class="legend" aria-label="Leyenda">
+        <span style="--swatch:var(--front)">Frontend</span>
+        <span style="--swatch:var(--back)">Lógica y datos</span>
+        <span style="--swatch:var(--domain)">Dominio</span>
+        <span style="--swatch:var(--external)">Servicio externo</span>
+      </div>
+      <section class="board" aria-label="Diagrama de arquitectura. Selecciona un bloque para ver su detalle.">
+        <div class="canvas">
+          <button class="node front" data-layer="Frontend" data-title="YesNoApp y AppTheme" data-text="main.dart crea ChangeNotifierProvider y configura MaterialApp. AppTheme centraliza el esquema de color y Material 3."><strong>YesNoApp + AppTheme</strong><small>Composition root y tema visual</small></button>
+          <button class="node front" data-layer="Frontend" data-title="ChatScreen y burbujas" data-text="ChatScreen consume ChatProvider y renderiza MyMessageBubble, HerMessageBubble y MessageTimeLabel. Las burbujas muestran texto, GIF opcional y hora."><strong>ChatScreen + Burbujas</strong><small>Presentación de la conversación</small></button>
+          <button class="node front" data-layer="Frontend" data-title="MessageFieldBox" data-text="El campo limpia espacios, conserva el foco y envía el texto mediante el botón o la acción Send del teclado."><strong>MessageFieldBox</strong><small>Entrada de texto del usuario</small></button>
+          <button class="node back" data-layer="Estado" data-title="ChatProvider" data-text="Guarda la lista de Message, agrega el estado de carga, desplaza el chat y encadena las consultas con _answerQueue para mantener el orden."><strong>ChatProvider</strong><small>ChangeNotifier · cola · scroll</small></button>
+          <span class="arrow a1" aria-hidden="true"></span><span class="arrow a2" aria-hidden="true"></span><span class="arrow a3" aria-hidden="true"></span>
+          <button class="node back" data-layer="Lógica" data-title="GetYesNoAnswer y AnswerWeights" data-text="Elige yes/no/maybe con pesos 40/40/20 y consulta la API una vez con el parámetro force. Convierte fallos de Dio y formato a YesNoException."><strong>GetYesNoAnswer</strong><small>Dio · pesos · manejo de errores</small></button>
+          <button class="node domain" data-layer="Dominio" data-title="Message" data-text="Entidad Dart pura que representa el texto, origen, hora, URL de imagen y estado de carga. No conoce Flutter ni Dio."><strong>Message</strong><small>Entidad de dominio</small></button>
+          <button class="node back" data-layer="Datos" data-title="YesNoModel" data-text="Valida el JSON de yesno.wtf y lo traduce a una respuesta visible en español con el GIF correspondiente."><strong>YesNoModel</strong><small>DTO · validación · traducción</small></button>
+          <button class="node external" data-layer="Externo" data-title="yesno.wtf" data-text="Servicio REST público. Recibe GET /api?force=yes|no|maybe y devuelve answer, forced e image."><strong>yesno.wtf</strong><small>API pública de respuestas</small></button>
+          <span class="arrow a4" aria-hidden="true"></span><span class="arrow a5" aria-hidden="true"></span>
+        </div>
+      </section>
+      <section class="detail" aria-live="polite">
+        <article class="card"><h2 id="detail-title">Selecciona un componente</h2><p id="detail-text">Cada bloque del diagrama corresponde a un componente real de la práctica. Selecciónalo para consultar su responsabilidad.</p></article>
+        <article class="card"><h2>Regla de dependencias</h2><p><code>presentation → config / infrastructure → domain</code>. El dominio se mantiene independiente de Flutter y del cliente HTTP.</p></article>
+      </section>
+      <section class="flow" aria-label="Recorrido de una pregunta">
+        <div><b>1. Entrada</b>El usuario envía un texto terminado en <code>?</code>.</div>
+        <div><b>2. Cola</b>ChatProvider añade la burbuja de carga y conserva la secuencia.</div>
+        <div><b>3. Consulta</b>Se elige una opción y se consulta <code>yesno.wtf</code> con <code>force</code>.</div>
+        <div><b>4. Respuesta</b>El modelo se convierte en mensaje con texto, GIF y hora.</div>
+      </section>
+    </main>
+    <footer>Diagrama de arquitectura interactivo · Publicado con GitHub Pages</footer>
+    <script>
+      const title = document.querySelector('#detail-title');
+      const text = document.querySelector('#detail-text');
+      document.querySelectorAll('.node').forEach((node) => node.addEventListener('click', () => {
+        title.textContent = node.dataset.title;
+        text.textContent = node.dataset.text;
+      }));
+    </script>
+  </body>
+</html>
