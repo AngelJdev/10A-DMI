@@ -27,5 +27,4 @@ class LocalVideoModel {
         likes: likes,
         views: views
       );
-  }
 }
