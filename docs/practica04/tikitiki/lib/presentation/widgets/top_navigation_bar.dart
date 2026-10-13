@@ -23,11 +23,20 @@ class TopNavigationBar extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
         child: Row(
           children: [
-            // Botón de Selector de Temporada (Mecanismo de prueba)
-            IconButton(
-              icon: Icon(seasonTheme.badgeIcon, color: seasonTheme.primaryColor, size: 24),
-              tooltip: 'Temporada: ${seasonTheme.displayName}',
-              onPressed: () => SeasonSelectorDialog.show(context),
+            // 🎨 Logo dinámico por temporada — cambia según la fecha detectada
+            // (Halloween, Navidad, San Valentín o Normal)
+            // Al tocar abre el selector de temporada para pruebas/documentación
+            GestureDetector(
+              onTap: () => SeasonSelectorDialog.show(context),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.asset(
+                  seasonTheme.logoAsset,
+                  width: 42,
+                  height: 42,
+                  fit: BoxFit.cover,
+                ),
+              ),
             ),
 
             // Pestañas Centrales: Discover | For You | Favorites con amplio espaciado

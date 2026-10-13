@@ -9,16 +9,19 @@ class YouTubeVideoDatasourceImpl implements YouTubeVideoDatasource {
   Future<List<VideoModel>> getVideos() async {
     await Future.delayed(const Duration(milliseconds: 300));
 
-    // Videos en streaming directo sin interfaces web de terceros (solo el video limpio)
+    // Videos MP4 públicos de Archive.org y Wikimedia Commons (sin CORS/referrer)
+    // Se usan como sustituto de YouTube para evitar el 403 desde emulador
     final List<Map<String, dynamic>> onlineClips = [
       {
         'id': 'yt_vid_1',
         'url':
-            'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
-        'usuario': '@google_developers',
+            'https://archive.org/download/Sintel/sintel-2048-surround.mp4',
+        'usuario': '@blender_foundation',
         'descripcion':
-            'Novedades de Inteligencia Artificial y Flutter: renderizado nativo a 60 FPS con Clean Architecture. #GoogleIO #Flutter #Dart #CleanCode',
-        'cancion': 'Google Developers Audio - Tech Pulse',
+            'Sintel — cortometraje épico de fantasía producido por Blender Foundation. '
+            'Demuestra el poder del renderizado Cycles y la animación procedural. '
+            '#Blender #Fantasy #OpenMovie #3DAnimation #FlutterDev',
+        'cancion': 'Sintel OST - Jan Morgenstern',
         'likes': 158000,
         'comentarios': 4500,
         'compartidos': 3200,
@@ -29,11 +32,13 @@ class YouTubeVideoDatasourceImpl implements YouTubeVideoDatasource {
       {
         'id': 'yt_vid_2',
         'url':
-            'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
-        'usuario': '@flutter_devs',
+            'https://archive.org/download/TearsOfSteel/tears_of_steel_720p.mov',
+        'usuario': '@mango_studio',
         'descripcion':
-            'Construcción de interfaces fluidas estilo TikTok en dispositivos móviles: State Management con Providers y consumo de múltiples datasources. #FlutterDev #Mobile #CodeLife',
-        'cancion': 'LoFi Coding Beats - Chill Wave',
+            'Tears of Steel — corto VFX open-source de Blender. '
+            'Integración de live action con efectos visuales en tiempo real. '
+            '#VFX #Blender #OpenSource #CGI #DigitalCinema',
+        'cancion': 'Tears of Steel OST - Joram van Hartingsveldt',
         'likes': 89200,
         'comentarios': 740,
         'compartidos': 510,
@@ -44,10 +49,12 @@ class YouTubeVideoDatasourceImpl implements YouTubeVideoDatasource {
       {
         'id': 'yt_vid_3',
         'url':
-            'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4',
+            'https://archive.org/download/BigBuckBunny_124/Content/big_buck_bunny_720p_surround.mp4',
         'usuario': '@tech_creators',
         'descripcion':
-            'Clean Code en aplicaciones móviles: separación estricta de capas Domain, Data y Presentation para desacoplamiento total. #CleanCode #DartLang #SoftwareArchitecture',
+            'Clean Code en aplicaciones móviles: separación estricta de capas '
+            'Domain, Data y Presentation para desacoplamiento total. '
+            '#CleanCode #DartLang #SoftwareArchitecture #Flutter',
         'cancion': 'Synthwave Chill - Retro Future',
         'likes': 42100,
         'comentarios': 280,
@@ -59,10 +66,12 @@ class YouTubeVideoDatasourceImpl implements YouTubeVideoDatasource {
       {
         'id': 'yt_vid_4',
         'url':
-            'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyBlazes.mp4',
+            'https://archive.org/download/ElephantsDream/ed_1024_512kb.mp4',
         'usuario': '@creative_code',
         'descripcion':
-            'Microinteracciones y gradientes dinámicos adaptados a la temporada del año (Halloween, Día de Muertos, Navidad y San Valentín). #UIDesign #CreativeDev',
+            'Microinteracciones y gradientes dinámicos adaptados a la temporada del año '
+            '(Halloween, Día de Muertos, Navidad y San Valentín). '
+            '#UIDesign #CreativeDev #Flutter #SeasonalTheme',
         'cancion': 'Cyber Beats 2026 - Digital Energy',
         'likes': 67500,
         'comentarios': 920,

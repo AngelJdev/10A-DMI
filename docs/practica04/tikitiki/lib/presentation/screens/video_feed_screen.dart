@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../providers/video_feed_provider.dart';
 import '../widgets/video_player_item.dart';
 
@@ -42,6 +43,7 @@ class _VideoFeedScreenState extends State<VideoFeedScreen> {
     return PageView.builder(
       controller: _pageController,
       scrollDirection: Axis.vertical,
+      // Mantiene solo el item actual + 1 adyacente vivo para liberar memoria
       itemCount: videoFeedProvider.forYouVideos.length,
       onPageChanged: (index) {
         setState(() {
@@ -50,10 +52,15 @@ class _VideoFeedScreenState extends State<VideoFeedScreen> {
       },
       itemBuilder: (context, index) {
         final video = videoFeedProvider.forYouVideos[index];
-        return VideoPlayerItem(
-          video: video,
-          isCurrentInFeed: index == _currentPage,
-        );
+        // Solo renderiza los items cercanos al actual (±1)
+        final isNearby = (index - _currentPage).abs() <= 1;
+        return isNearby
+            ? VideoPlayerItem(
+                key: ValueKey(video.id),
+                video: video,
+                isCurrentInFeed: index == _currentPage,
+              )
+            : Container(color: Colors.black);
       },
     );
   }

@@ -45,20 +45,41 @@ class SeasonProvider extends ChangeNotifier {
   }
 
   void _detectSeasonByDate() {
-    final now = DateTime.now();
-    // Octubre -> Halloween
-    if (now.month == 10) {
+    // ─────────────────────────────────────────────────────────────────────────
+    // 🔧 VARIABLE DE SIMULACIÓN — Para cambiar la fecha en pruebas/demostración:
+    //    Cambia `simulatedDate` a una fecha específica y reinicia la app.
+    //    Pon `null` para que use la fecha real del dispositivo.
+    //
+    //    Ejemplos para pruebas:
+    //      DateTime(2026, 10, 20)  → Halloween  🎃
+    //      DateTime(2026, 12, 15)  → Navidad    🎄
+    //      DateTime(2026, 2, 10)   → San Valentín ❤️
+    //      null                    → Fecha real del dispositivo
+    // ─────────────────────────────────────────────────────────────────────────
+    const DateTime? simulatedDate = null; // <-- CAMBIA AQUÍ PARA SIMULAR
+    // ─────────────────────────────────────────────────────────────────────────
+
+    final now = simulatedDate ?? DateTime.now();
+    final month = now.month;
+    final day = now.day;
+
+    // 🎃 Halloween / Día de Muertos: 15 oct → 31 oct
+    if (month == 10 && day >= 15) {
       _currentSeason = Season.halloween;
     }
-    // Diciembre -> Navidad
-    else if (now.month == 12) {
+    // 🎄 Navidad: 10 dic → 31 dic
+    else if (month == 12 && day >= 10) {
       _currentSeason = Season.christmas;
     }
-    // Febrero -> San Valentín
-    else if (now.month == 2) {
+    // ❤️ San Valentín: 1 feb → 14 feb
+    else if (month == 2 && day <= 14) {
       _currentSeason = Season.valentines;
     }
-    // Resto del año -> Normal
+    // 🕷️ Pre-Halloween (atmosférico): 1 oct → 14 oct
+    else if (month == 10) {
+      _currentSeason = Season.halloween;
+    }
+    // Resto del año → Normal
     else {
       _currentSeason = Season.normal;
     }

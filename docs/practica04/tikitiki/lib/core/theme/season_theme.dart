@@ -17,6 +17,8 @@ class SeasonTheme {
   final IconData badgeIcon;
   final IconData musicIcon;
   final String audioAsset;
+  /// Logo de la app correspondiente a la temporada (para mostrar in-app)
+  final String logoAsset;
   final TextStyle headingStyle;
   final TextStyle bodyStyle;
   final TextStyle captionStyle;
@@ -36,6 +38,7 @@ class SeasonTheme {
     required this.badgeIcon,
     required this.musicIcon,
     required this.audioAsset,
+    required this.logoAsset,
     required this.headingStyle,
     required this.bodyStyle,
     required this.captionStyle,
@@ -59,6 +62,8 @@ class SeasonTheme {
           badgeIcon: Icons.nightlight_round,
           musicIcon: Icons.graphic_eq_rounded,
           audioAsset: 'assets/audio/halloween.wav',
+          // 🎃 Logo Halloween generado con Gemini (morado oscuro con telaraña)
+          logoAsset: 'assets/images/logo_splash.jpg',
           headingStyle: GoogleFonts.creepster(
             color: const Color(0xFFFF6B00),
             fontSize: 22,
@@ -100,6 +105,8 @@ class SeasonTheme {
           badgeIcon: Icons.ac_unit_rounded,
           musicIcon: Icons.music_note_rounded,
           audioAsset: 'assets/audio/christmas.wav',
+          // 🎄 Logo Navidad generado con Gemini (verde oscuro con adornos)
+          logoAsset: 'assets/images/logo_icon.jpg',
           headingStyle: GoogleFonts.mountainsOfChristmas(
             color: const Color(0xFFFFD700),
             fontSize: 24,
@@ -141,6 +148,8 @@ class SeasonTheme {
           badgeIcon: Icons.volunteer_activism_rounded,
           musicIcon: Icons.favorite_border_rounded,
           audioAsset: 'assets/audio/valentines.wav',
+          // ❤️ Logo San Valentín → usa el logo neutro (azul/naranja)
+          logoAsset: 'assets/images/logo_alt.jpg',
           headingStyle: GoogleFonts.dancingScript(
             color: const Color(0xFFFF2E93),
             fontSize: 26,
@@ -182,6 +191,8 @@ class SeasonTheme {
           badgeIcon: Icons.auto_awesome_rounded,
           musicIcon: Icons.graphic_eq_rounded,
           audioAsset: 'assets/audio/normal.wav',
+          // 🎯 Logo normal → azul/naranja (logo principal neutro del app)
+          logoAsset: 'assets/images/logo_alt.jpg',
           headingStyle: GoogleFonts.inter(
             color: Colors.white,
             fontSize: 20,

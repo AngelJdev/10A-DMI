@@ -9,50 +9,57 @@ class OnlineStreamDatasourceImpl implements OnlineStreamDatasource {
   Future<List<VideoModel>> getVideos() async {
     await Future.delayed(const Duration(milliseconds: 350));
 
-    // Videos en streaming MP4 directos de alta disponibilidad (Vimeo / CDN abiertos)
+    // Videos MP4 públicos de Archive.org (sin restricción CORS ni referrer)
+    // Seleccionados por ser ligeros y de acceso libre desde emuladores Android
     final List<Map<String, dynamic>> streamClips = [
       {
-        'id': 'vimeo_stream_1',
+        'id': 'stream_archive_1',
         'url':
-            'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
-        'usuario': '@vimeo_nature',
+            'https://archive.org/download/BigBuckBunny_124/Content/big_buck_bunny_720p_surround.mp4',
+        'usuario': '@nature_hd',
         'descripcion':
-            'Fascinante captura en alta resolución de fuego y naturaleza en movimiento. Grabado con óptica cinematográfica y etalonaje profesional de color HDR para dispositivos móviles. #Nature #VimeoStaffPick #Cinematography #FireAndIce #Landscape',
-        'cancion': 'Ambient Fire Symphony - Nature Sounds',
+            'Big Buck Bunny — cortometraje animado de Blender Foundation. '
+            'Ejemplo de animación 3D de alta calidad renderizada con software libre. '
+            '#Animation #OpenSource #Blender #3D #Nature',
+        'cancion': 'Big Buck Bunny OST - Jan Morgenstern',
         'likes': 65400,
         'comentarios': 3890,
         'compartidos': 2450,
-        'source': 'vimeo',
+        'source': 'archive',
         'thumbnailUrl':
             'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=500',
       },
       {
-        'id': 'dailymotion_stream_2',
+        'id': 'stream_archive_2',
         'url':
-            'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
-        'usuario': '@dailymotion_travel',
+            'https://archive.org/download/ElephantsDream/ed_1024_512kb.mp4',
+        'usuario': '@blender_studio',
         'descripcion':
-            'Explorando los rincones más impresionantes del mundo. Un viaje visual que desafía los sentidos y nos conecta con los horizontes lejanos de la aventura global. #Travel #Wanderlust #DailymotionTrends #AdventureTime',
-        'cancion': 'Acoustic Escape - Wanderer Melodies',
+            'Elephants Dream — primera producción open-movie de Blender. '
+            'Vanguardia del cine digital creado con herramientas de software libre. '
+            '#Blender #OpenMovie #CGI #DigitalArt',
+        'cancion': 'Elephants Dream OST - Jan Morgenstern',
         'likes': 48300,
         'comentarios': 2100,
         'compartidos': 1300,
-        'source': 'dailymotion',
+        'source': 'archive',
         'thumbnailUrl':
             'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=500',
       },
       {
-        'id': 'vimeo_stream_3',
+        'id': 'stream_archive_3',
         'url':
-            'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4',
-        'usuario': '@motion_graphics_lab',
+            'https://archive.org/download/Popeye_forPresident/Popeye_forPresident_512kb.mp4',
+        'usuario': '@classic_cartoons',
         'descripcion':
-            'Diseño interactivo y animación de personajes en 3D: el proceso creativo detrás de las mejores campañas publicitarias audiovisuales de la era digital.',
-        'cancion': 'Upbeat Electro Fun - Party Track',
+            'Popeye for President — dibujo animado clásico de 1956 del dominio público. '
+            'Parte del patrimonio cultural de la animación americana. '
+            '#Classic #Cartoon #PublicDomain #RetroAnimation',
+        'cancion': 'Popeye Theme - Classic',
         'likes': 77100,
         'comentarios': 4620,
         'compartidos': 3100,
-        'source': 'vimeo',
+        'source': 'archive',
         'thumbnailUrl':
             'https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=500',
       },
