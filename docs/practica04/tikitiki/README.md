@@ -223,8 +223,6 @@ Los dos diagramas se generaron con **Archify** y se publican como páginas inter
 
 ### Diagrama 1. Arquitectura local
 
-[![Diagrama de Archify: arquitectura local de TikiTiki con pantallas, estado, dominio, repositorio, preferencias y temporadas](../arquitectura/local.png)](https://angeljdev.github.io/10A-DMI/practica04/arquitectura/local.html)
-
 **[Explorar el diagrama local](https://angeljdev.github.io/10A-DMI/practica04/arquitectura/local.html)**
 
 La app se ejecuta en un teléfono Android o en el emulador de la computadora. Las pantallas envían las acciones al estado del feed; los casos de uso y el repositorio reúnen la información de los videos y las interacciones guardadas. El reproductor abre los archivos incluidos o los videos en línea.
@@ -232,8 +230,6 @@ La app se ejecuta en un teléfono Android o en el emulador de la computadora. La
 El like **0 → 1**, los favoritos y los comentarios se guardan en el dispositivo. La temporada se decide a partir de la fecha real, simulada o selección manual, y modifica el diseño, el sonido y el icono de Android. La palabra «backend» en la leyenda identifica lógica interna de la app, no un servidor propio.
 
 ### Diagrama 2. Appetize y GitHub Pages
-
-[![Diagrama de Archify: despliegue de TikiTiki mediante un APK en Appetize y publicación de los diagramas en GitHub Pages](../arquitectura/appetize.png)](https://angeljdev.github.io/10A-DMI/practica04/arquitectura/appetize.html)
 
 **[Explorar el diagrama de despliegue](https://angeljdev.github.io/10A-DMI/practica04/arquitectura/appetize.html)** · **[Abrir la demo en Appetize](https://appetize.io/app/b_wy3wolryxw65vyzxisnpzln6ay)**
 
