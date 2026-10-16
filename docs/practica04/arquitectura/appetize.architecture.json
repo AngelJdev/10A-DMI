@@ -1,0 +1,385 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "TikiTiki · Appetize y GitHub Pages",
+    "locale": "es",
+    "output": ".archify/architecture-tikitiki-appetize-20261016154156/tikitiki-appetize.html",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/AngelJdev/10A-DMI.git",
+      "revision": "20063d2951f446c2fed9d84c9362704b3591a297"
+    }
+  },
+  "components": [
+    {
+      "id": "proyecto",
+      "type": "backend",
+      "label": "Proyecto Flutter",
+      "sublabel": "Código y assets",
+      "pos": [
+        40,
+        60
+      ],
+      "size": [
+        170,
+        66
+      ],
+      "sources": [
+        {
+          "path": "docs/practica04/tikitiki/lib/main.dart",
+          "line": 19,
+          "end_line": 50
+        },
+        {
+          "path": "docs/practica04/tikitiki/pubspec.yaml",
+          "line": 75,
+          "end_line": 105
+        }
+      ]
+    },
+    {
+      "id": "apk",
+      "type": "backend",
+      "label": "APK de Android",
+      "sublabel": "Compilar y comprobar",
+      "pos": [
+        330,
+        60
+      ],
+      "size": [
+        170,
+        66
+      ],
+      "sources": [
+        {
+          "path": "docs/practica04/tikitiki/deployment.json",
+          "line": 1,
+          "end_line": 12
+        },
+        {
+          "path": "docs/practica04/tikitiki/README.md",
+          "line": 192,
+          "end_line": 206
+        },
+        {
+          "path": "docs/practica04/tikitiki/README.md",
+          "line": 266,
+          "end_line": 306
+        }
+      ]
+    },
+    {
+      "id": "plataforma",
+      "type": "cloud",
+      "label": "Appetize",
+      "sublabel": "Cargar la versión Android",
+      "pos": [
+        650,
+        60
+      ],
+      "size": [
+        190,
+        66
+      ],
+      "sources": [
+        {
+          "path": "docs/practica04/tikitiki/deployment.json",
+          "line": 1,
+          "end_line": 12
+        },
+        {
+          "path": "docs/practica04/tikitiki/README.md",
+          "line": 266,
+          "end_line": 306
+        }
+      ]
+    },
+    {
+      "id": "usuario",
+      "type": "external",
+      "label": "Docente o usuario",
+      "sublabel": "Abrir enlace",
+      "pos": [
+        40,
+        330
+      ],
+      "size": [
+        130,
+        66
+      ],
+      "sources": [
+        {
+          "path": "docs/practica04/tikitiki/deployment.json",
+          "line": 1,
+          "end_line": 12
+        },
+        {
+          "path": "docs/practica04/tikitiki/README.md",
+          "line": 266,
+          "end_line": 306
+        }
+      ]
+    },
+    {
+      "id": "browser",
+      "type": "frontend",
+      "label": "Navegador",
+      "sublabel": "Pantalla y control remoto",
+      "pos": [
+        330,
+        330
+      ],
+      "size": [
+        170,
+        66
+      ],
+      "sources": [
+        {
+          "path": "docs/practica04/tikitiki/deployment.json",
+          "line": 1,
+          "end_line": 12
+        },
+        {
+          "path": "docs/practica04/tikitiki/README.md",
+          "line": 270,
+          "end_line": 306
+        }
+      ]
+    },
+    {
+      "id": "runtime",
+      "type": "backend",
+      "label": "TikiTiki en Android",
+      "sublabel": "Emulador remoto de sesión",
+      "pos": [
+        650,
+        330
+      ],
+      "size": [
+        190,
+        66
+      ],
+      "sources": [
+        {
+          "path": "docs/practica04/tikitiki/deployment.json",
+          "line": 1,
+          "end_line": 12
+        },
+        {
+          "path": "docs/practica04/tikitiki/README.md",
+          "line": 283,
+          "end_line": 304
+        },
+        {
+          "path": "docs/practica04/tikitiki/lib/main.dart",
+          "line": 19,
+          "end_line": 50
+        }
+      ]
+    },
+    {
+      "id": "datos",
+      "type": "database",
+      "label": "Datos de la sesión",
+      "sublabel": "SharedPreferences",
+      "pos": [
+        970,
+        330
+      ],
+      "size": [
+        180,
+        66
+      ],
+      "sources": [
+        {
+          "path": "docs/practica04/tikitiki/lib/core/utils/storage_service.dart",
+          "line": 15,
+          "end_line": 57
+        },
+        {
+          "path": "docs/practica04/tikitiki/README.md",
+          "line": 304,
+          "end_line": 304
+        }
+      ]
+    },
+    {
+      "id": "assets",
+      "type": "database",
+      "label": "Assets del APK",
+      "sublabel": "Videos, logos y sonidos",
+      "pos": [
+        650,
+        560
+      ],
+      "size": [
+        190,
+        66
+      ],
+      "sources": [
+        {
+          "path": "docs/practica04/tikitiki/pubspec.yaml",
+          "line": 75,
+          "end_line": 105
+        }
+      ]
+    },
+    {
+      "id": "pages",
+      "type": "cloud",
+      "label": "GitHub Pages",
+      "sublabel": "Diagramas HTML de Archify",
+      "pos": [
+        330,
+        560
+      ],
+      "size": [
+        180,
+        66
+      ],
+      "sources": [
+        {
+          "path": ".github/workflows/pages.yml",
+          "line": 1,
+          "end_line": 38
+        }
+      ]
+    },
+    {
+      "id": "publicos",
+      "type": "external",
+      "label": "Videos públicos",
+      "sublabel": "HTTPS desde el emulador",
+      "pos": [
+        970,
+        760
+      ],
+      "size": [
+        180,
+        66
+      ],
+      "sources": [
+        {
+          "path": "docs/practica04/tikitiki/lib/data/datasources/online_stream_datasource.dart",
+          "line": 12,
+          "end_line": 35
+        }
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Computadora de desarrollo",
+      "wraps": [
+        "proyecto",
+        "apk"
+      ],
+      "pad": 18
+    },
+    {
+      "kind": "region",
+      "label": "Appetize · ejecución Android remota",
+      "wraps": [
+        "plataforma",
+        "runtime",
+        "datos",
+        "assets"
+      ],
+      "pad": 22
+    }
+  ],
+  "connections": [
+    {
+      "id": "compilar",
+      "from": "proyecto",
+      "to": "apk",
+      "label": "Flutter build",
+      "variant": "emphasis"
+    },
+    {
+      "id": "subir",
+      "from": "apk",
+      "to": "plataforma",
+      "label": "Subir APK",
+      "variant": "emphasis"
+    },
+    {
+      "id": "instalar",
+      "from": "plataforma",
+      "to": "runtime",
+      "label": "Instalar"
+    },
+    {
+      "id": "acceder",
+      "from": "usuario",
+      "to": "browser",
+      "label": "Abrir enlace",
+      "variant": "emphasis"
+    },
+    {
+      "id": "control",
+      "from": "browser",
+      "to": "runtime",
+      "label": "Toques",
+      "variant": "emphasis"
+    },
+    {
+      "id": "stream",
+      "from": "runtime",
+      "to": "browser",
+      "label": "Pantalla"
+    },
+    {
+      "id": "leer-guardar",
+      "from": "runtime",
+      "to": "datos",
+      "label": "Leer / guardar"
+    },
+    {
+      "id": "recursos",
+      "from": "runtime",
+      "to": "assets",
+      "label": "Abrir archivo"
+    },
+    {
+      "id": "contenido",
+      "from": "runtime",
+      "to": "publicos",
+      "label": "HTTPS"
+    },
+    {
+      "id": "documentar",
+      "from": "browser",
+      "to": "pages",
+      "label": "Ver diagramas"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Dos publicaciones",
+      "items": [
+        "GitHub Pages aloja los diagramas interactivos.",
+        "Appetize ejecuta el APK; el navegador envía gestos y recibe la pantalla."
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Datos separados",
+      "items": [
+        "Los likes de la computadora no viajan dentro del APK.",
+        "Para comprobar 0 → 1 y reapertura, conservar la misma sesión remota."
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Demo publicada",
+      "items": [
+        "El APK está disponible en Appetize; el enlace aparece en la portada.",
+        "Carga y paquete Android confirmados. La prueba interactiva no fue observada por el agente."
+      ]
+    }
+  ]
+}

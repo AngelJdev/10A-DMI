@@ -2,6 +2,8 @@
 
 TikiTiki es una aplicación de videos cortos inspirada en TikTok. Permite recorrer videos, dar Me gusta, guardar favoritos y consultar el perfil. Su apariencia cambia según la fecha: conserva un diseño original durante el año y utiliza estilos especiales para Halloween, Navidad y San Valentín.
 
+**[Diagramas interactivos](https://angeljdev.github.io/10A-DMI/practica04/)** · **[Demo Android en Appetize](https://appetize.io/app/b_wy3wolryxw65vyzxisnpzln6ay)**
+
 **Estudiante:** Angel de Jesus Baños Tellez · **Matrícula:** 230592 · **Grupo:** 10A
 
 **Materia:** Desarrollo Móvil Integral (DMI)
@@ -205,105 +207,45 @@ Si la terminal ya está dentro de `tikitiki`, basta con ejecutar los dos último
 
 Para actualizar una fecha simulada se recomienda detener y volver a ejecutar la aplicación. Para repetir las capturas de persistencia se debe conservar la instalación y sus datos.
 
-## 7. Diagramas de arquitectura
+### Probar la demo en Appetize
 
-Los siguientes diagramas presentan dos formas de ejecutar la misma práctica: la instalación local que ya se utiliza para las capturas y el despliegue previsto en Appetize para probarla desde un navegador.
+**[Abrir TikiTiki en el navegador](https://appetize.io/app/b_wy3wolryxw65vyzxisnpzln6ay)**
 
-### Diagrama 1. Arquitectura actual: ejecución local
+La versión cargada utiliza el diseño de **San Valentín**. Iniciar la demo con el control de reproducción de Appetize y probar el primer video de **@tikitiki_demo**: dar Me gusta y consultar el perfil. El tema también se puede cambiar desde el logo superior.
 
-TikiTiki se ejecuta dentro de un teléfono Android o del emulador instalado en la computadora. Las pantallas muestran los videos y envían las interacciones al estado de la app. El repositorio reúne la información de los videos con los likes, favoritos y comentarios guardados en ese dispositivo.
+La demostración usa un emulador remoto con sus propios datos. La disponibilidad y duración de la sesión dependen del servicio de Appetize.
 
-```mermaid
-flowchart TD
-    Usuario["Usuario"] --> Pantallas
+## 7. Diagramas de arquitectura con Archify
 
-    subgraph Dispositivo["Teléfono Android o emulador local"]
-        subgraph Presentacion["Presentación: lo que ve y utiliza el usuario"]
-            Pantallas["Discover, For You, Favorites y Perfil"]
-            Estado["VideoFeedProvider: estado e interacciones"]
-            Reproductor["Reproductor de video"]
-        end
+Los dos diagramas se generaron con **Archify** y se publican como páginas interactivas en **GitHub Pages**. El visor permite consultar componentes y sus fuentes, ampliar, cambiar entre tema claro y oscuro y exportar la vista.
 
-        subgraph Dominio["Dominio: consulta de videos"]
-            Consulta["GetVideos y contrato VideoRepository"]
-        end
+**[Abrir la portada de arquitectura de TikiTiki](https://angeljdev.github.io/10A-DMI/practica04/)**
 
-        subgraph Datos["Datos: contenido y almacenamiento"]
-            Repositorio["VideoRepositoryImpl"]
-            Catalogos["Catálogos de videos locales y en línea"]
-            Guardado[("SharedPreferences: likes, favoritos y comentarios")]
-        end
+### Diagrama 1. Arquitectura local
 
-        subgraph Temporadas["Personalización y recursos del dispositivo"]
-            Fecha["Fecha real, simulada o selección manual"]
-            Tema["SeasonProvider: temporada activa"]
-            Recursos["Assets: videos, logos y sonidos"]
-            Icono["Icono Android mediante MethodChannel"]
-        end
+[![Diagrama de Archify: arquitectura local de TikiTiki con pantallas, estado, dominio, repositorio, preferencias y temporadas](../arquitectura/local.png)](https://angeljdev.github.io/10A-DMI/practica04/arquitectura/local.html)
 
-        Pantallas <-->|"Consultar y actualizar"| Estado
-        Estado -->|"Cargar videos"| Consulta
-        Consulta --> Repositorio
-        Estado -->|"Dar like, guardar o comentar"| Repositorio
-        Repositorio --> Catalogos
-        Repositorio <-->|"Leer y guardar interacciones"| Guardado
-        Pantallas --> Reproductor
-        Reproductor -->|"Video incluido"| Recursos
-        Fecha --> Tema
-        Tema -->|"Colores, letras e iconos"| Pantallas
-        Tema -->|"Logo y sonido"| Recursos
-        Tema -->|"Al pasar a segundo plano"| Icono
-        Tema <-->|"Preferencia de temporada"| Guardado
-    end
+**[Explorar el diagrama local](https://angeljdev.github.io/10A-DMI/practica04/arquitectura/local.html)**
 
-    Reproductor -.->|"Videos en línea: requiere Internet"| Internet["Servidores públicos de video"]
-```
+La app se ejecuta en un teléfono Android o en el emulador de la computadora. Las pantallas envían las acciones al estado del feed; los casos de uso y el repositorio reúnen la información de los videos y las interacciones guardadas. El reproductor abre los archivos incluidos o los videos en línea.
 
-**Cómo leerlo:** las acciones parten de las pantallas; el estado coordina los cambios y el repositorio guarda o recupera los datos. El reproductor abre los archivos incluidos o los enlaces de video. La temporada se decide de forma independiente y cambia la presentación de esas mismas pantallas.
+El like **0 → 1**, los favoritos y los comentarios se guardan en el dispositivo. La temporada se decide a partir de la fecha real, simulada o selección manual, y modifica el diseño, el sonido y el icono de Android. La palabra «backend» en la leyenda identifica lógica interna de la app, no un servidor propio.
 
-En esta versión, los likes permanecen en el almacenamiento del teléfono o emulador donde se utiliza la app. Los videos incluidos están dentro del proyecto; los videos en línea requieren conexión. No existe un servidor propio que sincronice las interacciones entre distintos dispositivos.
+### Diagrama 2. Appetize y GitHub Pages
 
-### Diagrama 2. Arquitectura prevista: ejecución en Appetize
+[![Diagrama de Archify: despliegue de TikiTiki mediante un APK en Appetize y publicación de los diagramas en GitHub Pages](../arquitectura/appetize.png)](https://angeljdev.github.io/10A-DMI/practica04/arquitectura/appetize.html)
 
-**Estado: despliegue pendiente.** Este diagrama describe la siguiente etapa de la práctica; todavía no representa una aplicación publicada ni un enlace de acceso disponible.
+**[Explorar el diagrama de despliegue](https://angeljdev.github.io/10A-DMI/practica04/arquitectura/appetize.html)** · **[Abrir la demo en Appetize](https://appetize.io/app/b_wy3wolryxw65vyzxisnpzln6ay)**
 
-Appetize permite cargar un archivo **APK** y ejecutar la aplicación Android en un emulador remoto, al que se accede desde el navegador. La app sigue siendo móvil y conserva su organización interna; cambia el lugar donde se ejecuta. Referencias oficiales: [carga de aplicaciones Android](https://docs.appetize.io/platform/app-management/uploading-apps/android) y [emuladores utilizados por Appetize](https://support.appetize.io/does-appetize.io-use-emulators-or-physical-devices).
+La computadora genera el APK y Appetize lo instala en un emulador Android remoto. El usuario abre el enlace, envía toques y desplazamientos desde el navegador y recibe la pantalla de la app. GitHub Pages aloja estos diagramas y su portada de documentación.
 
-```mermaid
-flowchart TD
-    subgraph Equipo["Computadora de desarrollo"]
-        Proyecto["Código Flutter y assets de TikiTiki"]
-        Compilacion["Compilar y probar la app"]
-        APK["Archivo APK de Android"]
-        Proyecto --> Compilacion --> APK
-    end
+Los archivos de video, logos y sonidos incluidos forman parte del APK. Los Me gusta siguen guardándose en las preferencias de la instalación Android remota; no se copian automáticamente los datos del emulador de la computadora. Para comprobar la persistencia, cerrar y reabrir la app conservando la misma sesión remota y sus datos.
 
-    APK -.->|"Carga manual prevista: Upload App"| Plataforma
+**Estado de Appetize:** APK cargado y enlace verificado. La respuesta pública identifica la app Android **tikitiki**, paquete `com.example.tikitiki`. La ejecución interactiva completa no fue observada por el agente; las capturas de este README corresponden al emulador local.
 
-    subgraph Nube["Appetize: entorno remoto previsto"]
-        Plataforma["Aplicación y versión cargada"]
-        Emulador["Emulador Android de la sesión"]
-        App["TikiTiki: pantallas, providers y repositorio"]
-        Assets["Videos, logos y sonidos incluidos en el APK"]
-        Preferencias[("SharedPreferences del emulador remoto")]
+Los originales editables están en [local.architecture.json](../arquitectura/local.architecture.json) y [appetize.architecture.json](../arquitectura/appetize.architecture.json). Las vistas HTML son autónomas y se generaron con las comprobaciones de estructura, artefacto y navegador de Archify.
 
-        Plataforma -->|"Instalar e iniciar"| Emulador
-        Emulador -->|"Ejecutar"| App
-        App --> Assets
-        App <-->|"Likes, favoritos y comentarios"| Preferencias
-    end
-
-    Visitante["Docente o usuario"] --> Navegador["Navegador: abrir el enlace de la app"]
-    Navegador -->|"Toques y desplazamientos"| Emulador
-    Emulador -->|"Pantalla transmitida"| Navegador
-    App -.->|"Contenido en línea"| Videos["Servidores públicos de video"]
-```
-
-**Qué cambia:** la computadora genera el APK y Appetize lo ejecuta en su emulador. Quien abre el enlace ve y controla la app desde el navegador. No se convierte el proyecto en una página web ni se añade una base de datos compartida; el almacenamiento sigue perteneciendo a la instalación Android que ejecuta TikiTiki.
-
-Los likes existentes en el emulador local no se incluyen en el APK ni se trasladan automáticamente al emulador de Appetize. Para comprobar la persistencia durante la demostración, se debe cerrar y reabrir la app dentro de la misma sesión del emulador remoto, conservando sus datos. La conservación entre sesiones distintas deberá verificarse al preparar el despliegue.
-
-La siguiente etapa será generar y probar el APK, cargarlo con **Upload App**, iniciar una sesión Android y comprobar videos, temporadas y Me gusta. Después se añadirá aquí el enlace real y las capturas de la ejecución en Appetize. La [guía oficial para ejecutar aplicaciones](https://docs.appetize.io/platform/app-management/running-apps) describe la página de acceso y sus controles.
+Referencias: [Archify](https://github.com/tt-a1i/archify), [carga de aplicaciones Android en Appetize](https://docs.appetize.io/platform/app-management/uploading-apps/android) y [ejecución de aplicaciones en Appetize](https://docs.appetize.io/platform/app-management/running-apps).
 
 ## 8. Organización y comprobaciones
 
