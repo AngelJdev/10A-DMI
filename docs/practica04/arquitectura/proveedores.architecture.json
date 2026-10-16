@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "TikiTiki · Provider y fuentes externas de video",
+    "locale": "es",
+    "output": ".archify/architecture-tikitiki-proveedores-20261016-161804/proveedores.html",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/AngelJdev/10A-DMI.git",
+      "revision": "a863318700a852182e7cc67655888ee70463f6ba"
+    }
+  },
+  "components": [
+    {"id":"pantallas","type":"frontend","label":"Pantallas del feed","sublabel":"Para ti / Discover","pos":[40,40],"size":[180,70],"sources":[{"path":"docs/practica04/tikitiki/lib/main.dart","line":132,"end_line":144},{"path":"docs/practica04/tikitiki/lib/presentation/screens/discover/discover_screen.dart","line":24,"end_line":56},{"path":"docs/practica04/tikitiki/lib/presentation/widgets/video_player_item.dart","line":21,"end_line":40}]},
+    {"id":"provider","type":"backend","label":"VideoFeedProvider","sublabel":"Estado y notificaciones","pos":[360,40],"size":[190,70],"sources":[{"path":"docs/practica04/tikitiki/lib/presentation/providers/video_feed_provider.dart","line":6,"end_line":46},{"path":"docs/practica04/tikitiki/lib/presentation/providers/video_feed_provider.dart","line":55,"end_line":81}]},
+    {"id":"caso-uso","type":"backend","label":"GetVideos","sublabel":"Seleccionar tipo de feed","pos":[680,40],"size":[190,70],"sources":[{"path":"docs/practica04/tikitiki/lib/domain/usecases/get_videos.dart","line":4,"end_line":22}]},
+    {"id":"repositorio","type":"backend","label":"VideoRepositoryImpl","sublabel":"Combinar fuentes y datos","pos":[680,260],"size":[190,80],"sources":[{"path":"docs/practica04/tikitiki/lib/data/repositories/video_repository_impl.dart","line":10,"end_line":68},{"path":"docs/practica04/tikitiki/lib/data/repositories/video_repository_impl.dart","line":71,"end_line":116}]},
+    {"id":"mapper","type":"backend","label":"VideoMapper","sublabel":"VideoModel → Video","pos":[360,260],"size":[190,70],"sources":[{"path":"docs/practica04/tikitiki/lib/data/mappers/video_mapper.dart","line":4,"end_line":39},{"path":"docs/practica04/tikitiki/lib/data/repositories/video_repository_impl.dart","line":71,"end_line":89}]},
+    {"id":"preferencias","type":"database","label":"StorageService","sublabel":"SharedPreferences local","pos":[1000,260],"size":[190,70],"sources":[{"path":"docs/practica04/tikitiki/lib/core/utils/storage_service.dart","line":9,"end_line":59},{"path":"docs/practica04/tikitiki/lib/core/utils/storage_service.dart","line":62,"end_line":85}]},
+    {"id":"reproductor","type":"frontend","label":"UnifiedVideoPlayer","sublabel":"Reproducir URL o asset","pos":[40,260],"size":[190,70],"sources":[{"path":"docs/practica04/tikitiki/lib/presentation/widgets/unified_video_player.dart","line":64,"end_line":110},{"path":"docs/practica04/tikitiki/lib/presentation/widgets/video_player_item.dart","line":30,"end_line":40}]},
+    {"id":"catalogo-local","type":"backend","label":"Catálogo local","sublabel":"LocalVideoDatasourceImpl","pos":[360,500],"size":[190,70],"sources":[{"path":"docs/practica04/tikitiki/lib/data/datasources/local_video_datasource.dart","line":7,"end_line":36}]},
+    {"id":"catalogo-youtube","type":"backend","label":"Catálogo «YouTube»","sublabel":"YouTubeVideoDatasourceImpl","pos":[680,500],"size":[210,70],"sources":[{"path":"docs/practica04/tikitiki/lib/data/datasources/youtube_video_datasource.dart","line":3,"end_line":30}]},
+    {"id":"catalogo-stream","type":"backend","label":"Catálogo de streams","sublabel":"OnlineStreamDatasourceImpl","pos":[1000,500],"size":[210,70],"sources":[{"path":"docs/practica04/tikitiki/lib/data/datasources/online_stream_datasource.dart","line":3,"end_line":29}]},
+    {"id":"videos-externos","type":"external","label":"Archive.org","sublabel":"Archivos de video remotos","pos":[40,500],"size":[190,70],"sources":[{"path":"docs/practica04/tikitiki/lib/data/datasources/youtube_video_datasource.dart","line":12,"end_line":18},{"path":"docs/practica04/tikitiki/lib/data/datasources/online_stream_datasource.dart","line":12,"end_line":18},{"path":"docs/practica04/tikitiki/lib/presentation/widgets/unified_video_player.dart","line":68,"end_line":86}]}
+  ],
+  "connections": [
+    {"id":"observar","from":"pantallas","to":"provider","label":"Observar estado","variant":"emphasis"},
+    {"id":"notificar","from":"provider","to":"pantallas","label":"notifyListeners"},
+    {"id":"cargar","from":"provider","to":"caso-uso","label":"Cargar listas","variant":"emphasis"},
+    {"id":"seleccionar","from":"caso-uso","to":"repositorio","label":"Elegir feed","variant":"emphasis"},
+    {"id":"local","from":"repositorio","to":"catalogo-local","label":"Para ti"},
+    {"id":"youtube","from":"repositorio","to":"catalogo-youtube","label":"Discover"},
+    {"id":"streams","from":"repositorio","to":"catalogo-stream","label":"Ambos feeds"},
+    {"id":"mapear","from":"repositorio","to":"mapper","label":"VideoModel"},
+    {"id":"resultado","from":"mapper","to":"provider","label":"Lista de Video"},
+    {"id":"interaccion","from":"provider","to":"repositorio","label":"Like / favorito"},
+    {"id":"persistencia","from":"repositorio","to":"preferencias","label":"Leer / guardar"},
+    {"id":"mostrar","from":"pantallas","to":"reproductor","label":"Mostrar video","variant":"emphasis"},
+    {"id":"red","from":"reproductor","to":"videos-externos","label":"HTTPS","variant":"emphasis"}
+  ],
+  "cards": [
+    {"dot":"cyan","title":"Dos feeds, tres fuentes","items":["Para ti combina el catálogo local con streams; Discover combina el catálogo YouTube con streams.","Favoritos y Me gusta filtran las tres fuentes con los identificadores guardados en el dispositivo."]},
+    {"dot":"amber","title":"Qué se consume realmente","items":["Los DataSources devuelven catálogos definidos en Dart; el reproductor solicita los archivos remotos por HTTPS.","Aunque conserva el nombre YouTube, ese catálogo usa Archive.org como sustituto. No hay una consulta activa a las API de YouTube, Vimeo o Dailymotion en este flujo."]},
+    {"dot":"emerald","title":"Provider no es el proveedor externo","items":["VideoFeedProvider coordina el estado de Flutter; Archive.org sirve el video. La leyenda backend representa lógica interna, no un servidor propio.","Los likes y favoritos se guardan localmente, sin modificar contadores de la plataforma externa. Esta vista se centra en el consumo de videos; el primer diagrama conserva el detalle local."]}
+  ]
+}

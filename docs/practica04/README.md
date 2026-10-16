@@ -115,7 +115,7 @@ El proyecto implementa 3 fuentes de datos independientes desacopladas bajo la ar
 Los dos diagramas interactivos se elaboraron con **Archify** y se consultan en **GitHub Pages**:
 
 - [Diagrama 1. Arquitectura local](https://angeljdev.github.io/10A-DMI/practica04/arquitectura/local.html): pantallas, videos, temporadas y datos guardados en el dispositivo.
-- [Diagrama 2. Appetize y GitHub Pages](https://angeljdev.github.io/10A-DMI/practica04/arquitectura/appetize.html): ejecución del APK en el emulador remoto y publicación de la documentación.
+- [Diagrama 2. Provider y fuentes externas de video](https://angeljdev.github.io/10A-DMI/practica04/arquitectura/proveedores.html): pantallas, Provider, repositorio, catálogos de videos y reproducción de archivos remotos por HTTPS.
 
 [Abrir la portada de arquitectura de TikiTiki](https://angeljdev.github.io/10A-DMI/practica04/)
 

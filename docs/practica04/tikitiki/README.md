@@ -229,19 +229,21 @@ La app se ejecuta en un teléfono Android o en el emulador de la computadora. La
 
 El like **0 → 1**, los favoritos y los comentarios se guardan en el dispositivo. La temporada se decide a partir de la fecha real, simulada o selección manual, y modifica el diseño, el sonido y el icono de Android. La palabra «backend» en la leyenda identifica lógica interna de la app, no un servidor propio.
 
-### Diagrama 2. Appetize y GitHub Pages
+### Diagrama 2. Arquitectura con Provider y fuentes externas de video
 
-**[Explorar el diagrama de despliegue](https://angeljdev.github.io/10A-DMI/practica04/arquitectura/appetize.html)** · **[Abrir la demo en Appetize](https://appetize.io/app/b_wy3wolryxw65vyzxisnpzln6ay)**
+**[Explorar el diagrama de consumo de videos externos](https://angeljdev.github.io/10A-DMI/practica04/arquitectura/proveedores.html)**
 
-La computadora genera el APK y Appetize lo instala en un emulador Android remoto. El usuario abre el enlace, envía toques y desplazamientos desde el navegador y recibe la pantalla de la app. GitHub Pages aloja estos diagramas y su portada de documentación.
+Este diagrama muestra cómo se organiza el consumo de videos al incorporar varias fuentes. Las pantallas observan a `VideoFeedProvider`, que carga los feeds mediante `GetVideos` y `VideoRepositoryImpl`. El repositorio combina los catálogos, transforma sus datos a videos de la app y recupera los likes y favoritos guardados.
 
-Los archivos de video, logos y sonidos incluidos forman parte del APK. Los Me gusta siguen guardándose en las preferencias de la instalación Android remota; no se copian automáticamente los datos del emulador de la computadora. Para comprobar la persistencia, cerrar y reabrir la app conservando la misma sesión remota y sus datos.
+- **Para ti:** combina videos locales y streams en línea.
+- **Discover:** combina el catálogo llamado YouTube y los streams en línea.
+- **Favoritos y Me gusta:** reúnen las tres fuentes y filtran los videos según las interacciones guardadas.
 
-**Estado de Appetize:** APK cargado y enlace verificado. La respuesta pública identifica la app Android **tikitiki**, paquete `com.example.tikitiki`. La ejecución interactiva completa no fue observada por el agente; las capturas de este README corresponden al emulador local.
+**Qué se consume en esta versión:** los catálogos están definidos en Dart y contienen las direcciones de los videos. Aunque uno conserva el nombre `YouTubeVideoDatasourceImpl`, utiliza archivos públicos de **Archive.org** como sustituto de YouTube. `UnifiedVideoPlayer` abre esos archivos por **HTTPS** o reproduce un asset si la dirección comienza con `assets/`. Este flujo no consulta las API de YouTube, Vimeo o Dailymotion.
 
-Los originales editables están en [local.architecture.json](../arquitectura/local.architecture.json) y [appetize.architecture.json](../arquitectura/appetize.architecture.json). Las vistas HTML son autónomas y se generaron con las comprobaciones de estructura, artefacto y navegador de Archify.
+El **Provider** administra el estado de Flutter; el proveedor externo sirve el archivo de video. Los likes y favoritos se guardan en el dispositivo con `SharedPreferences`, sin cambiar los contadores de la plataforma externa. Appetize sigue disponible como demo en la sección anterior, pero no forma parte de este segundo diagrama.
 
-Referencias: [Archify](https://github.com/tt-a1i/archify), [carga de aplicaciones Android en Appetize](https://docs.appetize.io/platform/app-management/uploading-apps/android) y [ejecución de aplicaciones en Appetize](https://docs.appetize.io/platform/app-management/running-apps).
+Los originales editables están en [local.architecture.json](../arquitectura/local.architecture.json) y [proveedores.architecture.json](../arquitectura/proveedores.architecture.json). Las vistas HTML son autónomas y se generaron con las comprobaciones de estructura, artefacto y navegador de [Archify](https://github.com/tt-a1i/archify).
 
 ## 8. Organización y comprobaciones
 
