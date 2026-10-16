@@ -110,119 +110,14 @@ El proyecto implementa 3 fuentes de datos independientes desacopladas bajo la ar
 
 ---
 
-## 4. Diagramas de Arquitectura (Mermaid)
+## 4. Diagramas de Arquitectura en GitHub Pages
 
-### Diagrama 1: Arquitectura con Provider Local
+Los dos diagramas interactivos se elaboraron con **Archify** y se consultan en **GitHub Pages**:
 
-Flujo directo desacoplado donde la interfaz de usuario interactúa con un Provider que consume el Repositorio de videos abastecido por la fuente local de assets.
+- [Diagrama 1. Arquitectura local](https://angeljdev.github.io/10A-DMI/practica04/arquitectura/local.html): pantallas, videos, temporadas y datos guardados en el dispositivo.
+- [Diagrama 2. Appetize y GitHub Pages](https://angeljdev.github.io/10A-DMI/practica04/arquitectura/appetize.html): ejecución del APK en el emulador remoto y publicación de la documentación.
 
-```mermaid
-graph TD
-    subgraph Presentation_Layer [Capa de Presentación]
-        UI[VideoFeedScreen / VideoPlayerItem]
-        VFP[VideoFeedProvider]
-        UI -->|Observa estado / Envía eventos| VFP
-    end
-
-    subgraph Domain_Layer [Capa de Dominio]
-        UC[GetVideos UseCase]
-        VRepoInterface[<<interface>> VideoRepository]
-        Entity[Video Entity]
-        VFP -->|Invoca caso de uso| UC
-        UC -->|Consulta repositorio| VRepoInterface
-        VRepoInterface -->|Retorna entidades puras| Entity
-    end
-
-    subgraph Data_Layer [Capa de Datos e Infraestructura]
-        VRepoImpl[VideoRepositoryImpl]
-        LocalDS[<<interface>> LocalVideoDatasource]
-        LocalDSImpl[LocalVideoDatasourceImpl]
-        Mapper[VideoMapper]
-        Model[VideoModel]
-        Assets[(Assets Videos /video_1..5.mp4)]
-
-        VRepoInterface -.->|Implementado por| VRepoImpl
-        VRepoImpl -->|Solicita modelos| LocalDS
-        LocalDS -.->|Implementado por| LocalDSImpl
-        LocalDSImpl -->|Lee archivos locales| Assets
-        LocalDSImpl -->|Construye con Loop| Model
-        Model -->|Mapeado por| Mapper
-        Mapper -->|Produce| Entity
-    end
-
-    style Presentation_Layer fill:#1e1e24,stroke:#FE2C55,stroke-width:2px,color:#fff
-    style Domain_Layer fill:#162447,stroke:#25F4EE,stroke-width:2px,color:#fff
-    style Data_Layer fill:#1f4068,stroke:#FF6B00,stroke-width:2px,color:#fff
-```
-
----
-
-### Diagrama 2: Arquitectura Multi-DataSource con Persistencia en Local Storage
-
-Flujo completo donde el Repositorio orquesta tres fuentes de datos heterogéneas (Local Assets, YouTube y Streaming Online Vimeo/Dailymotion) y coordina la persistencia con `SharedPreferences`.
-
-```mermaid
-graph TD
-    subgraph Presentation_Layer [Capa de Presentación]
-        MainUI[MainScreen - PageView Horizontal]
-        Tabs[TopNavigationBar - Discover / For You / Favorites]
-        ThemeUI[SeasonProvider - Halloween / Navidad / San Valentín]
-        FeedProv[VideoFeedProvider]
-        
-        MainUI --> Tabs
-        MainUI --> FeedProv
-        MainUI --> ThemeUI
-    end
-
-    subgraph Domain_Layer [Capa de Dominio - Reglas de Negocio]
-        GetVideosUC[GetVideos UseCase]
-        RepoContract[<<interface>> VideoRepository]
-        DomainVideo[Video Entity con Aserciones]
-        
-        FeedProv --> GetVideosUC
-        GetVideosUC --> RepoContract
-        RepoContract --> DomainVideo
-    end
-
-    subgraph Data_Layer [Capa de Datos - Repositorios y Mappers]
-        RepoImpl[VideoRepositoryImpl]
-        Mapper[VideoMapper]
-        RepoContract -.->|Implementa| RepoImpl
-        RepoImpl --> Mapper
-        Mapper --> DomainVideo
-    end
-
-    subgraph Data_Sources [Fuentes de Datos Heterogéneas]
-        DS1[LocalVideoDatasourceImpl]
-        DS2[YouTubeVideoDatasourceImpl]
-        DS3[OnlineStreamDatasourceImpl]
-        DSLocal[StorageService - SharedPreferences]
-        
-        RepoImpl -->|1. Videos Locales| DS1
-        RepoImpl -->|2. YouTube IFrame API| DS2
-        RepoImpl -->|3. Streams Vimeo / Dailymotion| DS3
-        RepoImpl -->|4. Persistencia Likes / Favoritos / Temas| DSLocal
-    end
-
-    subgraph External_Resources [Recursos Externos y Dispositivo]
-        LocalFiles[(assets/videos/ & assets/audio/)]
-        YTApi[(YouTube Platform)]
-        CloudCDN[(Cloud CDN MP4 Streams)]
-        LocalStorage[(Dispositivo SharedPreferences)]
-
-        DS1 --> LocalFiles
-        DS2 --> YTApi
-        DS3 --> CloudCDN
-        DSLocal --> LocalStorage
-        ThemeUI -->|Guarda / Lee Tema| DSLocal
-    end
-
-    style Presentation_Layer fill:#0f172a,stroke:#38bdf8,stroke-width:2px,color:#fff
-    style Domain_Layer fill:#1e1b4b,stroke:#818cf8,stroke-width:2px,color:#fff
-    style Data_Layer fill:#14532d,stroke:#4ade80,stroke-width:2px,color:#fff
-    style Data_Sources fill:#701a75,stroke:#f472b6,stroke-width:2px,color:#fff
-    style External_Resources fill:#312e81,stroke:#a78bfa,stroke-width:2px,color:#fff
-```
+[Abrir la portada de arquitectura de TikiTiki](https://angeljdev.github.io/10A-DMI/practica04/)
 
 ---
 
