@@ -4,4 +4,9 @@
          to allow setting breakpoints, to provide hot reload, etc.
     -->
     <uses-permission android:name="android.permission.INTERNET"/>
+    <application>
+        <!-- Entrada estable para flutter run: nunca se deshabilita al cambiar
+             de temporada. Solo existe en la variante de depuración. -->
+        <activity android:name=".MainActivity" android:label="TikiTiki · desarrollo"/>
+    </application>
 </manifest>

@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="ic_launcher_background">#FFFFFF</color>
+    <color name="launcher_halloween">#3B0A45</color>
+    <color name="launcher_christmas">#0C4B33</color>
+    <color name="launcher_valentines">#B3134B</color>
 </resources>

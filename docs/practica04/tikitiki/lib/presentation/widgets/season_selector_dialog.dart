@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../core/theme/season_theme.dart';
+import '../../core/theme/season_date_config.dart';
 import '../providers/season_provider.dart';
 
 class SeasonSelectorDialog extends StatelessWidget {
@@ -18,6 +19,7 @@ class SeasonSelectorDialog extends StatelessWidget {
     final seasonProvider = context.watch<SeasonProvider>();
     final currentSeason = seasonProvider.currentSeason;
     final currentTheme = seasonProvider.currentTheme;
+    final effectiveDate = effectiveSeasonDate;
 
     return AlertDialog(
       backgroundColor: const Color(0xFF1E1E26),
@@ -99,7 +101,9 @@ class SeasonSelectorDialog extends StatelessWidget {
                 style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.bold),
               ),
               subtitle: Text(
-                'Carga según el mes actual del sistema (${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year})',
+                simulatedSeasonDate == null
+                    ? 'Fecha del dispositivo: ${effectiveDate.day}/${effectiveDate.month}/${effectiveDate.year}'
+                    : 'Fecha simulada: ${effectiveDate.day}/${effectiveDate.month}/${effectiveDate.year}',
                 style: const TextStyle(color: Colors.white60, fontSize: 11),
               ),
               onTap: () {
