@@ -1,0 +1,463 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "TikiTiki · arquitectura local",
+    "locale": "es",
+    "output": ".archify/architecture-tikitiki-local-20261016154156/tikitiki-local.html",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/AngelJdev/10A-DMI.git",
+      "revision": "157be215ff5be4060bb6f3ca674bd913e1ea5028"
+    }
+  },
+  "components": [
+    {
+      "id": "persona",
+      "type": "external",
+      "label": "Usuario",
+      "sublabel": "Toques y gestos",
+      "pos": [
+        40,
+        260
+      ],
+      "size": [
+        120,
+        66
+      ],
+      "sources": [
+        {
+          "path": "docs/practica04/tikitiki/lib/presentation/widgets/video_player_item.dart",
+          "line": 20,
+          "end_line": 40
+        }
+      ]
+    },
+    {
+      "id": "pantallas",
+      "type": "frontend",
+      "label": "Pantallas",
+      "sublabel": "For You / Discover / Perfil",
+      "pos": [
+        270,
+        260
+      ],
+      "size": [
+        170,
+        66
+      ],
+      "sources": [
+        {
+          "path": "docs/practica04/tikitiki/lib/main.dart",
+          "line": 113,
+          "end_line": 177
+        },
+        {
+          "path": "docs/practica04/tikitiki/lib/presentation/widgets/video_player_item.dart",
+          "line": 20,
+          "end_line": 40
+        }
+      ]
+    },
+    {
+      "id": "estado",
+      "type": "backend",
+      "label": "Estado del feed",
+      "sublabel": "VideoFeedProvider",
+      "pos": [
+        565,
+        260
+      ],
+      "size": [
+        170,
+        66
+      ],
+      "sources": [
+        {
+          "path": "docs/practica04/tikitiki/lib/presentation/providers/video_feed_provider.dart",
+          "line": 25,
+          "end_line": 47
+        },
+        {
+          "path": "docs/practica04/tikitiki/lib/presentation/providers/video_feed_provider.dart",
+          "line": 55,
+          "end_line": 86
+        }
+      ]
+    },
+    {
+      "id": "dominio",
+      "type": "backend",
+      "label": "Consulta de videos",
+      "sublabel": "GetVideos / VideoRepository",
+      "pos": [
+        870,
+        260
+      ],
+      "size": [
+        180,
+        66
+      ],
+      "sources": [
+        {
+          "path": "docs/practica04/tikitiki/lib/domain/usecases/get_videos.dart",
+          "line": 1,
+          "end_line": 23
+        },
+        {
+          "path": "docs/practica04/tikitiki/lib/domain/repositories/video_repository.dart",
+          "line": 3,
+          "end_line": 26
+        }
+      ]
+    },
+    {
+      "id": "repo",
+      "type": "backend",
+      "label": "Repositorio",
+      "sublabel": "VideoRepositoryImpl",
+      "pos": [
+        870,
+        460
+      ],
+      "size": [
+        180,
+        66
+      ],
+      "sources": [
+        {
+          "path": "docs/practica04/tikitiki/lib/data/repositories/video_repository_impl.dart",
+          "line": 23,
+          "end_line": 40
+        },
+        {
+          "path": "docs/practica04/tikitiki/lib/data/repositories/video_repository_impl.dart",
+          "line": 77,
+          "end_line": 107
+        }
+      ]
+    },
+    {
+      "id": "catalogos",
+      "type": "backend",
+      "label": "Catálogos",
+      "sublabel": "Archivos y enlaces de video",
+      "pos": [
+        565,
+        460
+      ],
+      "size": [
+        170,
+        66
+      ],
+      "sources": [
+        {
+          "path": "docs/practica04/tikitiki/lib/data/datasources/local_video_datasource.dart",
+          "line": 7,
+          "end_line": 42
+        },
+        {
+          "path": "docs/practica04/tikitiki/lib/data/datasources/youtube_video_datasource.dart",
+          "line": 7,
+          "end_line": 32
+        }
+      ]
+    },
+    {
+      "id": "player",
+      "type": "frontend",
+      "label": "Reproductor",
+      "sublabel": "video_player",
+      "pos": [
+        270,
+        460
+      ],
+      "size": [
+        170,
+        66
+      ],
+      "sources": [
+        {
+          "path": "docs/practica04/tikitiki/lib/presentation/widgets/unified_video_player.dart",
+          "line": 62,
+          "end_line": 104
+        }
+      ]
+    },
+    {
+      "id": "assets",
+      "type": "database",
+      "label": "Assets de la app",
+      "sublabel": "MP4, logos y audios",
+      "pos": [
+        270,
+        670
+      ],
+      "size": [
+        170,
+        66
+      ],
+      "sources": [
+        {
+          "path": "docs/practica04/tikitiki/pubspec.yaml",
+          "line": 75,
+          "end_line": 105
+        }
+      ]
+    },
+    {
+      "id": "prefs",
+      "type": "database",
+      "label": "Datos del dispositivo",
+      "sublabel": "SharedPreferences",
+      "pos": [
+        870,
+        670
+      ],
+      "size": [
+        180,
+        66
+      ],
+      "sources": [
+        {
+          "path": "docs/practica04/tikitiki/lib/core/utils/storage_service.dart",
+          "line": 15,
+          "end_line": 57
+        },
+        {
+          "path": "docs/practica04/tikitiki/lib/core/utils/storage_service.dart",
+          "line": 59,
+          "end_line": 101
+        }
+      ]
+    },
+    {
+      "id": "internet",
+      "type": "external",
+      "label": "Videos públicos",
+      "sublabel": "Acceso mediante HTTPS",
+      "pos": [
+        40,
+        670
+      ],
+      "size": [
+        130,
+        66
+      ],
+      "sources": [
+        {
+          "path": "docs/practica04/tikitiki/lib/data/datasources/online_stream_datasource.dart",
+          "line": 12,
+          "end_line": 35
+        },
+        {
+          "path": "docs/practica04/tikitiki/lib/presentation/widgets/unified_video_player.dart",
+          "line": 62,
+          "end_line": 90
+        }
+      ]
+    },
+    {
+      "id": "fecha",
+      "type": "backend",
+      "label": "Fecha y selección",
+      "sublabel": "Real, simulada o manual",
+      "pos": [
+        270,
+        60
+      ],
+      "size": [
+        170,
+        66
+      ],
+      "sources": [
+        {
+          "path": "docs/practica04/tikitiki/lib/core/theme/season_date_config.dart",
+          "line": 16,
+          "end_line": 40
+        },
+        {
+          "path": "docs/practica04/tikitiki/lib/presentation/providers/season_provider.dart",
+          "line": 23,
+          "end_line": 57
+        }
+      ]
+    },
+    {
+      "id": "tema",
+      "type": "backend",
+      "label": "Temporada activa",
+      "sublabel": "SeasonProvider",
+      "pos": [
+        565,
+        60
+      ],
+      "size": [
+        170,
+        66
+      ],
+      "sources": [
+        {
+          "path": "docs/practica04/tikitiki/lib/presentation/providers/season_provider.dart",
+          "line": 23,
+          "end_line": 57
+        },
+        {
+          "path": "docs/practica04/tikitiki/lib/presentation/providers/season_provider.dart",
+          "line": 84,
+          "end_line": 104
+        }
+      ]
+    },
+    {
+      "id": "launcher",
+      "type": "frontend",
+      "label": "Icono de Android",
+      "sublabel": "Cambio al salir de la app",
+      "pos": [
+        870,
+        60
+      ],
+      "size": [
+        180,
+        66
+      ],
+      "sources": [
+        {
+          "path": "docs/practica04/tikitiki/android/app/src/main/kotlin/com/example/tikitiki/MainActivity.kt",
+          "line": 12,
+          "end_line": 48
+        }
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Instalación Android · teléfono o emulador local",
+      "wraps": [
+        "pantallas",
+        "estado",
+        "dominio",
+        "repo",
+        "catalogos",
+        "player",
+        "assets",
+        "prefs",
+        "fecha",
+        "tema",
+        "launcher"
+      ],
+      "pad": 22
+    }
+  ],
+  "connections": [
+    {
+      "id": "gestos",
+      "from": "persona",
+      "to": "pantallas",
+      "label": "Usar app",
+      "variant": "emphasis"
+    },
+    {
+      "id": "ui-estado",
+      "from": "pantallas",
+      "to": "estado",
+      "label": "Interacciones",
+      "variant": "emphasis"
+    },
+    {
+      "id": "cargar",
+      "from": "estado",
+      "to": "dominio",
+      "label": "Consultar",
+      "variant": "emphasis"
+    },
+    {
+      "id": "consultar-repo",
+      "from": "dominio",
+      "to": "repo",
+      "label": "GetVideos"
+    },
+    {
+      "id": "guardar",
+      "from": "estado",
+      "to": "repo",
+      "label": "Like / guardar"
+    },
+    {
+      "id": "metadatos",
+      "from": "repo",
+      "to": "catalogos",
+      "label": "Leer catálogo"
+    },
+    {
+      "id": "persistir",
+      "from": "repo",
+      "to": "prefs",
+      "label": "Leer / guardar"
+    },
+    {
+      "id": "reproducir",
+      "from": "pantallas",
+      "to": "player",
+      "label": "Reproducir"
+    },
+    {
+      "id": "mp4-local",
+      "from": "player",
+      "to": "assets",
+      "label": "Archivo local"
+    },
+    {
+      "id": "mp4-remoto",
+      "from": "player",
+      "to": "internet",
+      "label": "HTTPS"
+    },
+    {
+      "id": "elegir-tema",
+      "from": "fecha",
+      "to": "tema",
+      "label": "Resolver fecha"
+    },
+    {
+      "id": "aplicar-tema",
+      "from": "tema",
+      "to": "pantallas",
+      "label": "Diseño estacional"
+    },
+    {
+      "id": "icono",
+      "from": "tema",
+      "to": "launcher",
+      "label": "MethodChannel"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Recorrido principal",
+      "items": [
+        "Las pantallas consultan el estado del feed.",
+        "GetVideos selecciona la colección; el repositorio mezcla contenido y datos guardados."
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Persistencia local",
+      "items": [
+        "El like 0 → 1 se guarda por identificador de video.",
+        "Se recupera al reabrir la misma instalación; no existe sincronización entre dispositivos."
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Temporadas y reproducción",
+      "items": [
+        "La fecha simulada tiene prioridad; también existe un selector manual.",
+        "Assets y video remoto se abren desde el reproductor. El sonido y el logo dependen del tema."
+      ]
+    }
+  ]
+}

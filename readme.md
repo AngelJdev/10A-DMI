@@ -30,3 +30,5 @@
 #### Diagramas interactivos
 
 - [Práctica 03 — Arquitectura de Yes/No App](https://angeljdev.github.io/10A-DMI/practica-03/)
+- [Práctica 04 — Arquitecturas de TikiTiki con Archify](https://angeljdev.github.io/10A-DMI/practica04/)
+- [Práctica 04 — Demo Android de TikiTiki en Appetize](https://appetize.io/app/b_wy3wolryxw65vyzxisnpzln6ay)

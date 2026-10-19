@@ -148,8 +148,8 @@ class SeasonTheme {
           badgeIcon: Icons.volunteer_activism_rounded,
           musicIcon: Icons.favorite_border_rounded,
           audioAsset: 'assets/audio/valentines.wav',
-          // ❤️ Logo San Valentín → usa el logo neutro (azul/naranja)
-          logoAsset: 'assets/images/logo_alt.jpg',
+          // ❤️ Arte propio de San Valentín, también usado por el launcher Android.
+          logoAsset: 'assets/images/logo_valentines.png',
           headingStyle: GoogleFonts.dancingScript(
             color: const Color(0xFFFF2E93),
             fontSize: 26,

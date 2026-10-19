@@ -182,18 +182,37 @@ class _VideoSideActionsState extends State<VideoSideActions>
                     ]
                   : null,
             ),
-            child: Icon(icon, color: color, size: 28),
+            child: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 260),
+              transitionBuilder: (child, animation) => ScaleTransition(
+                scale: CurvedAnimation(
+                  parent: animation,
+                  curve: Curves.elasticOut,
+                ),
+                child: child,
+              ),
+              child: Icon(
+                icon,
+                key: ValueKey(icon.codePoint),
+                color: color,
+                size: 28,
+              ),
+            ),
           ),
           const SizedBox(height: 3),
-          Text(
-            countText,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 11,
-              fontWeight: FontWeight.w700,
-              shadows: [
-                Shadow(offset: Offset(0, 1), blurRadius: 4, color: Colors.black87),
-              ],
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 180),
+            child: Text(
+              countText,
+              key: ValueKey(countText),
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+                shadows: [
+                  Shadow(offset: Offset(0, 1), blurRadius: 4, color: Colors.black87),
+                ],
+              ),
             ),
           ),
         ],

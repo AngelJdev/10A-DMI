@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Práctica 04: TikiTiki. Dos arquitecturas interactivas creadas con Archify y una demo Android en Appetize.">
+<meta name="color-scheme" content="dark">
+<title>TikiTiki · Arquitectura y demo</title>
+<style>
+:root{--bg:#100d15;--panel:#19151f;--ink:#f8f2f7;--muted:#b8acba;--line:#392c3d;--accent:#ff469a;--soft:#d5f7ef}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 20% 0,#3a1633 0,transparent 48%),var(--bg);color:var(--ink);font:16px/1.65 system-ui,-apple-system,"Segoe UI",sans-serif}a{color:inherit;text-underline-offset:4px}a:focus-visible{outline:3px solid var(--accent);outline-offset:6px}header,main,footer{width:min(1160px,calc(100% - 48px));margin:auto}header{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:25px 0;border-bottom:1px solid var(--line)}.brand{font-size:20px;font-weight:800;text-decoration:none;letter-spacing:-.5px}.brand span{color:var(--accent)}nav{display:flex;gap:24px;font-size:14px;color:var(--muted)}.intro{padding:64px 0 36px;max-width:850px}.eyebrow{margin:0 0 10px;color:var(--accent);font-size:12px;font-weight:750;letter-spacing:.14em;text-transform:uppercase}h1{font-size:clamp(36px,6vw,64px);line-height:1.08;letter-spacing:-2px;margin:12px 0 24px;font-weight:800}.lead{max-width:750px;font-size:18px;color:var(--muted)}.actions{display:flex;flex-wrap:wrap;gap:12px;margin:26px 0 14px}.button{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:10px 20px;border:1px solid var(--line);border-radius:10px;text-decoration:none;font-size:14px;font-weight:700;background:var(--panel)}.primary{background:var(--accent);color:#210918;border-color:var(--accent)}.status{font-size:13px;color:var(--soft)}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;margin:20px 0 40px}.card{background:linear-gradient(135deg,#211a28,var(--panel));border:1px solid var(--line);border-radius:18px;overflow:hidden}.card img{width:100%;height:auto;display:block;background:#050a19;aspect-ratio:2048/1320;object-fit:contain}.copy{padding:24px}.copy h2{font-size:24px;line-height:1.2;margin:8px 0 14px;letter-spacing:-.6px}.copy p{color:var(--muted);font-size:15px}.number{font:12px ui-monospace,monospace;color:var(--accent)}.link{font-size:15px;font-weight:700}.notes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;padding:26px 0 42px;border-top:1px solid var(--line)}.notes h3{font-size:15px;margin:0 0 8px}.notes p{font-size:14px;color:var(--muted);margin:0}footer{padding:26px 0 38px;border-top:1px solid var(--line);font-size:12px;color:var(--muted)}@media(max-width:740px){header,main,footer{width:calc(100% - 32px)}header{align-items:flex-start;flex-direction:column;gap:12px}nav{gap:18px}.intro{padding-top:38px}.grid,.notes{grid-template-columns:1fr}.copy{padding:20px}h1{letter-spacing:-1px}}
+</style>
+</head>
+<body>
+<header>
+<a class="brand" href="./">Tiki<span>Tiki</span> / Práctica 04</a>
+<nav aria-label="Navegación principal">
+<a href="https://github.com/AngelJdev/10A-DMI/blob/main/docs/practica04/tikitiki/README.md">Documentación</a>
+<a href="https://github.com/AngelJdev/10A-DMI/tree/main/docs/practica04/tikitiki">Código</a>
+</nav>
+</header>
+<main>
+<section class="intro" aria-labelledby="titulo">
+<p class="eyebrow">Desarrollo Móvil Integral · 10A</p>
+<h1>Explora la arquitectura<br>de TikiTiki.</h1>
+<p class="lead">Una app de videos cortos con diseños por temporada y Me gusta persistentes. Recorre su arquitectura local y el consumo de videos de fuentes externas con dos diagramas interactivos creados con Archify.</p>
+<div class="actions">
+<a class="button primary" href="https://appetize.io/app/b_wy3wolryxw65vyzxisnpzln6ay" target="_blank" rel="noopener noreferrer">Abrir demo Android ↗</a>
+<a class="button" href="#diagramas">Ver las dos arquitecturas ↓</a>
+</div>
+<p class="status">APK cargado en Appetize · Enlace verificado · Diagramas con fuentes de código</p>
+</section>
+<section class="grid" id="diagramas" aria-label="Diagramas de arquitectura">
+<article class="card">
+<a href="arquitectura/local.html" aria-label="Abrir el diagrama interactivo de arquitectura local"><img src="arquitectura/local.png" width="2048" height="1320" alt="Arquitectura local: pantallas, estado, repositorio, reproducción, datos persistentes y temporadas."></a>
+<div class="copy"><span class="number">01 / EN EL DISPOSITIVO</span><h2>Arquitectura local</h2><p>Cómo se conectan las pantallas, la lógica de videos, los archivos y las preferencias guardadas. Sigue el recorrido de un like y el cambio de temporada.</p><a class="link" href="arquitectura/local.html">Explorar diagrama local →</a></div>
+</article>
+<article class="card">
+<a href="arquitectura/proveedores.html" aria-label="Abrir el diagrama interactivo de Provider y fuentes externas de video"><img src="arquitectura/proveedores.png" width="2048" height="1320" alt="Consumo de videos: pantallas, VideoFeedProvider, repositorio, tres catálogos, reproducción HTTPS y persistencia local."></a>
+<div class="copy"><span class="number">02 / FUENTES EXTERNAS DE VIDEO</span><h2>Provider y videos externos</h2><p>Cómo el Provider carga los feeds, el repositorio combina tres catálogos y el reproductor consume los videos remotos. Incluye los likes y favoritos guardados en el dispositivo.</p><a class="link" href="arquitectura/proveedores.html">Explorar consumo de videos →</a></div>
+</article>
+</section>
+<section class="notes" aria-label="Cómo explorar la práctica">
+<div><h3>Diagramas para explorar</h3><p>Abre una vista y selecciona sus componentes para consultar el código fuente. Puedes cambiar el tema, ampliar y exportar desde el visor de Archify.</p></div>
+<div><h3>Una prueba de persistencia</h3><p>En la demo, marca el video de @tikitiki_demo. Para comprobar el dato guardado, cierra y reabre la app conservando la misma sesión Android.</p></div>
+<div><h3>Capturas y explicación</h3><p>El README reúne 12 figuras de Halloween, Navidad, San Valentín y el cambio de 0 a 1 like. Esas capturas corresponden al emulador local.</p></div>
+</section>
+</main>
+<footer>Angel de Jesus Baños Tellez · Matrícula 230592 · DMI · Práctica 04<br>Diagramas generados con <a href="https://github.com/tt-a1i/archify">Archify</a> · Publicación en GitHub Pages · Demo en Appetize.</footer>
+</body>
+</html>

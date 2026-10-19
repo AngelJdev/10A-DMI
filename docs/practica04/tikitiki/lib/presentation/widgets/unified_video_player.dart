@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 import '../../domain/entities/video.dart';
+import '../providers/season_provider.dart';
 
 /// Reproductor unificado nativo a pantalla completa sin interfaces de terceros.
 /// Optimizado para evitar trabones: init una sola vez, pausa/resume ligero,
@@ -153,6 +155,8 @@ class _UnifiedVideoPlayerState extends State<UnifiedVideoPlayer> {
 
   @override
   Widget build(BuildContext context) {
+    final seasonTheme = context.watch<SeasonProvider>().currentTheme;
+
     if (_hasError) {
       return Container(
         color: Colors.black,
@@ -233,7 +237,7 @@ class _UnifiedVideoPlayerState extends State<UnifiedVideoPlayer> {
               ),
             ),
 
-          // 3. Animación de corazón flotante al hacer doble tap
+          // 3. Animación de like flotante acorde a la temporada.
           if (_showHeartAnim)
             Center(
               child: TweenAnimationBuilder<double>(
@@ -242,11 +246,11 @@ class _UnifiedVideoPlayerState extends State<UnifiedVideoPlayer> {
                 builder: (context, scale, child) {
                   return Transform.scale(
                     scale: scale,
-                    child: const Icon(
-                      Icons.favorite_rounded,
+                    child: Icon(
+                      seasonTheme.likedIcon,
                       size: 90,
-                      color: Color(0xFFFE2C55),
-                      shadows: [
+                      color: seasonTheme.primaryColor,
+                      shadows: const [
                         Shadow(color: Colors.black54, blurRadius: 12),
                       ],
                     ),

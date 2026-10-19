@@ -12,13 +12,28 @@ class LocalVideoDatasourceImpl implements LocalVideoDatasource {
 
     final rawData = [
       {
+        // Identificador estable y propio: no hereda likes de otros videos ni
+        // se reinicia al abrir la app. Permite capturar 0 -> 1 -> reabrir con 1.
+        'id': 'demo_persistencia_likes',
+        'url': 'assets/videos/video_1.mp4',
+        'usuario': '@tikitiki_demo',
+        'descripcion':
+            'Mi primer video en TikiTiki. Un corazón para compartir este momento. '
+            '#TikiTiki #SanValentin',
+        'cancion': 'Sonido original - TikiTiki',
+        'likes': 0,
+        'comentarios': 0,
+        'compartidos': 0,
+      },
+      {
         'id': 'mrkolinz_video_1',
         'url': 'assets/videos/mrkolinz_1.mp4',
         'usuario': '@MrKolinz',
         'descripcion':
             'Pero de que me tengo que cuidar o que 👀👀 - MrKolinz. Momento viral y comedia clásica en TikTok. Esta descripción es intencionalmente extensa para probar la funcionalidad de (... más) y el desplazamiento vertical interno exclusivo del texto sin interrumpir el deslizamiento del video principal. #MrKolinz #Comedia #Humor #TikTokViral #Risas',
         'cancion': 'Sonido Original - MrKolinz',
-        'likes': 85200,
+        // Video demostrativo: inicia en 0 para comprobar el like persistente.
+        'likes': 0,
         'comentarios': 3410,
         'compartidos': 2150,
       },

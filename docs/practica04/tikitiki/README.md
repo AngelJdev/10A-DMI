@@ -1,337 +1,290 @@
-# Práctica 04 — TikiTiki (TikTok Clone con Clean Architecture)
+# Práctica 04 — TikiTiki
 
-> Aplicación móvil en Flutter que simula la experiencia central de la red social **TikTok**: reproducción de video vertical a pantalla completa, navegación fluida, arquitectura limpia desacoplada (**Clean Code**), gestión reactiva de estado con **Providers**, soporte de temas estacionales visuales y auditivos (**Halloween**, **Navidad**, **San Valentín** y **Normal**), persistencia en **Local Storage** y consumo multi-fuente (**Local**, **YouTube** y **Online Streams**).
+TikiTiki es una aplicación de videos cortos inspirada en TikTok. Permite recorrer videos, dar Me gusta, guardar favoritos y consultar el perfil. Su apariencia cambia según la fecha: conserva un diseño original durante el año y utiliza estilos especiales para Halloween, Navidad y San Valentín.
 
-- **Estudiante:** Angel de Jesus Baños Tellez
-- **Matrícula:** 230592
-- **Grupo:** 10A
-- **Materia:** Desarrollo Móvil Integral (DMI)
-- **Docente:** M.T.I. Marco A. Ramírez Hernández
-- **Periodo:** Septiembre – Diciembre 2026
+**[Diagramas interactivos](https://angeljdev.github.io/10A-DMI/practica04/)** · **[Demo Android en Appetize](https://appetize.io/app/b_wy3wolryxw65vyzxisnpzln6ay)**
 
----
+**Estudiante:** Angel de Jesus Baños Tellez · **Matrícula:** 230592 · **Grupo:** 10A
 
-## 1. Objetivo de la Práctica
+**Materia:** Desarrollo Móvil Integral (DMI)
 
-El estudiante realizará una aplicación básica que simule la funcionalidad esencial de la Red Social TikTok: la reproducción de videos con desplazamiento vertical fluido, incorporando widgets Stateless y Stateful, gestión de estado con Providers, arquitectura Clean Code por capas y persistencia local de interacciones.
+**Docente:** M.T.I. Marco A. Ramírez Hernández
 
-### Conceptos Clave Incorporados
+**Periodo:** Septiembre – Diciembre de 2026
 
-1. **Providers:** Gestión reactiva del estado de la aplicación mediante `MultiProvider`, `ChangeNotifierProvider`, `SeasonProvider` y `VideoFeedProvider`.
-2. **Manejo de Assets:** Organización de recursos locales en `assets/videos/` (5 videos optimizados < 25 MB totales), `assets/images/` y `assets/audio/` (efectos de audio estacionales en formato WAV PCM de alta compatibilidad).
-3. **Paquetes de Terceros:** Integración de `provider`, `video_player`, `youtube_player_flutter`, `shared_preferences`, `audioplayers` y `google_fonts`.
-4. **Gesture Detector:** Control gestual para pausar/reproducir con un solo tap, dar me gusta instantáneo con doble tap y animación de corazón flotante, y toggles táctiles en botones flotantes.
-5. **Posicionamiento de Widgets:** Empleo estricto de `Positioned`, `Positioned.fill` y `Align` para ubicar controles, contadores, descripciones e indicadores sin colisiones visuales.
-6. **Mappers:** Transformación limpia de modelos de infraestructura (`VideoModel`) a entidades puras del dominio (`Video`) mediante `VideoMapper`.
-7. **Gradientes:** Aplicación de `LinearGradient` superior para legibilidad de cabeceras y gradiente temático inferior acorde a la paleta de temporada.
-8. **Loops:** Iteración sistemática de listas de datos en repositorios y bucles continuos de reproducción de video (`controller.setLooping(true)`) y rotación del disco de vinilo (`AnimationController.repeat()`).
-9. **Aserciones:** Validación estricta en tiempo de construcción (`assert(id.isNotEmpty)`, `assert(likes >= 0)`, etc.) en modelos y entidades del dominio.
-10. **Stacks:** Composición multicapa de video de fondo, sombras degradadas, controles interactivos y overlays informativos.
-11. **Controladores de Video:** Manejo coordinado de `VideoPlayerController` (para assets locales y streams de red MP4) y `YoutubePlayerController` (para videos embebidos de YouTube).
-12. **Clean Code & Clean Architecture:** Separación rigurosa de responsabilidades en capas `Domain`, `Data`, `Core` y `Presentation`.
+## 1. Objetivo
 
----
+Desarrollar una aplicación móvil que permita reproducir videos y realizar interacciones básicas de una red social. La práctica también busca personalizar la experiencia según la temporada y conservar los Me gusta y favoritos después de cerrar la aplicación.
 
-## 2. Tecnologías Utilizadas
+La documentación presenta primero el funcionamiento y las capturas del resultado. Al final se incluyen las instrucciones de ejecución y una referencia breve de la organización del código.
 
-### Lenguajes y Frameworks
+## 2. ¿Qué se puede hacer?
 
-| Tecnología | Versión | Uso en el Proyecto |
-|---|---:|---|
-| **Flutter** | `3.47.5` (stable) | Framework de desarrollo multiplataforma y Material 3. |
-| **Dart** | `3.13.4` | Lenguaje con Null Safety, asincronía (`async/await`) y programación funcional. |
+| Función | Cómo se utiliza |
+|---|---|
+| Ver videos | Deslizar hacia arriba o abajo para cambiar de video. Un toque permite pausar o continuar. |
+| Explorar secciones | Cambiar entre **Discover**, **For You** y **Favorites** con las pestañas superiores o deslizando lateralmente. |
+| Dar Me gusta | Tocar el botón lateral o dar doble toque al video. El icono y la animación cambian con la temporada. |
+| Consultar el perfil | Abrir **Perfil** para ver la colección de videos marcados con Me gusta. |
+| Guardar favoritos | Pulsar **Guardar** para añadir el video a **Favorites**. Es una colección distinta a los Me gusta del perfil. |
+| Comentar | Abrir el botón de comentarios para consultar y agregar texto. |
+| Controlar el audio | Pulsar **Audio/Silencio** para activar o silenciar los videos. El botón superior permite reproducir el efecto de temporada. |
+| Leer la descripción | Pulsar **más** para ampliar el texto y **Ocultar** para volver a la vista breve. |
+| Cambiar de temporada | Utilizar la fecha del dispositivo o tocar el logo superior para abrir el selector de temas. |
 
-### Paquetes (`pubspec.yaml`)
+El contenido combina archivos incluidos en el proyecto y videos de demostración disponibles en línea. Los archivos incluidos pueden reproducirse sin descargar el video; el contenido en línea necesita conexión a Internet.
 
-| Paquete | Versión | Función dentro del Proyecto |
-|---|---:|---|
-| `provider` | `^6.0.5` | Inyección de dependencias y reactividad (`SeasonProvider`, `VideoFeedProvider`). |
-| `video_player` | `^2.14.1` | Reproducción de videos locales en assets y streams online de alta velocidad. |
-| `youtube_player_flutter` | `^10.0.1` | Reproducción de contenido desde la API IFrame de YouTube. |
-| `shared_preferences` | `^2.5.6` | Almacenamiento local persistente (conteo de likes, estado me gusta, favoritos y tema forzado). |
-| `audioplayers` | `^6.8.1` | Reproducción de efectos de sonido temáticos al cambiar de temporada. |
-| `google_fonts` | `^9.0.0` | Tipografías temáticas por temporada (`Creepster`, `Mountains of Christmas`, `Dancing Script`, `Inter`). |
-| `cupertino_icons` | `^1.0.8` | Iconografía auxiliar del sistema. |
-| `flutter_lints` | `^6.0.0` | Reglas de estilo y calidad de código ejecutadas con `flutter analyze`. |
+## 3. Capturas y resultado visual
 
----
+Las imágenes siguientes corresponden a las capturas agregadas al proyecto. Se ordenaron para mostrar el acceso a la app, la navegación, las interacciones y las diferencias entre temporadas.
 
-## 3. Funcionalidades Específicas Implementadas
+### 3.1. Icono original de TikiTiki
 
-### A. Temas Visuales y Auditivos por Temporada
+<p align="center">
+  <img src="logo_normal.jpeg" alt="Pantalla de inicio de Android con el icono original de TikiTiki en azul y naranja" width="300">
+</p>
 
-La aplicación adapta dinámicamente su paleta cromática, tipografía, iconografía y efectos de audio según la temporada:
+**Figura 1. Acceso a la aplicación.** El icono original conserva el símbolo de reproducción, el birrete y los colores azul y naranja. Esta imagen muestra cómo se identifica TikiTiki antes de abrirla.
 
-| Temporada | Mes Automático | Tipografía (Google Fonts) | Paleta de Colores | Iconos Temáticos | Efecto de Audio |
-|---|:---:|---|---|---|---|
-| **🎃 Halloween** | Octubre (`10`) | `Creepster` / `Cinzel` | Naranja Calabaza (`#FF6B00`), Púrpura Místico (`#8A2BE2`), Verde Ectoplasma (`#39FF14`) | Murciélago / Luna (`Icons.nightlight_round`) | `assets/audio/halloween.wav` |
-| **🎄 Navidad** | Diciembre (`12`) | `Mountains of Christmas` / `Quicksand` | Rojo Navideño (`#E50914`), Verde Pino (`#1E5128`), Dorado Campana (`#FFD700`) | Estrella (`Icons.star`), Regalo (`Icons.card_giftcard`) | `assets/audio/christmas.wav` |
-| **💝 San Valentín** | Febrero (`2`) | `Dancing Script` / `Poppins` | Rosa Pasión (`#FF2E93`), Rojo Carmín (`#D80032`), Oro Rosa (`#FFB6C1`) | Corazón Voluntario (`Icons.volunteer_activism`) | `assets/audio/valentines.wav` |
-| **📱 Normal** | Resto del año | `Inter` (TikTok Clásico) | Rojo TikTok (`#FE2C55`), Cian Eléctrico (`#25F4EE`), Negro Puro (`#000000`) | Corazón Clásico (`Icons.favorite`), Nota Musical | `assets/audio/normal.wav` |
+### 3.2. Pantalla principal y perfil en Halloween
 
-- **Detección Automática:** Al iniciar, `SeasonProvider` consulta la fecha actual del sistema con `DateTime.now().month`.
-- **Mecanismo de Prueba Persistente:** Se incluye el botón de temporada en el `TopNavigationBar` que despliega `SeasonSelectorDialog`. Permite al usuario forzar cualquier temporada para evaluación; la selección se guarda en `SharedPreferences` y perdura al reiniciar la aplicación, pudiendo restaurarse a modo automático en cualquier momento.
+| Pantalla de videos | Perfil y Me gusta |
+|:---:|:---:|
+| <img src="tiktokApi.jpeg" alt="Video de MrKolinz en For You con tema Halloween, llama de Me gusta y botón Guardado" width="300"> | <img src="perfil_guardado.jpeg" alt="Perfil con tema Halloween que muestra un video en la sección Me gusta" width="300"> |
+| **Figura 2. Video e interacciones.** | **Figura 3. Colección del perfil.** |
 
-### B. Secciones Discover / For You / Favorites con Desplazamiento Lateral
+En **For You** se reproduce un video de MrKolinz y aparecen los controles de Me gusta, comentarios, guardado y sonido. El estilo de Halloween utiliza detalles naranjas y morados, una llama para los Me gusta y una tipografía decorativa.
 
-- **Estructura en `PageView` Horizontal:** En `MainScreen`, la raíz dispone de un `PageView` horizontal que permite deslizar a la izquierda o derecha entre:
-  - **Discover (Página 0):** Exploración de videos de múltiples fuentes (YouTube, Vimeo y Dailymotion) con barra superior de filtros interactivos (`Todos`, `YouTube`, `Vimeo`, `Dailymotion`).
-  - **For You / Para ti (Página 1):** Feed principal con la mezcla optimizada de videos locales en assets y transmisiones en red.
-  - **Favorites / Favoritos (Página 2):** Colección personalizada de videos guardados por el usuario, respaldados en `SharedPreferences`.
-- **Desplazamiento Vertical Interno:** Cada una de las 3 secciones contiene su propio `PageView.builder(scrollDirection: Axis.vertical)` para navegar video por video de forma independiente.
+La segunda captura muestra el perfil con **Me gusta (1)** y un video dentro de esa colección. Ese número indica cuántos videos ha marcado el usuario; el contador de la miniatura corresponde a los likes del video.
 
-### C. Muteado y Activación de Sonido Dinámico
+Aunque el archivo de la figura 2 se llama `tiktokApi.jpeg`, la pantalla muestra la etiqueta **Local Asset**. La captura documenta un video incluido en el proyecto, no una llamada a la API de TikTok. Del mismo modo, `perfil_guardado.jpeg` muestra la colección de **Me gusta**, no la pestaña **Favorites**.
 
-- Ubicado en la columna de acciones de la esquina inferior derecha (`VideoSideActions`).
-- Dispone del icono interactivo de volumen (`Icons.volume_up` cuando el sonido está activo y `Icons.volume_off` en rojo cuando está silenciado).
-- Al pulsar, `VideoFeedProvider.toggleMute()` conmuta el estado global y ajusta el volumen del controlador activo (`controller.setVolume(0.0)` vs `controller.setVolume(1.0)` y `youtubeController.mute()` vs `youtubeController.unMute()`).
+### 3.3. Exploración de contenido en Discover
 
-### D. Persistencia de Me Gustas (+1 / -1) en Local Storage
+| Vista etiquetada Local Asset | Vista etiquetada YouTube |
+|:---:|:---:|
+| <img src="localasset.jpeg" alt="Discover reproduciendo Big Buck Bunny con etiqueta Local Asset, descripción y controles laterales" width="300"> | <img src="api_y.jpeg" alt="Discover reproduciendo Sintel con etiqueta YouTube y controles de interacción" width="300"> |
+| **Figura 4. Big Buck Bunny en Discover.** | **Figura 5. Sintel en Discover.** |
 
-- Al tocar el botón de Me Gusta:
-  - Si el video **no** tenía like: se incrementa el contador (+1), `isLiked = true`, y se guarda tanto el nuevo contador como el flag en `SharedPreferences` (`likes_{videoId}` y `liked_{videoId}`).
-  - Si el video **ya** tenía like y se desmarca: se resta un me gusta (-1), `isLiked = false`, y se persiste en almacenamiento local.
-- Los datos son persistentes entre sesiones y reinicios de la aplicación mientras no se borre la memoria caché del dispositivo.
+Estas capturas muestran la sección **Discover**, la reproducción vertical y la información del autor, descripción y sonido. También se aprecia el botón **más**, que permite ampliar las descripciones largas, y el estado **Silencio** del reproductor.
 
-### E. Descripción Extensa con "... más" y Desplazamiento Vertical
+Las etiquetas son las que muestra la interfaz. En la versión actual, los videos de demostración de estas fuentes se obtienen mediante enlaces públicos; la etiqueta **YouTube** no significa que se esté utilizando su API oficial. La etiqueta **Local Asset** tampoco basta por sí sola para demostrar que el archivo está almacenado en el dispositivo.
 
-- En `VideoDescriptionWidget`, si la descripción del video supera el umbral de caracteres (> 80 caracteres), se muestra recortada con el botón interactivo **más**.
-- Al presionar **más**, la descripción se expande dentro de un contenedor acotado con `Scrollbar` y `SingleChildScrollView(scrollDirection: Axis.vertical)`.
-- Esto permite al usuario deslizar verticalmente el texto largo de la descripción sin interferir con el gesto de cambio de video del `PageView` principal. Al terminar, puede presionar **Ocultar** para regresar a la vista compacta.
+### 3.4. Diseño de Navidad
 
-### F. Consumo de 3 DataSources Diferentes
+| Pantalla principal | Perfil |
+|:---:|:---:|
+| <img src="navidad_feed.jpeg" alt="For You con logo navideño, estrella de Me gusta y detalles rojos, verdes y dorados" width="300"> | <img src="navidad_perfil.jpeg" alt="Perfil navideño con nombre en tipografía decorativa, borde rojo y dos videos con Me gusta" width="300"> |
+| **Figura 6. Reproducción con estilo navideño.** | **Figura 7. Perfil con estilo navideño.** |
 
-El proyecto implementa 3 fuentes de datos independientes desacopladas bajo la arquitectura Clean Code:
+El diseño navideño cambia el logo superior, los colores de los controles, la tipografía y el icono de Me gusta, que pasa de una llama a una estrella. Los detalles rojos, verdes y dorados distinguen esta temporada.
 
-1. **`LocalVideoDatasourceImpl`:** Carga los videos MP4 locales ubicados en `assets/videos/`, incluyendo los 2 videos virales descargados por el usuario de `@MrKolinz` (`mrkolinz_1.mp4`: *"Pero de que me tengo que cuidar o que 👀👀"* y `mrkolinz_2.mp4`: *"QUE LE ANDAS AGARRANDO AL CHENTE, KIKO 😭😭"*), junto a los videos demostrativos de desarrollo, totalizando ~28 MB de assets (muy por debajo del límite de 100 MB para commits).
-2. **`YouTubeVideoDatasourceImpl`:** Consume videos de YouTube reales vía `YoutubePlayerController` (videos oficiales de Google, Flutter y el primer video histórico de YouTube).
-3. **`OnlineStreamDatasourceImpl`:** Consume videos en streaming MP4 de alta velocidad (Vimeo y Dailymotion / Cloud Buckets) para reproducción fluida en red.
-4. **`StorageService`:** Abstracción unificada de `SharedPreferences` para la persistencia de likes, favoritos y temporadas.
+En el perfil se observa el nombre con otra tipografía, el borde rojo del avatar y la sección **Me gusta (2)** con dos videos. La comparación con Halloween permite apreciar cómo la misma función adopta una presentación diferente.
 
----
+### 3.5. Diseño de San Valentín y prueba de Me gusta
 
-## 4. Diagramas de Arquitectura (Mermaid)
+<p align="center">
+  <img src="logo_sanvalentin.jpeg" alt="Arte de TikiTiki para San Valentín con corazones, símbolo de reproducción y birrete en tonos rojos, rosas y dorados" width="420">
+</p>
 
-### Diagrama 1: Arquitectura con Provider Local
+**Figura 8. Logo de San Valentín.** Esta variante conserva el símbolo de TikiTiki y añade corazones, listones y tonos rojos y rosas. El mismo estilo se utiliza en el logo superior de la app y en su icono estacional de Android.
 
-Flujo directo desacoplado donde la interfaz de usuario interactúa con un Provider que consume el Repositorio de videos abastecido por la fuente local de assets.
+| Antes de dar Me gusta | Después de dar Me gusta |
+|:---:|:---:|
+| <img src="sanvalentin_0likes.jpeg" alt="Video de tikitiki_demo con diseño de San Valentín, corazón sin marcar y contador en 0" width="300"> | <img src="like+1.jpeg" alt="El mismo video de tikitiki_demo con corazón rosa activado y contador incrementado a 1" width="300"> |
+| **Figura 9. Video con 0 likes.** | **Figura 10. El mismo video con 1 like.** |
 
-```mermaid
-graph TD
-    subgraph Presentation_Layer [Capa de Presentación]
-        UI[VideoFeedScreen / VideoPlayerItem]
-        VFP[VideoFeedProvider]
-        UI -->|Observa estado / Envía eventos| VFP
-    end
+Las dos capturas muestran el mismo video de **@tikitiki_demo**. Antes de la interacción, el corazón está vacío y el contador indica **0**. Al pulsarlo, el corazón se rellena de rosa, aparece un resplandor a su alrededor y el contador sube a **1**.
 
-    subgraph Domain_Layer [Capa de Dominio]
-        UC[GetVideos UseCase]
-        VRepoInterface[<<interface>> VideoRepository]
-        Entity[Video Entity]
-        VFP -->|Invoca caso de uso| UC
-        UC -->|Consulta repositorio| VRepoInterface
-        VRepoInterface -->|Retorna entidades puras| Entity
-    end
+También se aprecian el logo de corazones, el degradado rosa en la parte inferior y los detalles de color en el avatar y los controles. La navegación y la reproducción mantienen su funcionamiento mientras cambia la apariencia.
 
-    subgraph Data_Layer [Capa de Datos e Infraestructura]
-        VRepoImpl[VideoRepositoryImpl]
-        LocalDS[<<interface>> LocalVideoDatasource]
-        LocalDSImpl[LocalVideoDatasourceImpl]
-        Mapper[VideoMapper]
-        Model[VideoModel]
-        Assets[(Assets Videos /video_1..5.mp4)]
+| Perfil de San Valentín | Icono en Android |
+|:---:|:---:|
+| <img src="perfil_san.jpeg" alt="Perfil con tipografía cursiva rosa, avatar iluminado y tres videos con Me gusta; el primero muestra 1 like" width="300"> | <img src="iconosan.jpeg" alt="Pantalla de inicio de Android con el icono rosa de San Valentín en la parte inferior derecha y el acceso de desarrollo con el logo original" width="300"> |
+| **Figura 11. Video añadido al perfil.** | **Figura 12. Icono estacional antes de abrir la app.** |
 
-        VRepoInterface -.->|Implementado por| VRepoImpl
-        VRepoImpl -->|Solicita modelos| LocalDS
-        LocalDS -.->|Implementado por| LocalDSImpl
-        LocalDSImpl -->|Lee archivos locales| Assets
-        LocalDSImpl -->|Construye con Loop| Model
-        Model -->|Mapeado por| Mapper
-        Mapper -->|Produce| Entity
-    end
+En el perfil aparece **Me gusta (3)** porque la colección contiene el video nuevo y dos videos marcados anteriormente. La primera miniatura muestra **1 like**, correspondiente al video de demostración. Se distinguen además el nombre en cursiva, el borde rosa del avatar y los corazones de la temporada.
 
-    style Presentation_Layer fill:#1e1e24,stroke:#FE2C55,stroke-width:2px,color:#fff
-    style Domain_Layer fill:#162447,stroke:#25F4EE,stroke-width:2px,color:#fff
-    style Data_Layer fill:#1f4068,stroke:#FF6B00,stroke-width:2px,color:#fff
+En la pantalla de inicio de Android, el icono rosa de San Valentín se encuentra en la parte inferior derecha. El acceso **TikiTiki · desarrollo**, situado junto a la otra app de Flutter, conserva el logo azul y naranja: es la entrada de depuración, distinta del acceso estacional.
+
+### 3.6. Resumen de las evidencias
+
+| Aspecto documentado | Evidencia incluida |
+|---|---|
+| Identidad original | Icono de TikiTiki en Android, figura 1. |
+| Diseño de Halloween | Pantalla de videos y perfil, figuras 2 y 3. |
+| Exploración de contenido | Dos vistas de Discover, figuras 4 y 5. |
+| Diseño de Navidad | Pantalla de videos y perfil, figuras 6 y 7. |
+| Diseño de San Valentín | Logo, pantalla de videos, perfil e icono de Android, figuras 8 a 12. |
+| Incremento de Me gusta | El mismo video pasa de 0 a 1 y aparece en el perfil, figuras 9 a 11. |
+
+Las capturas anteriores con contadores como **85.2K** muestran el diseño de otras temporadas; las figuras 9 y 10 corresponden a la prueba preparada desde cero. Las imágenes adjuntas comprueban el incremento y la incorporación al perfil. No se adjuntó una captura identificada como posterior al cierre y reapertura; la sección 5 explica cómo comprobar ese paso de persistencia.
+
+El audio y el movimiento de las animaciones se comprueban usando la app o mediante una grabación de pantalla. Las funciones de favoritos, comentarios, descripción ampliada y selector de temporadas se explican en el documento, aunque no cuentan con capturas específicas en esta galería.
+
+## 4. Diseños según la fecha
+
+Al iniciar en modo automático, la aplicación consulta la fecha del dispositivo y elige el estilo correspondiente. Los días inicial y final de cada periodo están incluidos.
+
+| Estilo | Periodo | Cambios principales |
+|---|---|---|
+| Original | Fuera de las fechas especiales | Logo azul y naranja; interfaz oscura, corazón de Me gusta y presentación habitual. |
+| Halloween | 15 de octubre al 5 de noviembre | Logo de Halloween, tonos naranjas y morados, letras decorativas y llama de Me gusta. |
+| Navidad | 10 de diciembre al 6 de enero | Logo navideño, rojo, verde y dorado, tipografía navideña y estrella de Me gusta. |
+| San Valentín | 1 al 14 de febrero | Logo con corazones, tonos rosas y rojos, letras cursivas y corazón de Me gusta. |
+
+Cada temporada tiene un sonido de entrada y modifica los detalles visuales de la aplicación. El tema también se puede elegir manualmente desde el logo superior; esa selección se conserva hasta volver a **Automático**.
+
+### Cómo cambiar la fecha para tomar capturas
+
+El archivo que se modifica es [lib/core/theme/season_date_config.dart](lib/core/theme/season_date_config.dart). Buscar la variable `simulatedSeasonDate` y dejar **una sola declaración** con la fecha deseada:
+
+| Diseño que se quiere mostrar | Valor de ejemplo |
+|---|---|
+| Original | `DateTime(2026, 7, 10)` |
+| Halloween | `DateTime(2026, 10, 20)` |
+| Navidad | `DateTime(2026, 12, 20)` |
+| San Valentín | `DateTime(2026, 2, 10)` |
+| Fecha real del dispositivo | `null` |
+
+Por ejemplo, para Navidad:
+
+```dart
+final DateTime? simulatedSeasonDate = DateTime(2026, 12, 20);
 ```
 
----
+Para volver a la fecha real:
 
-### Diagrama 2: Arquitectura Multi-DataSource con Persistencia en Local Storage
-
-Flujo completo donde el Repositorio orquesta tres fuentes de datos heterogéneas (Local Assets, YouTube y Streaming Online Vimeo/Dailymotion) y coordina la persistencia con `SharedPreferences`.
-
-```mermaid
-graph TD
-    subgraph Presentation_Layer [Capa de Presentación]
-        MainUI[MainScreen - PageView Horizontal]
-        Tabs[TopNavigationBar - Discover / For You / Favorites]
-        ThemeUI[SeasonProvider - Halloween / Navidad / San Valentín]
-        FeedProv[VideoFeedProvider]
-        
-        MainUI --> Tabs
-        MainUI --> FeedProv
-        MainUI --> ThemeUI
-    end
-
-    subgraph Domain_Layer [Capa de Dominio - Reglas de Negocio]
-        GetVideosUC[GetVideos UseCase]
-        RepoContract[<<interface>> VideoRepository]
-        DomainVideo[Video Entity con Aserciones]
-        
-        FeedProv --> GetVideosUC
-        GetVideosUC --> RepoContract
-        RepoContract --> DomainVideo
-    end
-
-    subgraph Data_Layer [Capa de Datos - Repositorios y Mappers]
-        RepoImpl[VideoRepositoryImpl]
-        Mapper[VideoMapper]
-        RepoContract -.->|Implementa| RepoImpl
-        RepoImpl --> Mapper
-        Mapper --> DomainVideo
-    end
-
-    subgraph Data_Sources [Fuentes de Datos Heterogéneas]
-        DS1[LocalVideoDatasourceImpl]
-        DS2[YouTubeVideoDatasourceImpl]
-        DS3[OnlineStreamDatasourceImpl]
-        DSLocal[StorageService - SharedPreferences]
-        
-        RepoImpl -->|1. Videos Locales| DS1
-        RepoImpl -->|2. YouTube IFrame API| DS2
-        RepoImpl -->|3. Streams Vimeo / Dailymotion| DS3
-        RepoImpl -->|4. Persistencia Likes / Favoritos / Temas| DSLocal
-    end
-
-    subgraph External_Resources [Recursos Externos y Dispositivo]
-        LocalFiles[(assets/videos/ & assets/audio/)]
-        YTApi[(YouTube Platform)]
-        CloudCDN[(Cloud CDN MP4 Streams)]
-        LocalStorage[(Dispositivo SharedPreferences)]
-
-        DS1 --> LocalFiles
-        DS2 --> YTApi
-        DS3 --> CloudCDN
-        DSLocal --> LocalStorage
-        ThemeUI -->|Guarda / Lee Tema| DSLocal
-    end
-
-    style Presentation_Layer fill:#0f172a,stroke:#38bdf8,stroke-width:2px,color:#fff
-    style Domain_Layer fill:#1e1b4b,stroke:#818cf8,stroke-width:2px,color:#fff
-    style Data_Layer fill:#14532d,stroke:#4ade80,stroke-width:2px,color:#fff
-    style Data_Sources fill:#701a75,stroke:#f472b6,stroke-width:2px,color:#fff
-    style External_Resources fill:#312e81,stroke:#a78bfa,stroke-width:2px,color:#fff
+```dart
+final DateTime? simulatedSeasonDate = null;
 ```
 
----
+1. Guardar el archivo.
+2. Detener por completo la ejecución y volver a iniciar con `flutter run`.
+3. Capturar la pantalla de videos y el perfil.
+4. Presionar **Inicio** en Android para que se aplique el icono estacional y esperar a que se actualice.
+5. Capturar el icono desde la pantalla de inicio o el listado de aplicaciones.
 
-## 5. Estructura de Directorios del Proyecto
+La fecha simulada tiene prioridad al iniciar. Al regresar a `null`, seleccionar **Automático** si antes se eligió un tema manualmente. El icono se actualiza después de ejecutar la app y pasarla a segundo plano.
 
-```text
-tikitiki/
-├── assets/
-│   ├── audio/
-│   │   ├── christmas.wav        # Chime estacional navideño
-│   │   ├── halloween.wav        # Tono sintético misterioso
-│   │   ├── normal.wav           # Pop característico estándar
-│   │   └── valentines.wav       # Acorde armónico dulce
-│   ├── images/
-│   │   └── logo.png             # Logotipo de la app
-│   └── videos/
-│       ├── video_1.mp4          # Video local 1
-│       ├── video_2.mp4          # Video local 2
-│       ├── video_3.mp4          # Video local 3
-│       ├── video_4.mp4          # Video local 4
-│       └── video_5.mp4          # Video local 5
-├── lib/
-│   ├── config/
-│   │   └── app_theme.dart       # Configuración global del tema
-│   ├── core/
-│   │   ├── theme/
-│   │   │   └── season_theme.dart    # Enums y configuraciones por temporada
-│   │   └── utils/
-│   │       ├── number_formats.dart  # Formateo de números (1.2K, 3.5M)
-│   │       └── storage_service.dart # SharedPreferences para Likes y Temporada
-│   ├── data/
-│   │   ├── datasources/
-│   │   │   ├── local_video_datasource.dart     # DS 1: Videos locales
-│   │   │   ├── youtube_video_datasource.dart   # DS 2: YouTube Videos
-│   │   │   └── online_stream_datasource.dart   # DS 3: Vimeo / Dailymotion
-│   │   ├── mappers/
-│   │   │   └── video_mapper.dart               # Mapeo Model -> Entity
-│   │   ├── models/
-│   │   │   └── video_model.dart                # Modelo de datos serializable
-│   │   └── repositories/
-│   │       └── video_repository_impl.dart      # Implementación del repositorio
-│   ├── domain/
-│   │   ├── entities/
-│   │   │   └── video.dart                      # Entidad pura con aserciones
-│   │   ├── repositories/
-│   │   │   └── video_repository.dart           # Contrato abstracto
-│   │   └── usecases/
-│   │       └── get_videos.dart                 # Caso de uso GetVideos
-│   ├── presentation/
-│   │   ├── providers/
-│   │   │   ├── season_provider.dart            # Provider de temporada y audio
-│   │   │   └── video_feed_provider.dart        # Provider de videos y mute
-│   │   ├── screens/
-│   │   │   ├── discover/
-│   │   │   │   └── discover_screen.dart        # Sección Discover con filtros
-│   │   │   ├── favorites/
-│   │   │   │   └── favorites_screen.dart       # Sección Favoritos
-│   │   │   └── video_feed_screen.dart          # Sección For You
-│   │   └── widgets/
-│   │       ├── bottom_navigation_bar_widget.dart # Barra inferior TikTok
-│   │       ├── season_selector_dialog.dart       # Modal de prueba de temporadas
-│   │       ├── top_navigation_bar.dart           # Pestañas y selector superior
-│   │       ├── unified_video_player.dart         # Player local, red y YouTube
-│   │       ├── video_description_widget.dart     # Descripción con scroll vertical
-│   │       ├── video_player_item.dart            # Stack de video completo
-│   │       └── video_side_actions.dart           # Botones laterales y mute
-│   └── main.dart                               # Punto de entrada MultiProvider
-├── test/
-│   ├── core/utils/
-│   │   └── number_formats_test.dart            # Pruebas unitarias de formato
-│   └── widget_test.dart                        # Pruebas de widget
-└── pubspec.yaml                                # Dependencias y configuración
+Durante el desarrollo puede aparecer un segundo acceso llamado **TikiTiki · desarrollo**. Es la entrada fija para ejecutar y depurar la app; para documentar el cambio de icono se utiliza el acceso estacional. El acceso adicional no forma parte de la versión de distribución.
+
+## 5. Me gusta y datos guardados
+
+Los Me gusta y los favoritos se conservan en el dispositivo. Al cerrar y volver a abrir la app, se recupera el estado guardado. Esto permite comprobar que las interacciones permanecen entre sesiones.
+
+**Me gusta** y **Guardar** tienen funciones diferentes: el primero marca el video y lo añade a la colección del perfil; el segundo lo agrega a **Favorites**.
+
+### Comprobación del like de 0 a 1
+
+El primer video, de **@tikitiki_demo**, está configurado para iniciar en **0 likes** cuando no existe un valor anterior guardado para ese video. Tiene un identificador propio, por lo que no hereda los contadores de las capturas anteriores. El valor no se reinicia al abrir la app.
+
+Las figuras 9 y 10 muestran el cambio de **0 a 1** y la figura 11 muestra el video dentro de la colección del perfil. Para repetir la prueba y comprobar también que el like permanece después de cerrar la app:
+
+1. Abrir el primer video y capturar el contador en **0**, sin marcar.
+2. Pulsar Me gusta y capturar el contador en **1**, con el icono activado.
+3. Cerrar completamente la aplicación y volver a abrirla, sin borrar sus datos.
+4. Regresar al mismo video y capturar que continúa con **1 like** y el icono activado.
+5. Revisar el perfil para comprobar que el video aparece en la colección de Me gusta.
+
+Si ya existe un like guardado, no se debe esperar que el contador vuelva a cero con cada arranque. Quitar ese like permite repetir la secuencia en el video de prueba. Borrar los datos o desinstalar la app también elimina las preferencias y demás interacciones guardadas.
+
+Al reabrir, el resultado esperado es que el mismo video siga mostrando **1** y el corazón marcado. Ese paso comprueba la persistencia entre sesiones; consultar el perfil durante una misma sesión comprueba la actualización de la colección.
+
+## 6. Cómo ejecutar la práctica
+
+Se necesita Flutter configurado y un emulador Android o un teléfono conectado.
+
+Desde la carpeta principal del repositorio:
+
+```powershell
+cd docs/practica04/tikitiki
+flutter pub get
+flutter run
 ```
 
----
+Si la terminal ya está dentro de `tikitiki`, basta con ejecutar los dos últimos comandos. La práctica se ha comprobado en un emulador Android; el cambio del icono estacional está implementado para esa plataforma.
 
-## 6. Verificación y Pruebas Automatizadas
+Para actualizar una fecha simulada se recomienda detener y volver a ejecutar la aplicación. Para repetir las capturas de persistencia se debe conservar la instalación y sus datos.
 
-Se realizaron pruebas automatizadas unitarias y de análisis estático con el SDK de Flutter:
+### Probar la demo en Appetize
 
-```bash
-# Análisis estático de código sin errores
+**[Abrir TikiTiki en el navegador](https://appetize.io/app/b_wy3wolryxw65vyzxisnpzln6ay)**
+
+La versión cargada utiliza el diseño de **San Valentín**. Iniciar la demo con el control de reproducción de Appetize y probar el primer video de **@tikitiki_demo**: dar Me gusta y consultar el perfil. El tema también se puede cambiar desde el logo superior.
+
+La demostración usa un emulador remoto con sus propios datos. La disponibilidad y duración de la sesión dependen del servicio de Appetize.
+
+## 7. Diagramas de arquitectura con Archify
+
+Los dos diagramas se generaron con **Archify** y se publican como páginas interactivas en **GitHub Pages**. El visor permite consultar componentes y sus fuentes, ampliar, cambiar entre tema claro y oscuro y exportar la vista.
+
+**[Abrir la portada de arquitectura de TikiTiki](https://angeljdev.github.io/10A-DMI/practica04/)**
+
+### Diagrama 1. Arquitectura local
+
+**[Explorar el diagrama local](https://angeljdev.github.io/10A-DMI/practica04/arquitectura/local.html)**
+
+La app se ejecuta en un teléfono Android o en el emulador de la computadora. Las pantallas envían las acciones al estado del feed; los casos de uso y el repositorio reúnen la información de los videos y las interacciones guardadas. El reproductor abre los archivos incluidos o los videos en línea.
+
+El like **0 → 1**, los favoritos y los comentarios se guardan en el dispositivo. La temporada se decide a partir de la fecha real, simulada o selección manual, y modifica el diseño, el sonido y el icono de Android. La palabra «backend» en la leyenda identifica lógica interna de la app, no un servidor propio.
+
+### Diagrama 2. Arquitectura con Provider y fuentes externas de video
+
+**[Explorar el diagrama de consumo de videos externos](https://angeljdev.github.io/10A-DMI/practica04/arquitectura/proveedores.html)**
+
+Este diagrama muestra cómo se organiza el consumo de videos al incorporar varias fuentes. Las pantallas observan a `VideoFeedProvider`, que carga los feeds mediante `GetVideos` y `VideoRepositoryImpl`. El repositorio combina los catálogos, transforma sus datos a videos de la app y recupera los likes y favoritos guardados.
+
+- **Para ti:** combina videos locales y streams en línea.
+- **Discover:** combina el catálogo llamado YouTube y los streams en línea.
+- **Favoritos y Me gusta:** reúnen las tres fuentes y filtran los videos según las interacciones guardadas.
+
+**Qué se consume en esta versión:** los catálogos están definidos en Dart y contienen las direcciones de los videos. Aunque uno conserva el nombre `YouTubeVideoDatasourceImpl`, utiliza archivos públicos de **Archive.org** como sustituto de YouTube. `UnifiedVideoPlayer` abre esos archivos por **HTTPS** o reproduce un asset si la dirección comienza con `assets/`. Este flujo no consulta las API de YouTube, Vimeo o Dailymotion.
+
+El **Provider** administra el estado de Flutter; el proveedor externo sirve el archivo de video. Los likes y favoritos se guardan en el dispositivo con `SharedPreferences`, sin cambiar los contadores de la plataforma externa. Appetize sigue disponible como demo en la sección anterior, pero no forma parte de este segundo diagrama.
+
+Los originales editables están en [local.architecture.json](../arquitectura/local.architecture.json) y [proveedores.architecture.json](../arquitectura/proveedores.architecture.json). Las vistas HTML son autónomas y se generaron con las comprobaciones de estructura, artefacto y navegador de [Archify](https://github.com/tt-a1i/archify).
+
+## 8. Organización y comprobaciones
+
+La aplicación se desarrolló con **Flutter y Dart**. El código separa las pantallas, la información de los videos y el almacenamiento de las interacciones para facilitar los cambios y el mantenimiento.
+
+En las verificaciones realizadas durante el desarrollo se registraron **10 pruebas aprobadas**, análisis sin incidencias y compilación correcta del APK de depuración. También se comprobó el arranque en el emulador y la activación de los iconos de Navidad y San Valentín. Estas comprobaciones complementan las 12 figuras de la galería; la sección 3.6 distingue lo que muestran las capturas de lo que se comprueba al utilizar la app.
+
+<details>
+<summary>Ver referencia del código y comprobaciones</summary>
+
+### Archivos principales
+
+| Archivo o carpeta | Para qué sirve |
+|---|---|
+| [lib/main.dart](lib/main.dart) | Inicia la app y conecta sus secciones. |
+| [lib/core/theme/season_date_config.dart](lib/core/theme/season_date_config.dart) | Define los periodos de cada temporada y la fecha de prueba. |
+| [lib/core/theme/season_theme.dart](lib/core/theme/season_theme.dart) | Reúne colores, tipografías, logos, iconos y sonidos de cada estilo. |
+| [lib/presentation/providers/season_provider.dart](lib/presentation/providers/season_provider.dart) | Selecciona la temporada y coordina el sonido y el icono. |
+| [lib/presentation/providers/video_feed_provider.dart](lib/presentation/providers/video_feed_provider.dart) | Mantiene actualizadas las listas y las interacciones de los videos. |
+| [lib/core/utils/storage_service.dart](lib/core/utils/storage_service.dart) | Guarda y recupera likes, favoritos, comentarios y tema manual. |
+| [lib/data/datasources/local_video_datasource.dart](lib/data/datasources/local_video_datasource.dart) | Define los videos incluidos y sus contadores iniciales. |
+| [lib/data/datasources/](lib/data/datasources/) | Contiene las fuentes locales y de contenido en línea. |
+| [lib/data/repositories/video_repository_impl.dart](lib/data/repositories/video_repository_impl.dart) | Combina los videos con las interacciones guardadas. |
+| [lib/presentation/](lib/presentation/) | Contiene las pantallas y los controles visibles. |
+| [assets/](assets/) | Incluye imágenes, audios y videos. |
+| [test/](test/) | Contiene las pruebas del calendario, almacenamiento y formato de contadores. |
+
+Los paquetes principales son `provider` para actualizar la interfaz, `video_player` para reproducir los videos, `shared_preferences` para guardar las interacciones, `audioplayers` para los sonidos y `google_fonts` para las tipografías. Las dependencias completas están en [pubspec.yaml](pubspec.yaml).
+
+Los modelos se convierten en entidades mediante un mapper. Esta separación corresponde a la organización por capas de la práctica. Los gestos permiten pausar y dar doble toque; las animaciones y los gradientes acompañan cada temporada; los videos y el disco de música utilizan repetición en bucle.
+
+### Comandos de comprobación
+
+```powershell
 flutter analyze
-
-# Ejecución de pruebas unitarias
 flutter test
+flutter build apk --debug
 ```
 
-Resultado obtenido:
-- **`flutter analyze`:** `0 issues found.`
-- **`flutter test`:** `All tests passed! (6/6 pruebas unitarias exitosas)`
+</details>
 
----
+## 9. Aprendizaje de la práctica
 
-## 7. Instrucciones para Ejecutar la Aplicación
-
-1. Clonar el repositorio y situarse en la rama `practica04`:
-   ```bash
-   git checkout practica04
-   ```
-2. Navegar a la carpeta del proyecto:
-   ```bash
-   cd docs/practica04/tikitiki
-   ```
-3. Descargar las dependencias:
-   ```bash
-   flutter pub get
-   ```
-4. Ejecutar en emulador o dispositivo físico Android/iOS/Web:
-   ```bash
-   flutter run
-   ```
+TikiTiki reúne reproducción de video, navegación, personalización por fecha y almacenamiento local en una misma aplicación. Las capturas permiten comparar Halloween, Navidad y San Valentín, observar el icono estacional en Android y seguir el cambio de un video de **0 a 1 like** hasta su aparición en el perfil. La conservación de las interacciones entre sesiones completa la práctica de almacenamiento de datos.

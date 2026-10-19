@@ -1,0 +1,12 @@
+{
+  "application": "TikiTiki - Practica 04",
+  "platform": "Appetize Android",
+  "appUrl": "https://appetize.io/app/b_wy3wolryxw65vyzxisnpzln6ay",
+  "buildId": "b_wy3wolryxw65vyzxisnpzln6ay",
+  "publicationStatus": "uploaded_user_confirmed",
+  "linkCheck": "HTTP 200 on 2026-10-16",
+  "runtimeValidation": "not_observed_by_agent",
+  "apkSha256": "90f2de207ac1a32f20e82f9034f637dc8f3dc0e2ca75f08e3f5316a7f5e6549c",
+  "architectureHosting": "GitHub Pages",
+  "architectureBaseUrl": "https://angeljdev.github.io/10A-DMI/practica04/"
+}
