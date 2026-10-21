@@ -5,6 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "practica06",
+            "cwd": "${workspaceFolder}/docs/practica06",
+            "program": "${workspaceFolder}/docs/practica06/lib/main.dart",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
             "name": "practica05 (Cards y botones)",
             "cwd": "${workspaceFolder}/docs/practica05",
             "program": "${workspaceFolder}/docs/practica05/lib/main.dart",
