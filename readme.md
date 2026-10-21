@@ -21,6 +21,12 @@
 
 ---
 
+### Manual de Desarrollo Móvil Integral
+
+- [Consultar el manual](MANUAL/MANUAL_MOVIL_INTEGRAL_230592.pdf)
+
+---
+
 ### Proyectos y diagramas de arquitectura
 
 - [hello_world_app](hello_world_app/README.md) — Contador funcional en Flutter.
