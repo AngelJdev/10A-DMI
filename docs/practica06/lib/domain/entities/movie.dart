@@ -25,7 +25,7 @@ class Movie {
   final String overview;
   final double popularity;
   final String posterPath;
-  final String releaseDate;
+  final DateTime? releaseDate;
   final String title;
   final bool video;
   final double voteAverage;
