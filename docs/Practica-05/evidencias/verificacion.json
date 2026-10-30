@@ -1,0 +1,19 @@
+{
+  "fecha": "2026-10-30",
+  "flutter": "3.47.2",
+  "dart": "3.13.2",
+  "dispositivo": "sdk gphone16k x86 64; Android 17 API 37; emulator-5554",
+  "analisis": "flutter analyze: No issues found",
+  "widgets": "flutter test: 11 pruebas aprobadas",
+  "integracion": "flutter drive: recorrido de las diez pantallas aprobado",
+  "capturas": 11,
+  "archify": "3.2.0; ambos diagramas: validate/deliver/check/browser-check aprobados",
+  "apk": {
+    "ruta": "build/app/outputs/flutter-apk/app-release.apk",
+    "bytes": 52230516,
+    "sha256": "a479d62a43106a7acbaf64b38b785398906103f3fa334618c0116289ca61ff12",
+    "modo": "release",
+    "firma": "debug para demostracion"
+  },
+  "appetize": "https://appetize.io/app/b_ue2gmhjvqbxaqfijsdybg7bbze"
+}

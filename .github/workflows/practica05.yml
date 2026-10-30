@@ -1,0 +1,35 @@
+﻿name: Validar Widgets App
+on:
+  push:
+    branches: [practica05]
+    paths: ['docs/Practica-05/**', '.github/workflows/practica05.yml']
+  pull_request:
+    paths: ['docs/Practica-05/**', '.github/workflows/practica05.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  flutter:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: docs/Practica-05
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.2'
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - run: flutter analyze
+      - run: flutter test
+      - run: flutter build apk --release
+      - uses: actions/upload-artifact@v4
+        with:
+          name: widgets-app-android
+          path: docs/Practica-05/build/app/outputs/flutter-apk/app-release.apk

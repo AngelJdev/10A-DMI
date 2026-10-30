@@ -18,6 +18,7 @@
 | 2. | [Mi Primera Aplicación Móvil con Flutter](hello_world_app/README.md) | Codificar una app móvil en Flutter manejando Stateless y Stateful Widgets | 25 | Concluida |
 | 3. | [Yes No Maybe App](docs/practica-03/README.md) | App de chat en Flutter que consulta la API yesno.wtf, usa arquitectura por capas, inyección de dependencias, 18 pruebas y diagramas de arquitectura | 30 | Concluida |
 | 4. | [TikTik](docs/practica04/tikitiki/README.md) | App de videos estilo TikTok con scroll vertical, provider, temas por temporada e iconos personalizados | 30 | En curso |
+| 5. | [Widgets App](docs/Practica-05/README.md) | Catálogo Material 3 con GoRouter, Riverpod, animaciones y scroll infinito | 40 | Concluida |
 
 ---
 
@@ -38,3 +39,7 @@
 - [Práctica 03 — Arquitectura de Yes/No App](https://angeljdev.github.io/10A-DMI/practica-03/)
 - [Práctica 04 — Arquitecturas de TikiTiki con Archify](https://angeljdev.github.io/10A-DMI/practica04/)
 - [Práctica 04 — Demo Android de TikiTiki en Appetize](https://appetize.io/app/b_wy3wolryxw65vyzxisnpzln6ay)
+
+- [Práctica 05 · Widgets App y diagramas Archify](docs/Practica-05/README.md)
+
+- [Práctica 05 — Demo Android de Widgets App en Appetize](https://appetize.io/app/b_ue2gmhjvqbxaqfijsdybg7bbze)
