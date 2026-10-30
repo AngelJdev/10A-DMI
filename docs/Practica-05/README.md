@@ -90,7 +90,7 @@ node RUTA/archify/bin/archify.mjs finalize architecture docs/Practica-05/arquite
 node RUTA/archify/bin/archify.mjs finalize architecture docs/Practica-05/arquitectura/especifica.architecture.json docs/Practica-05/arquitectura/especifica.html --repo-root . --quality showcase --json
 ```
 
-El flujo `pages.yml` publica `docs` en GitHub Pages al subir a `main` o `practica05`. La URL del portal requiere que el despliegue de GitHub Actions haya terminado correctamente.
+La publicación está pendiente de revisión. El flujo `pages.yml` publica `docs` en GitHub Pages únicamente desde `main`. Después de revisar este README se podrá integrar `practica05` mediante un merge `--no-ff`; no se ha realizado ese merge. La URL del portal requiere que el despliegue posterior haya terminado correctamente.
 
 ## Evidencias y verificación
 
@@ -98,9 +98,23 @@ Las once pruebas de widgets cubren navegación, drawer, contador entre rutas, ca
 
 El recorrido de integración abre las diez demostraciones en Android, interactúa con botones, contador, tema, animación, diálogos y Pull to Refresh, y genera capturas reales mediante `integration_test`.
 
-| Inicio | Controles | Tema |
+Las once capturas muestran el inicio y las diez demostraciones. Puedes abrir cada imagen para verla a tamaño completo.
+
+| Inicio | Botones | Tarjetas |
 |---|---|---|
-| ![Inicio](evidencias/01-inicio.png) | ![Controles](evidencias/controls.png) | ![Tema oscuro](evidencias/theme.png) |
+| ![Catálogo principal](evidencias/01-inicio.png) | ![Botones y SnackBar](evidencias/02-botones.png) | ![Elevaciones de tarjetas](evidencias/cards.png) |
+
+| Progreso | Diálogos | Animaciones |
+|---|---|---|
+| ![Indicadores de progreso](evidencias/progress.png) | ![Diálogo de confirmación](evidencias/dialogs.png) | ![Contenedor animado](evidencias/animated.png) |
+
+| Controles | Tutorial | Scroll infinito |
+|---|---|---|
+| ![Controles de selección](evidencias/controls.png) | ![Tutorial con recursos locales](evidencias/tutorial.png) | ![Imágenes después de actualizar](evidencias/infinite.png) |
+
+| Contador | Tema |
+|---|---|
+| ![Contador reactivo](evidencias/counter.png) | ![Tema oscuro y color verde](evidencias/theme.png) |
 
 Consulta [evidencias](evidencias/) para las capturas de todas las pantallas y el registro de verificación.
 
