@@ -18,7 +18,7 @@
 | 2. | [Mi Primera Aplicación Móvil con Flutter](hello_world_app/README.md) | Codificar una app móvil en Flutter manejando Stateless y Stateful Widgets | 25 | Concluida |
 | 3. | [Yes No Maybe App](docs/practica-03/README.md) | App de chat en Flutter que consulta la API yesno.wtf, usa arquitectura por capas, inyección de dependencias, 18 pruebas y diagramas de arquitectura | 30 | Concluida |
 | 4. | [TikTik](docs/practica04/tikitiki/README.md) | App de videos estilo TikTok con scroll vertical, provider, temas por temporada e iconos personalizados | 30 | En curso |
-| 5. | [Widgets App](docs/Practica-05/README.md) | Catálogo Material 3 con GoRouter, Riverpod, animaciones y scroll infinito | 40 | Concluida |
+| 5. | [Práctica 05: Widgets App](docs/Practica-05/) | Catálogo Material 3 con GoRouter, Riverpod, animaciones y scroll infinito | 40 | Concluida |
 
 ---
 
