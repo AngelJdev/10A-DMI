@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "874d753e-662f-4dec-a4ce-bf478e460074",
+  "status": "current",
+  "command": "deliver",
+  "type": "architecture",
+  "input": "C:\\Users\\telle\\OneDrive\\Escritorio\\10A-DMI\\docs\\Practica-05\\arquitectura\\general.architecture.json",
+  "output": "C:\\Users\\telle\\OneDrive\\Escritorio\\10A-DMI\\docs\\Practica-05\\arquitectura\\general.html",
+  "specification": {
+    "sha256": "88afb5ef1ba0d09c0281ef72d79e918a64792f04b66dcfaa0f7747d212e574dd",
+    "bytes": 5446
+  },
+  "artifact": {
+    "sha256": "a1e26cb5607670a65231b49e45366a064aa2f6a6578e731b7011e18efae6b2bc",
+    "bytes": 845286
+  }
+}

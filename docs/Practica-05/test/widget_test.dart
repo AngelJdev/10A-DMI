@@ -148,6 +148,38 @@ void main() {
     await tester.pumpAndSettle();
     expect(tester.takeException(), isNull);
   });
+  testWidgets('galería agrega un lote y refresca el contenido', (tester) async {
+    await tester.pumpWidget(const MaterialApp(home: InfiniteScreen()));
+    await tester.pump();
+    final list = tester.widget<ListView>(find.byType(ListView));
+    expect(list.childrenDelegate.estimatedChildCount, 9);
+    list.controller!.jumpTo(list.controller!.position.maxScrollExtent);
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
+    expect(
+      tester
+          .widget<ListView>(find.byType(ListView))
+          .childrenDelegate
+          .estimatedChildCount,
+      17,
+    );
+    list.controller!.jumpTo(0);
+    await tester.pump();
+    await tester.drag(find.byType(ListView), const Offset(0, 400));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 500));
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pump(const Duration(milliseconds: 500));
+    expect(
+      tester
+          .widget<ListView>(find.byType(ListView))
+          .childrenDelegate
+          .estimatedChildCount,
+      9,
+    );
+    expect(find.text('Imagen 26'), findsOneWidget);
+    await tester.pumpWidget(const SizedBox());
+  });
   testWidgets('galería permite cancelar una carga al desmontarse', (
     tester,
   ) async {

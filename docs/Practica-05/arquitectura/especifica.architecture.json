@@ -1,0 +1,485 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Widgets App · pantallas, rutas y estado",
+    "locale": "es",
+    "output": "docs/Practica-05/arquitectura/especifica.html",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/AngelJdev/10A-DMI.git",
+      "revision": "71922ebc593855c2a538f80ae72e89f19ab141eb"
+    }
+  },
+  "components": [
+    {
+      "id": "buttons",
+      "type": "frontend",
+      "label": "Botones",
+      "sublabel": "/buttons",
+      "pos": [
+        40,
+        40
+      ],
+      "size": [
+        200,
+        70
+      ],
+      "sources": [
+        {
+          "path": "docs/Practica-05/lib/screens/component_screens.dart",
+          "line": 5,
+          "end_line": 94
+        }
+      ]
+    },
+    {
+      "id": "cards",
+      "type": "frontend",
+      "label": "Tarjetas",
+      "sublabel": "/cards",
+      "pos": [
+        280,
+        40
+      ],
+      "size": [
+        200,
+        70
+      ],
+      "sources": [
+        {
+          "path": "docs/Practica-05/lib/screens/component_screens.dart",
+          "line": 95,
+          "end_line": 128
+        }
+      ]
+    },
+    {
+      "id": "progress",
+      "type": "frontend",
+      "label": "Progreso",
+      "sublabel": "/progress",
+      "pos": [
+        520,
+        40
+      ],
+      "size": [
+        200,
+        70
+      ],
+      "sources": [
+        {
+          "path": "docs/Practica-05/lib/screens/progress_screen.dart",
+          "line": 5,
+          "end_line": 49
+        }
+      ]
+    },
+    {
+      "id": "dialogs",
+      "type": "frontend",
+      "label": "Notificaciones y diálogos",
+      "sublabel": "/dialogs",
+      "pos": [
+        760,
+        40
+      ],
+      "size": [
+        200,
+        70
+      ],
+      "sources": [
+        {
+          "path": "docs/Practica-05/lib/screens/interaction_screens.dart",
+          "line": 7,
+          "end_line": 68
+        }
+      ]
+    },
+    {
+      "id": "animated",
+      "type": "frontend",
+      "label": "Animaciones",
+      "sublabel": "/animated",
+      "pos": [
+        1000,
+        40
+      ],
+      "size": [
+        200,
+        70
+      ],
+      "sources": [
+        {
+          "path": "docs/Practica-05/lib/screens/interaction_screens.dart",
+          "line": 69,
+          "end_line": 122
+        }
+      ]
+    },
+    {
+      "id": "controls",
+      "type": "frontend",
+      "label": "Controles",
+      "sublabel": "/controls",
+      "pos": [
+        40,
+        540
+      ],
+      "size": [
+        200,
+        70
+      ],
+      "sources": [
+        {
+          "path": "docs/Practica-05/lib/screens/interaction_screens.dart",
+          "line": 125,
+          "end_line": 189
+        }
+      ]
+    },
+    {
+      "id": "tutorial",
+      "type": "frontend",
+      "label": "Tutorial",
+      "sublabel": "/tutorial",
+      "pos": [
+        280,
+        540
+      ],
+      "size": [
+        200,
+        70
+      ],
+      "sources": [
+        {
+          "path": "docs/Practica-05/lib/screens/tutorial_screen.dart",
+          "line": 25,
+          "end_line": 117
+        }
+      ]
+    },
+    {
+      "id": "infinite",
+      "type": "frontend",
+      "label": "Scroll infinito",
+      "sublabel": "/infinite",
+      "pos": [
+        520,
+        540
+      ],
+      "size": [
+        200,
+        70
+      ],
+      "sources": [
+        {
+          "path": "docs/Practica-05/lib/screens/infinite_screen.dart",
+          "line": 5,
+          "end_line": 122
+        }
+      ]
+    },
+    {
+      "id": "counter",
+      "type": "frontend",
+      "label": "Contador",
+      "sublabel": "/counter",
+      "pos": [
+        760,
+        540
+      ],
+      "size": [
+        200,
+        70
+      ],
+      "sources": [
+        {
+          "path": "docs/Practica-05/lib/screens/state_screens.dart",
+          "line": 8,
+          "end_line": 46
+        }
+      ]
+    },
+    {
+      "id": "theme",
+      "type": "frontend",
+      "label": "Tema",
+      "sublabel": "/theme",
+      "pos": [
+        1000,
+        540
+      ],
+      "size": [
+        200,
+        70
+      ],
+      "sources": [
+        {
+          "path": "docs/Practica-05/lib/screens/state_screens.dart",
+          "line": 48,
+          "end_line": 97
+        }
+      ]
+    },
+    {
+      "id": "menu",
+      "type": "frontend",
+      "label": "Inicio y menú lateral",
+      "sublabel": "/ · catálogo central",
+      "pos": [
+        40,
+        280
+      ],
+      "size": [
+        200,
+        70
+      ],
+      "sources": [
+        {
+          "path": "docs/Practica-05/lib/screens/home_screen.dart",
+          "line": 7,
+          "end_line": 50
+        },
+        {
+          "path": "docs/Practica-05/lib/widgets/app_drawer.dart",
+          "line": 9,
+          "end_line": 38
+        },
+        {
+          "path": "docs/Practica-05/lib/config/menu_items.dart",
+          "line": 9,
+          "end_line": 80
+        }
+      ]
+    },
+    {
+      "id": "router",
+      "type": "backend",
+      "label": "GoRouter",
+      "sublabel": "routerProvider",
+      "pos": [
+        520,
+        270
+      ],
+      "size": [
+        200,
+        110
+      ],
+      "sources": [
+        {
+          "path": "docs/Practica-05/lib/config/app_router.dart",
+          "line": 13,
+          "end_line": 40
+        }
+      ]
+    },
+    {
+      "id": "local",
+      "type": "database",
+      "label": "Recursos del tutorial",
+      "sublabel": "PNG + loading.gif",
+      "pos": [
+        280,
+        760
+      ],
+      "size": [
+        200,
+        70
+      ],
+      "sources": [
+        {
+          "path": "docs/Practica-05/pubspec.yaml",
+          "line": 19,
+          "end_line": 22
+        }
+      ]
+    },
+    {
+      "id": "remote",
+      "type": "external",
+      "label": "Picsum Photos",
+      "sublabel": "HTTPS · seed por imagen",
+      "pos": [
+        520,
+        760
+      ],
+      "size": [
+        200,
+        70
+      ],
+      "sources": [
+        {
+          "path": "docs/Practica-05/lib/screens/infinite_screen.dart",
+          "line": 89,
+          "end_line": 109
+        }
+      ]
+    },
+    {
+      "id": "counter-state",
+      "type": "backend",
+      "label": "counterProvider",
+      "sublabel": "StateProvider<int>",
+      "pos": [
+        760,
+        760
+      ],
+      "size": [
+        200,
+        70
+      ],
+      "sources": [
+        {
+          "path": "docs/Practica-05/lib/providers/app_providers.dart",
+          "line": 5,
+          "end_line": 5
+        }
+      ]
+    },
+    {
+      "id": "theme-state",
+      "type": "backend",
+      "label": "ThemeNotifier",
+      "sublabel": "StateNotifierProvider",
+      "pos": [
+        1000,
+        760
+      ],
+      "size": [
+        200,
+        70
+      ],
+      "sources": [
+        {
+          "path": "docs/Practica-05/lib/providers/app_providers.dart",
+          "line": 6,
+          "end_line": 18
+        },
+        {
+          "path": "docs/Practica-05/lib/config/app_theme.dart",
+          "line": 11,
+          "end_line": 26
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "router-buttons",
+      "from": "router",
+      "to": "buttons",
+      "label": "/buttons"
+    },
+    {
+      "id": "router-cards",
+      "from": "router",
+      "to": "cards",
+      "label": "/cards"
+    },
+    {
+      "id": "router-progress",
+      "from": "router",
+      "to": "progress",
+      "label": "/progress"
+    },
+    {
+      "id": "router-dialogs",
+      "from": "router",
+      "to": "dialogs",
+      "label": "/dialogs"
+    },
+    {
+      "id": "router-animated",
+      "from": "router",
+      "to": "animated",
+      "label": "/animated"
+    },
+    {
+      "id": "router-controls",
+      "from": "router",
+      "to": "controls",
+      "label": "/controls"
+    },
+    {
+      "id": "router-tutorial",
+      "from": "router",
+      "to": "tutorial",
+      "label": "/tutorial"
+    },
+    {
+      "id": "router-infinite",
+      "from": "router",
+      "to": "infinite",
+      "label": "/infinite"
+    },
+    {
+      "id": "router-counter",
+      "from": "router",
+      "to": "counter",
+      "label": "/counter"
+    },
+    {
+      "id": "router-theme",
+      "from": "router",
+      "to": "theme",
+      "label": "/theme"
+    },
+    {
+      "id": "menu-router",
+      "from": "menu",
+      "to": "router",
+      "label": "context.push"
+    },
+    {
+      "id": "tutorial-local",
+      "from": "tutorial",
+      "to": "local",
+      "label": "Image.asset"
+    },
+    {
+      "id": "infinite-remote",
+      "from": "infinite",
+      "to": "remote",
+      "label": "NetworkImage"
+    },
+    {
+      "id": "counter-counter-state",
+      "from": "counter",
+      "to": "counter-state",
+      "label": "watch / read"
+    },
+    {
+      "id": "theme-theme-state",
+      "from": "theme",
+      "to": "theme-state",
+      "label": "Cambiar tema"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Navegación",
+      "items": [
+        "Inicio y NavigationDrawer comparten menuItems.",
+        "DemoScaffold vuelve con context.pop o dirige al inicio cuando no hay historial."
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "Estado y ciclo de vida",
+      "items": [
+        "counterProvider conserva el contador entre rutas; ThemeNotifier aplica brillo y color globales.",
+        "PageController y ScrollController se liberan en dispose; StreamBuilder cancela su suscripción."
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "Galería y controles",
+      "items": [
+        "La galería comienza con 8 imágenes y agrega lotes de 8 cerca del final.",
+        "RefreshIndicator reemplaza el lote e invalida cargas anteriores; los controles usan setState y Transport."
+      ]
+    }
+  ]
+}

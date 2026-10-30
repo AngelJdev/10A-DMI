@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "finalize",
+  "status": "pass",
+  "type": "architecture",
+  "quality": "showcase",
+  "specification": {
+    "path": "C:\\Users\\telle\\OneDrive\\Escritorio\\10A-DMI\\docs\\Practica-05\\arquitectura\\especifica.architecture.json",
+    "sha256": "ca682da4798e228766dad2ce8c96d6f655696f9e4ba27d771262253fa688734b",
+    "bytes": 10191
+  },
+  "artifact": {
+    "path": "C:\\Users\\telle\\OneDrive\\Escritorio\\10A-DMI\\docs\\Practica-05\\arquitectura\\especifica.html",
+    "sha256": "2e3b0c409710d0243b2311b369ef94855f5db0563c6991c7e2449cc06cecc7eb",
+    "bytes": 869079
+  },
+  "gates": {
+    "validate": "pass",
+    "deliver": "pass",
+    "check": "pass",
+    "browser-check": "pass"
+  },
+  "diagnostics": [],
+  "diagnosticSummary": {
+    "total": 0,
+    "shown": 0,
+    "truncated": false
+  },
+  "evidence": {
+    "receipt": "C:\\Users\\telle\\OneDrive\\Escritorio\\10A-DMI\\docs\\Practica-05\\arquitectura\\review-2-especifica\\especifica.finalize.json",
+    "summaryReceipt": "C:\\Users\\telle\\OneDrive\\Escritorio\\10A-DMI\\docs\\Practica-05\\arquitectura\\review-2-especifica\\especifica.finalize-summary.json",
+    "browserCheckReceipt": "C:\\Users\\telle\\OneDrive\\Escritorio\\10A-DMI\\docs\\Practica-05\\arquitectura\\review-2-especifica\\especifica.browser-check.json"
+  },
+  "update": {
+    "status": "current",
+    "installedVersion": "3.2.0",
+    "availableVersion": "3.2.0",
+    "releaseNotes": null,
+    "checkedAt": "2026-10-30T15:09:46.623Z",
+    "source": "cache",
+    "noticeRequired": false,
+    "noticeText": null
+  },
+  "visualReview": "not-requested",
+  "durationMs": 8059,
+  "browserCheck": {
+    "requested": true,
+    "ran": true
+  }
+}

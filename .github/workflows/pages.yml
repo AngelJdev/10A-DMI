@@ -1,9 +1,10 @@
-﻿name: Deploy GitHub Pages
+name: Deploy GitHub Pages
 
 on:
   push:
     branches:
       - main
+      - practica05
   workflow_dispatch:
 
 permissions:

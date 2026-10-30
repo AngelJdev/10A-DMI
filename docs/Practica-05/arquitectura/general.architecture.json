@@ -1,0 +1,247 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Widgets App · arquitectura general",
+    "locale": "es",
+    "output": "docs/Practica-05/arquitectura/general.html",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/AngelJdev/10A-DMI.git",
+      "revision": "71922ebc593855c2a538f80ae72e89f19ab141eb"
+    }
+  },
+  "components": [
+    {
+      "id": "usuario",
+      "type": "external",
+      "label": "Usuario",
+      "sublabel": "Toques y gestos",
+      "pos": [
+        40,
+        40
+      ],
+      "size": [
+        140,
+        70
+      ],
+      "sources": [
+        {
+          "path": "docs/Practica-05/lib/screens/home_screen.dart",
+          "line": 7,
+          "end_line": 50
+        }
+      ]
+    },
+    {
+      "id": "app",
+      "type": "frontend",
+      "label": "Widgets App",
+      "sublabel": "Flutter + Material 3",
+      "pos": [
+        340,
+        40
+      ],
+      "size": [
+        200,
+        70
+      ],
+      "sources": [
+        {
+          "path": "docs/Practica-05/lib/main.dart",
+          "line": 7,
+          "end_line": 18
+        },
+        {
+          "path": "docs/Practica-05/lib/screens/home_screen.dart",
+          "line": 7,
+          "end_line": 50
+        }
+      ]
+    },
+    {
+      "id": "imagenes",
+      "type": "external",
+      "label": "Imágenes remotas",
+      "sublabel": "HTTPS · Picsum / Unsplash",
+      "pos": [
+        760,
+        40
+      ],
+      "size": [
+        220,
+        70
+      ],
+      "sources": [
+        {
+          "path": "docs/Practica-05/lib/screens/infinite_screen.dart",
+          "line": 89,
+          "end_line": 109
+        }
+      ]
+    },
+    {
+      "id": "router",
+      "type": "backend",
+      "label": "Navegación",
+      "sublabel": "GoRouter · 11 rutas",
+      "pos": [
+        340,
+        300
+      ],
+      "size": [
+        200,
+        70
+      ],
+      "sources": [
+        {
+          "path": "docs/Practica-05/lib/config/app_router.dart",
+          "line": 13,
+          "end_line": 40
+        }
+      ]
+    },
+    {
+      "id": "estado",
+      "type": "backend",
+      "label": "Estado reactivo",
+      "sublabel": "Riverpod · memoria de sesión",
+      "pos": [
+        760,
+        300
+      ],
+      "size": [
+        220,
+        70
+      ],
+      "sources": [
+        {
+          "path": "docs/Practica-05/lib/providers/app_providers.dart",
+          "line": 5,
+          "end_line": 18
+        },
+        {
+          "path": "docs/Practica-05/lib/screens/state_screens.dart",
+          "line": 8,
+          "end_line": 96
+        }
+      ]
+    },
+    {
+      "id": "demos",
+      "type": "frontend",
+      "label": "Pantallas demostrativas",
+      "sublabel": "10 ejemplos interactivos",
+      "pos": [
+        340,
+        560
+      ],
+      "size": [
+        200,
+        70
+      ],
+      "sources": [
+        {
+          "path": "docs/Practica-05/lib/config/menu_items.dart",
+          "line": 9,
+          "end_line": 80
+        },
+        {
+          "path": "docs/Practica-05/lib/screens/tutorial_screen.dart",
+          "line": 31,
+          "end_line": 79
+        },
+        {
+          "path": "docs/Practica-05/lib/screens/infinite_screen.dart",
+          "line": 65,
+          "end_line": 120
+        }
+      ]
+    },
+    {
+      "id": "assets",
+      "type": "database",
+      "label": "Recursos locales",
+      "sublabel": "PNG del tutorial + GIF",
+      "pos": [
+        760,
+        560
+      ],
+      "size": [
+        220,
+        70
+      ],
+      "sources": [
+        {
+          "path": "docs/Practica-05/pubspec.yaml",
+          "line": 19,
+          "end_line": 22
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "usuario-app",
+      "from": "usuario",
+      "to": "app",
+      "label": "Explorar"
+    },
+    {
+      "id": "app-imagenes",
+      "from": "app",
+      "to": "imagenes",
+      "label": "Cargar HTTPS"
+    },
+    {
+      "id": "app-router",
+      "from": "app",
+      "to": "router",
+      "label": "Abrir ruta"
+    },
+    {
+      "id": "router-demos",
+      "from": "router",
+      "to": "demos",
+      "label": "Construir"
+    },
+    {
+      "id": "estado-app",
+      "from": "estado",
+      "to": "app",
+      "label": "Tema reactivo"
+    },
+    {
+      "id": "demos-assets",
+      "from": "demos",
+      "to": "assets",
+      "label": "Leer imágenes"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Tecnologías",
+      "items": [
+        "Flutter y Dart construyen las interfaces de Material 3.",
+        "GoRouter resuelve rutas; Riverpod conserva contador y tema mientras vive ProviderScope."
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "Interacción y recursos",
+      "items": [
+        "Las pantallas con estado local utilizan setState, PageController o ScrollController.",
+        "animate_do anima el tutorial; Stream.periodic alimenta los indicadores."
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "Límites",
+      "items": [
+        "Las imágenes necesitan Internet y ofrecen un mensaje alternativo si fallan.",
+        "No hay servidor propio ni persistencia al cerrar la app."
+      ]
+    }
+  ]
+}

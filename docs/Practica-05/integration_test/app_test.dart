@@ -60,6 +60,13 @@ void main() {
         await tester.drag(find.byType(ListView), const Offset(0, 400));
         await tester.pump();
         await tester.pump(const Duration(seconds: 2));
+        for (
+          var attempt = 0;
+          attempt < 10 && find.text('Imagen 18').evaluate().isEmpty;
+          attempt++
+        ) {
+          await tester.pump(const Duration(milliseconds: 500));
+        }
         expect(find.text('Imagen 18'), findsOneWidget);
       }
       await binding.takeScreenshot(item.path.substring(1));

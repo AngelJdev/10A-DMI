@@ -10,8 +10,8 @@ class ButtonsScreen extends StatelessWidget {
     return DemoScaffold(
       title: 'Botones',
       floatingActionButton: FloatingActionButton(
-        onPressed: () => showMessage(context, 'Acci?n flotante'),
-        tooltip: 'Acci?n flotante',
+        onPressed: () => showMessage(context, 'Acción flotante'),
+        tooltip: 'Acción flotante',
         child: const Icon(Icons.add),
       ),
 
