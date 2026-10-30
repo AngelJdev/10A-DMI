@@ -6,7 +6,7 @@
 
 Aplicación Flutter y Dart con diez pantallas de Material Design 3, navegación declarativa mediante GoRouter y estado reactivo con Riverpod. El proyecto está en `docs/Practica-05`.
 
-- [Código en GitHub, rama practica05](https://github.com/AngelJdev/10A-DMI/tree/practica05/docs/Practica-05).
+- [Código en GitHub, rama main](https://github.com/AngelJdev/10A-DMI/tree/main/docs/Practica-05).
 - [Portal de la práctica y diagramas](https://angeljdev.github.io/10A-DMI/Practica-05/).
 - [Arquitectura general](https://angeljdev.github.io/10A-DMI/Practica-05/arquitectura/general.html) · [Arquitectura específica](https://angeljdev.github.io/10A-DMI/Practica-05/arquitectura/especifica.html).
 - [Demo Android en Appetize](https://appetize.io/app/b_ue2gmhjvqbxaqfijsdybg7bbze).
