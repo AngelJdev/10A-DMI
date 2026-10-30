@@ -40,6 +40,9 @@
 - [Práctica 04 — Arquitecturas de TikiTiki con Archify](https://angeljdev.github.io/10A-DMI/practica04/)
 - [Práctica 04 — Demo Android de TikiTiki en Appetize](https://appetize.io/app/b_wy3wolryxw65vyzxisnpzln6ay)
 
-- [Práctica 05 · Widgets App y diagramas Archify](docs/Practica-05/README.md)
+- [Práctica 05 · Portal y diagramas interactivos Archify](https://angeljdev.github.io/10A-DMI/Practica-05/)
+
+- [Práctica 05 — Arquitectura general interactiva](https://angeljdev.github.io/10A-DMI/Practica-05/arquitectura/general.html)
+- [Práctica 05 — Arquitectura específica interactiva](https://angeljdev.github.io/10A-DMI/Practica-05/arquitectura/especifica.html)
 
 - [Práctica 05 — Demo Android de Widgets App en Appetize](https://appetize.io/app/b_ue2gmhjvqbxaqfijsdybg7bbze)

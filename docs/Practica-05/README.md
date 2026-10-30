@@ -8,7 +8,7 @@ Aplicación Flutter y Dart con diez pantallas de Material Design 3, navegación 
 
 - [Código en GitHub, rama practica05](https://github.com/AngelJdev/10A-DMI/tree/practica05/docs/Practica-05).
 - [Portal de la práctica y diagramas](https://angeljdev.github.io/10A-DMI/Practica-05/).
-- [Arquitectura general](arquitectura/general.html) · [Arquitectura específica](arquitectura/especifica.html).
+- [Arquitectura general](https://angeljdev.github.io/10A-DMI/Practica-05/arquitectura/general.html) · [Arquitectura específica](https://angeljdev.github.io/10A-DMI/Practica-05/arquitectura/especifica.html).
 - [Demo Android en Appetize](https://appetize.io/app/b_ue2gmhjvqbxaqfijsdybg7bbze).
 
 ## Instalación y ejecución
