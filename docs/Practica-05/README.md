@@ -9,7 +9,7 @@ Aplicación Flutter y Dart con diez pantallas de Material Design 3, navegación 
 - [Código en GitHub, rama practica05](https://github.com/AngelJdev/10A-DMI/tree/practica05/docs/Practica-05).
 - [Portal de la práctica y diagramas](https://angeljdev.github.io/10A-DMI/Practica-05/).
 - [Arquitectura general](arquitectura/general.html) · [Arquitectura específica](arquitectura/especifica.html).
-- **Appetize: pendiente de publicación.** El navegador no pudo controlarse porque la herramienta no pudo verificar su URL. No se ha generado un enlace público de demostración.
+- [Demo Android en Appetize](https://appetize.io/app/b_ue2gmhjvqbxaqfijsdybg7bbze).
 
 ## Instalación y ejecución
 
@@ -90,7 +90,7 @@ node RUTA/archify/bin/archify.mjs finalize architecture docs/Practica-05/arquite
 node RUTA/archify/bin/archify.mjs finalize architecture docs/Practica-05/arquitectura/especifica.architecture.json docs/Practica-05/arquitectura/especifica.html --repo-root . --quality showcase --json
 ```
 
-La publicación está pendiente de revisión. El flujo `pages.yml` publica `docs` en GitHub Pages únicamente desde `main`. Después de revisar este README se podrá integrar `practica05` mediante un merge `--no-ff`; no se ha realizado ese merge. La URL del portal requiere que el despliegue posterior haya terminado correctamente.
+El flujo `pages.yml` publica `docs` en GitHub Pages desde `main`. El portal reúne ambos diagramas interactivos, las evidencias y el enlace a la demo Android en Appetize.
 
 ## Evidencias y verificación
 
@@ -118,11 +118,12 @@ Las once capturas muestran el inicio y las diez demostraciones. Puedes abrir cad
 
 Consulta [evidencias](evidencias/) para las capturas de todas las pantallas y el registro de verificación.
 
-## Completar la demo de Appetize
+## Demo Android en Appetize
 
-1. Abre tu cuenta de Appetize y crea una app Android para **Widgets App**.
-2. Sube `build/app/outputs/flutter-apk/app-release.apk` o el APK del artefacto de GitHub Actions.
-3. Inicia una sesión y verifica las pantallas y las imágenes remotas.
-4. Sustituye el estado pendiente de este README y del portal por el enlace público de la demo.
+[Ejecutar Widgets App en Appetize](https://appetize.io/app/b_ue2gmhjvqbxaqfijsdybg7bbze).
 
-La práctica no debe considerarse entregada al 100 % hasta que exista ese enlace y se haya verificado la publicación del portal.
+1. Abre el enlace y pulsa **Start** para iniciar la sesión Android.
+2. Explora las diez demostraciones desde el catálogo o el menú lateral.
+3. Prueba el contador, el tema oscuro, los controles y Pull to Refresh.
+
+La ejecución utiliza los minutos disponibles en la cuenta de Appetize. El APK reproducible se obtiene con `flutter build apk --release`.
