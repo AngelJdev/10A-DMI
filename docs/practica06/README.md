@@ -11,6 +11,33 @@ Cinemapedia es una aplicación Flutter para consultar y explorar películas medi
 - Reseñas locales persistentes para cada película.
 - Interfaz Material 3 adaptable, carruseles y animaciones.
 
+## Capturas de la aplicación
+
+<table>
+  <tr>
+    <td align="center"><strong>Pantalla de inicio</strong></td>
+    <td align="center"><strong>Catálogo regional</strong></td>
+    <td align="center"><strong>Búsqueda</strong></td>
+  </tr>
+  <tr>
+    <td><img src="screenshots/inicio.png" alt="Pantalla de inicio de Cinemapedia" width="230"></td>
+    <td><img src="screenshots/catalogo.png" alt="Catálogo regional de películas" width="230"></td>
+    <td><img src="screenshots/busqueda.png" alt="Búsqueda de películas" width="230"></td>
+  </tr>
+  <tr>
+    <td align="center"><strong>Detalle de película</strong></td>
+    <td align="center"><strong>Menú de navegación</strong></td>
+    <td align="center"><strong>Región e idioma</strong></td>
+  </tr>
+  <tr>
+    <td><img src="screenshots/detalle.png" alt="Detalle, clasificación y sinopsis de una película" width="230"></td>
+    <td><img src="screenshots/regiones.png" alt="Menú de navegación de Cinemapedia" width="230"></td>
+    <td><img src="screenshots/paises.png" alt="Selector de región, idioma y clasificación" width="230"></td>
+  </tr>
+</table>
+
+La pantalla principal reúne el carrusel destacado, el cine del país seleccionado y los próximos estrenos. La búsqueda muestra resultados con año y calificación; el detalle incorpora portada, favoritos, clasificación regional y sinopsis. Desde el menú se accede a categorías, favoritos, búsqueda y a la configuración de país e idioma.
+
 ## Tecnologías
 
 - Flutter y Dart.
