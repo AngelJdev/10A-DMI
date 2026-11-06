@@ -1,4 +1,3 @@
-
 class MovieDb {
   const MovieDb({
     required this.adult,
