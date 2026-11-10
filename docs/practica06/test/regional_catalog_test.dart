@@ -1,3 +1,5 @@
+import 'package:drift/native.dart';
+import 'package:practica06/infrastructure/database/movies_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -41,42 +43,50 @@ class RegionalRepository extends MovieRepositoryImpl {
 }
 
 void main() {
-  testWidgets('País cambia títulos y conserva transición al menos 3 segundos', (
-    tester,
-  ) async {
-    dotenv.loadFromString(envString: 'THE_MOVIEDB_KEY=test');
-    final repository = RegionalRepository();
-    final container = ProviderContainer(
-      overrides: [movieRepositoryProvider.overrideWithValue(repository)],
-    );
-    addTearDown(container.dispose);
-    await tester.pumpWidget(
-      UncontrolledProviderScope(
-        container: container,
-        child: const MaterialApp(home: HomeScreen()),
-      ),
-    );
-    await tester.pumpAndSettle();
-    expect(find.text('MX película 0'), findsOneWidget);
+  testWidgets(
+    'País actualiza el catálogo con una transición breve y paleta estable',
+    (tester) async {
+      dotenv.loadFromString(envString: 'THE_MOVIEDB_KEY=test');
+      final repository = RegionalRepository();
+      final container = ProviderContainer(
+        overrides: [
+          movieRepositoryProvider.overrideWithValue(repository),
+          moviesDatabaseProvider.overrideWith((ref) {
+            final database = MoviesDatabase(NativeDatabase.memory());
+            ref.onDispose(database.close);
+            return database;
+          }),
+        ],
+      );
+      addTearDown(container.dispose);
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: container,
+          child: const MaterialApp(home: HomeScreen()),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('MX película 0'), findsOneWidget);
 
-    container.read(selectedRegionProvider.notifier).state = regionProfiles
-        .firstWhere((r) => r.code == 'BR');
-    await tester.pump();
-    await tester.pump(const Duration(seconds: 2));
-    expect(find.text('Mudando região…'), findsOneWidget);
-    await tester.pump(const Duration(seconds: 2));
-    await tester.pumpAndSettle();
-    expect(find.text('BR película 0'), findsOneWidget);
-    expect(find.text('MX película 0'), findsNothing);
-    expect(find.text('Mudando região…'), findsNothing);
+      container.read(selectedRegionProvider.notifier).state = regionProfiles
+          .firstWhere((r) => r.code == 'BR');
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 250));
+      expect(find.text('Preparando seu catálogo'), findsOneWidget);
+      await tester.pump(const Duration(seconds: 1));
+      await tester.pumpAndSettle();
+      expect(find.text('BR película 0'), findsOneWidget);
+      expect(find.text('MX película 0'), findsNothing);
+      expect(find.text('Preparando seu catálogo'), findsNothing);
 
-    container.read(selectedRegionProvider.notifier).state = regionProfiles
-        .firstWhere((r) => r.code == 'US');
-    await tester.pump();
-    await tester.pump(const Duration(seconds: 4));
-    await tester.pumpAndSettle();
-    expect(find.text('US película 0'), findsOneWidget);
-    expect(find.text('BR película 0'), findsNothing);
-    expect(repository.requests, containsAllInOrder(['MX', 'BR', 'US']));
-  });
+      container.read(selectedRegionProvider.notifier).state = regionProfiles
+          .firstWhere((r) => r.code == 'US');
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 4));
+      await tester.pumpAndSettle();
+      expect(find.text('US película 0'), findsOneWidget);
+      expect(find.text('BR película 0'), findsNothing);
+      expect(repository.requests, containsAllInOrder(['MX', 'BR', 'US']));
+    },
+  );
 }

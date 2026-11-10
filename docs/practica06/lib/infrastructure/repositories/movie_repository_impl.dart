@@ -1,9 +1,19 @@
+import '../../domain/entities/video.dart';
+
 import 'package:practica06/infrastructure/datasources/movie_datasource.dart';
 import 'package:practica06/domain/entities/cast_member.dart';
 import 'package:practica06/domain/entities/movie.dart';
 import 'package:practica06/domain/repositories/movies_repositories.dart';
 
 class MovieRepositoryImpl extends MoviesRepository {
+  @override
+  Future<Movie> getMovieById(int id) => datasource.getMovieById(id);
+  @override
+  Future<List<Movie>> getSimilar(int id, {int page = 1}) =>
+      datasource.getSimilar(id, page: page);
+  @override
+  Future<List<Video>> getYoutubeVideosById(int movieId) =>
+      datasource.getYoutubeVideosById(movieId);
   @override
   Future<List<Movie>> getAnime() => datasource.getAnime();
   @override

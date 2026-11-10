@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import '../../domain/entities/movie.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LocalReview {
@@ -27,17 +29,27 @@ class LocalReview {
 }
 
 class LocalReviewsRepository {
-  Future<List<LocalReview>> load(int movieId) async {
+  String _key(int id, MediaType type) =>
+      '${type == MediaType.series ? 'series' : 'movie'}_reviews_v1_$id';
+
+  Future<List<LocalReview>> load(
+    int movieId, {
+    MediaType type = MediaType.movie,
+  }) async {
     final prefs = await SharedPreferences.getInstance();
-    return (prefs.getStringList('movie_reviews_v1_$movieId') ?? [])
+    return (prefs.getStringList(_key(movieId, type)) ?? [])
         .map(LocalReview.decode)
         .toList();
   }
 
-  Future<void> save(int movieId, List<LocalReview> reviews) async {
+  Future<void> save(
+    int movieId,
+    List<LocalReview> reviews, {
+    MediaType type = MediaType.movie,
+  }) async {
     final prefs = await SharedPreferences.getInstance();
     final saved = await prefs.setStringList(
-      'movie_reviews_v1_$movieId',
+      _key(movieId, type),
       reviews.map((r) => r.encode()).toList(),
     );
     if (!saved) throw StateError('No se pudo guardar la reseña');

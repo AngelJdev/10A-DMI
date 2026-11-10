@@ -1,3 +1,7 @@
+import '../../../domain/entities/video.dart';
+import '../../../domain/entities/movie.dart';
+import '../../providers/catalog_preferences.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -7,13 +11,40 @@ import '../../../infrastructure/repositories/movies_repository_provider.dart';
 import '../../../infrastructure/repositories/local_reviews_repository.dart';
 import '../../localization/app_copy.dart';
 
-final movieTrailerProvider = FutureProvider.family<Map<String, dynamic>?, int>(
-  (ref, id) => ref.watch(movieDatasourceProvider).getTrailer(id),
+final videosFromMovieProvider = FutureProvider.family<List<Video>, int>(
+  (ref, id) => ref.watch(movieRepositoryProvider).getYoutubeVideosById(id),
 );
+final movieTrailerProvider = FutureProvider.family<Video?, int>((
+  ref,
+  id,
+) async {
+  final videos = await ref.watch(videosFromMovieProvider(id).future);
+  return videos.isEmpty ? null : videos.first;
+});
+
+final contentTrailerProvider =
+    FutureProvider.family<Video?, ({int id, MediaType type})>((
+      ref,
+      request,
+    ) async {
+      if (request.type == MediaType.movie) {
+        return ref.watch(movieTrailerProvider(request.id).future);
+      }
+      final locale = ref.watch(selectedRegionProvider).locale;
+      final videos = await ref
+          .watch(seriesRepositoryProvider(locale))
+          .getYoutubeVideosById(request.id);
+      return videos.isEmpty ? null : videos.first;
+    });
 
 class MovieTrailer extends ConsumerWidget {
-  const MovieTrailer({super.key, required this.movieId});
+  const MovieTrailer({
+    super.key,
+    required this.movieId,
+    this.mediaType = MediaType.movie,
+  });
   final int movieId;
+  final MediaType mediaType;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final copy = AppCopy.of(context);
@@ -26,16 +57,25 @@ class MovieTrailer extends ConsumerWidget {
         ),
         const SizedBox(height: 12),
         ref
-            .watch(movieTrailerProvider(movieId))
+            .watch(contentTrailerProvider((id: movieId, type: mediaType)))
             .when(
               loading: () => const LinearProgressIndicator(),
               error: (_, _) => TextButton(
-                onPressed: () => ref.invalidate(movieTrailerProvider(movieId)),
+                onPressed: () {
+                  ref.invalidate(videosFromMovieProvider(movieId));
+                  ref.invalidate(movieTrailerProvider(movieId));
+                  ref.invalidate(
+                    contentTrailerProvider((id: movieId, type: mediaType)),
+                  );
+                },
                 child: Text(copy.text('retry')),
               ),
               data: (video) => video == null
                   ? const Text('No hay tráiler disponible para esta película.')
-                  : _InlineTrailer(key: ValueKey(video['key']), video: video),
+                  : _InlineTrailer(
+                      key: ValueKey(video.youtubeKey),
+                      video: video,
+                    ),
             ),
       ],
     );
@@ -44,7 +84,7 @@ class MovieTrailer extends ConsumerWidget {
 
 class _InlineTrailer extends StatefulWidget {
   const _InlineTrailer({super.key, required this.video});
-  final Map<String, dynamic> video;
+  final Video video;
   @override
   State<_InlineTrailer> createState() => _InlineTrailerState();
 }
@@ -57,7 +97,7 @@ class _InlineTrailerState extends State<_InlineTrailer>
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _controller = YoutubePlayerController.fromVideoId(
-      videoId: widget.video['key'] as String,
+      videoId: widget.video.youtubeKey,
       autoPlay: false,
       params: const YoutubePlayerParams(
         showControls: true,
@@ -77,9 +117,7 @@ class _InlineTrailerState extends State<_InlineTrailer>
     await _controller.pauseVideo();
     try {
       final opened = await launchUrl(
-        Uri.https('www.youtube.com', '/watch', {
-          'v': widget.video['key'] as String,
-        }),
+        Uri.https('www.youtube.com', '/watch', {'v': widget.video.youtubeKey}),
         mode: LaunchMode.externalApplication,
       );
       if (!opened) throw StateError('No se pudo abrir');
@@ -119,12 +157,12 @@ class _InlineTrailerState extends State<_InlineTrailer>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                widget.video['name'] as String,
+                widget.video.name,
                 style: const TextStyle(fontWeight: FontWeight.w700),
               ),
               const SizedBox(height: 4),
               Text(
-                widget.video['iso_639_1'] == 'es' ? 'Español' : 'Otro idioma',
+                widget.video.language == 'es' ? 'Español' : 'Otro idioma',
                 style: const TextStyle(color: Color(0xff666e7a)),
               ),
               const SizedBox(height: 8),
@@ -142,8 +180,13 @@ class _InlineTrailerState extends State<_InlineTrailer>
 }
 
 class MovieReviews extends StatefulWidget {
-  const MovieReviews({super.key, required this.movieId});
+  const MovieReviews({
+    super.key,
+    required this.movieId,
+    this.mediaType = MediaType.movie,
+  });
   final int movieId;
+  final MediaType mediaType;
   @override
   State<MovieReviews> createState() => _MovieReviewsState();
 }
@@ -163,7 +206,10 @@ class _MovieReviewsState extends State<MovieReviews> {
 
   Future<void> _load() async {
     try {
-      final reviews = await _repository.load(widget.movieId);
+      final reviews = await _repository.load(
+        widget.movieId,
+        type: widget.mediaType,
+      );
       if (mounted) {
         setState(() {
           _reviews = reviews;
@@ -190,7 +236,7 @@ class _MovieReviewsState extends State<MovieReviews> {
       ..._reviews,
     ];
     try {
-      await _repository.save(widget.movieId, next);
+      await _repository.save(widget.movieId, next, type: widget.mediaType);
       if (!mounted) return;
       setState(() {
         _reviews = next;
@@ -232,7 +278,7 @@ class _MovieReviewsState extends State<MovieReviews> {
         ),
         const SizedBox(height: 6),
         const Text(
-          'Tus comentarios se guardan en este dispositivo para cada película.',
+          'Tus comentarios se guardan en este dispositivo para cada título.',
           style: TextStyle(color: Color(0xff666e7a)),
         ),
         const SizedBox(height: 12),

@@ -3,6 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:practica06/main.dart';
+import 'package:practica06/presentation/widgets/movies/movies_slideshow.dart';
 import 'package:practica06/infrastructure/mappers/movie_mapper.dart';
 import 'package:practica06/infrastructure/models/moviedb/movie_moviedb.dart';
 import 'package:practica06/presentation/providers/movies/movies_providers.dart';
@@ -41,7 +42,7 @@ void main() {
     expect(find.byKey(const ValueKey('carousel-indicator-2')), findsOneWidget);
     final dots = tester.widgetList<AnimatedContainer>(
       find.descendant(
-        of: find.byType(Row),
+        of: find.byType(MoviesSlideshow),
         matching: find.byType(AnimatedContainer),
       ),
     );

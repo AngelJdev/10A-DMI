@@ -1,3 +1,5 @@
+import '../../../config/helpers/human_formats.dart';
+
 import 'package:flutter/material.dart';
 
 import '../../../domain/entities/movie.dart';
@@ -9,8 +11,10 @@ class MovieSection extends StatelessWidget {
     required this.movies,
     required this.onMovieTap,
     this.badge,
+    this.loadNextPage,
   });
 
+  final Future<void> Function()? loadNextPage;
   final String title;
   final String? badge;
   final List<Movie> movies;
@@ -59,69 +63,102 @@ class MovieSection extends StatelessWidget {
           ),
           SizedBox(
             height: 255,
-            child: ListView.separated(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              scrollDirection: Axis.horizontal,
-              itemCount: movies.length,
-              separatorBuilder: (_, _) => const SizedBox(width: 12),
-              itemBuilder: (context, index) {
-                final movie = movies[index];
-                return SizedBox(
-                  width: 122,
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(14),
-                    onTap: () => onMovieTap(movie),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(14),
-                          child: Image.network(
-                            movie.posterPath,
-                            width: 122,
-                            height: 180,
-                            fit: BoxFit.cover,
-                            errorBuilder: (_, _, _) => const ColoredBox(
-                              color: Color(0xffe7e8ed),
-                              child: SizedBox(
-                                width: 122,
-                                height: 180,
-                                child: Icon(Icons.movie_outlined),
+            child: NotificationListener<ScrollNotification>(
+              onNotification: (notification) {
+                if (notification.metrics.extentAfter < 250 &&
+                    loadNextPage != null) {
+                  loadNextPage!().catchError((Object _) {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                            'No se pudieron cargar más películas. Desliza para reintentar.',
+                          ),
+                        ),
+                      );
+                    }
+                  });
+                }
+                return false;
+              },
+              child: ListView.separated(
+                key: PageStorageKey('section-$title'),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                scrollDirection: Axis.horizontal,
+                itemCount: movies.length,
+                separatorBuilder: (_, _) => const SizedBox(width: 12),
+                itemBuilder: (context, index) {
+                  final movie = movies[index];
+                  return SizedBox(
+                    width: 122,
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(14),
+                      onTap: () => onMovieTap(movie),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(14),
+                            child: Image.network(
+                              movie.posterPath,
+                              width: 122,
+                              height: 180,
+                              fit: BoxFit.cover,
+                              errorBuilder: (_, _, _) => const ColoredBox(
+                                color: Color(0xffe7e8ed),
+                                child: SizedBox(
+                                  width: 122,
+                                  height: 180,
+                                  child: Icon(Icons.movie_outlined),
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        const SizedBox(height: 6),
-                        Text(
-                          movie.title,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            height: 1.15,
+                          const SizedBox(height: 6),
+                          Text(
+                            movie.title,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                              height: 1.15,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 4),
-                        Row(
-                          children: [
-                            const Icon(
-                              Icons.star_rounded,
-                              size: 17,
-                              color: Color(0xffffad1f),
-                            ),
-                            const SizedBox(width: 3),
-                            Text(
-                              movie.voteAverage.toStringAsFixed(1),
-                              style: const TextStyle(color: Color(0xffd18a00)),
-                            ),
-                          ],
-                        ),
-                      ],
+                          const SizedBox(height: 4),
+                          Row(
+                            children: [
+                              const Icon(
+                                Icons.star_rounded,
+                                size: 17,
+                                color: Color(0xffffad1f),
+                              ),
+                              const SizedBox(width: 3),
+                              Text(
+                                movie.voteAverage.toStringAsFixed(1),
+                                style: const TextStyle(
+                                  color: Color(0xffd18a00),
+                                ),
+                              ),
+                              const Spacer(),
+                              Tooltip(
+                                message: 'Popularidad',
+                                child: Text(
+                                  HumanFormats.number(movie.popularity),
+                                  style: const TextStyle(
+                                    fontSize: 11,
+                                    color: Color(0xff747986),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
           ),
         ],

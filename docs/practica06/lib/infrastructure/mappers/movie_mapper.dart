@@ -1,12 +1,18 @@
 import '../../domain/entities/movie.dart';
 import '../models/moviedb/movie_moviedb.dart';
+import '../models/moviedb/movie_details.dart';
 
 class MovieMapper {
-  static Movie movieDBToEntity(MovieDb moviedb) => Movie(
+  static Movie movieDBToEntity(MovieDb moviedb) => _toEntity(moviedb);
+
+  static Movie movieDetailsToEntity(MovieDetails details) =>
+      _toEntity(details.movie, genres: details.genres);
+
+  static Movie _toEntity(MovieDb moviedb, {List<String>? genres}) => Movie(
     adult: moviedb.adult,
     backdropPath:
         'https://image.tmdb.org/t/p/w500${moviedb.backdropPath?.isNotEmpty == true ? moviedb.backdropPath : moviedb.posterPath}',
-    genreIds: moviedb.genreIds.map((id) => id.toString()).toList(),
+    genreIds: genres ?? moviedb.genreIds.map((id) => id.toString()).toList(),
     id: moviedb.id,
     originalLanguage: moviedb.originalLanguage,
     originalTitle: moviedb.originalTitle,

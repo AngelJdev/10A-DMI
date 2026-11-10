@@ -1,3 +1,9 @@
+import '../../../app_theme.dart';
+
+import 'package:go_router/go_router.dart';
+
+import '../../widgets/movies/movie_section.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -14,15 +20,20 @@ class MovieDetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isFavorite = ref
-        .watch(favoriteMoviesProvider)
-        .any((item) => item.id == movie.id);
+    final favorite = ref.watch(
+      contentFavoriteProvider((id: movie.id, type: movie.mediaType)),
+    );
+    final isFavorite = favorite.value ?? false;
     final date = movie.releaseDate;
     final region = ref.watch(selectedRegionProvider);
     final copy = AppCopy.of(context);
-    final accent = Color(region.accentValue);
+    const accent = AppTheme.brandColor;
     final certification = ref.watch(
-      certificationProvider((movieId: movie.id, countryCode: region.code)),
+      contentCertificationProvider((
+        id: movie.id,
+        type: movie.mediaType,
+        country: region.code,
+      )),
     );
     final screenHeight = MediaQuery.sizeOf(context).height;
     final synopsisLength = movie.overview.trim().length;
@@ -46,8 +57,9 @@ class MovieDetailScreen extends ConsumerWidget {
                 tooltip: isFavorite
                     ? copy.text('removeFavorite')
                     : copy.text('addFavorite'),
-                onPressed: () =>
-                    ref.read(favoriteMoviesProvider.notifier).toggle(movie),
+                onPressed: favorite.isLoading
+                    ? null
+                    : () => _toggleFavorite(context, ref),
                 icon: Icon(
                   isFavorite
                       ? Icons.favorite_rounded
@@ -222,12 +234,45 @@ class MovieDetailScreen extends ConsumerWidget {
                       : movie.overview,
                   style: const TextStyle(fontSize: 16, height: 1.55),
                 ),
+                if (movie.mediaType == MediaType.series) ...[
+                  const SizedBox(height: 16),
+                  Wrap(
+                    spacing: 8,
+                    children: [
+                      if (movie.seasons != null)
+                        Chip(
+                          label: Text(
+                            '${movie.seasons} ${copy.text('seasons')}',
+                          ),
+                        ),
+                      if (movie.episodes != null)
+                        Chip(
+                          label: Text(
+                            '${movie.episodes} ${copy.text('episodes')}',
+                          ),
+                        ),
+                    ],
+                  ),
+                ],
+                if (movie.genreIds.any(
+                  (genre) => int.tryParse(genre) == null,
+                )) ...[
+                  const SizedBox(height: 16),
+                  Wrap(
+                    spacing: 8,
+                    children: movie.genreIds
+                        .where((genre) => int.tryParse(genre) == null)
+                        .map((genre) => Chip(label: Text(genre)))
+                        .toList(),
+                  ),
+                ],
                 const SizedBox(height: 28),
-                MovieTrailer(movieId: movie.id),
+                MovieTrailer(movieId: movie.id, mediaType: movie.mediaType),
                 const SizedBox(height: 24),
                 FilledButton.icon(
-                  onPressed: () =>
-                      ref.read(favoriteMoviesProvider.notifier).toggle(movie),
+                  onPressed: favorite.isLoading
+                      ? null
+                      : () => _toggleFavorite(context, ref),
                   icon: Icon(
                     isFavorite ? Icons.favorite : Icons.favorite_border,
                   ),
@@ -252,11 +297,21 @@ class MovieDetailScreen extends ConsumerWidget {
                 ),
                 const SizedBox(height: 16),
                 ref
-                    .watch(castProvider(movie.id))
+                    .watch(
+                      contentCastProvider((
+                        id: movie.id,
+                        type: movie.mediaType,
+                      )),
+                    )
                     .when(
                       loading: () => const LinearProgressIndicator(),
                       error: (_, _) => TextButton.icon(
-                        onPressed: () => ref.invalidate(castProvider(movie.id)),
+                        onPressed: () => ref.invalidate(
+                          contentCastProvider((
+                            id: movie.id,
+                            type: movie.mediaType,
+                          )),
+                        ),
                         icon: const Icon(Icons.refresh),
                         label: Text(copy.text('retry')),
                       ),
@@ -332,9 +387,42 @@ class MovieDetailScreen extends ConsumerWidget {
                             ),
                     ),
                 const SizedBox(height: 24),
+                ref
+                    .watch(
+                      contentSimilarProvider((
+                        id: movie.id,
+                        type: movie.mediaType,
+                      )),
+                    )
+                    .when(
+                      loading: () => const LinearProgressIndicator(),
+                      error: (_, _) => TextButton(
+                        onPressed: () => ref.invalidate(
+                          contentSimilarProvider((
+                            id: movie.id,
+                            type: movie.mediaType,
+                          )),
+                        ),
+                        child: Text(copy.text('retry')),
+                      ),
+                      data: (movies) => movies.isEmpty
+                          ? const SizedBox.shrink()
+                          : MovieSection(
+                              title: movie.mediaType == MediaType.series
+                                  ? copy.text('similarSeries')
+                                  : 'Películas similares',
+                              movies: movies,
+                              onMovieTap: (selected) => context.push(
+                                selected.location,
+                                extra: selected,
+                              ),
+                            ),
+                    ),
+                const SizedBox(height: 24),
                 MovieReviews(
-                  key: ValueKey('reviews-${movie.id}'),
+                  key: ValueKey('reviews-${movie.contentKey}'),
                   movieId: movie.id,
+                  mediaType: movie.mediaType,
                 ),
                 const SizedBox(height: 24),
               ],
@@ -343,6 +431,22 @@ class MovieDetailScreen extends ConsumerWidget {
         ],
       ),
     );
+  }
+
+  Future<void> _toggleFavorite(BuildContext context, WidgetRef ref) async {
+    try {
+      await ref.read(favoriteMoviesProvider.notifier).toggle(movie);
+    } catch (_) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'No se pudo guardar el favorito. Intenta nuevamente.',
+            ),
+          ),
+        );
+      }
+    }
   }
 
   Widget _imageLoadingBuilder(

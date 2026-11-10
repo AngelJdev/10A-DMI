@@ -1,3 +1,7 @@
+import '../../domain/entities/video.dart';
+import '../models/moviedb/moviedb_video.dart';
+import '../mappers/video_mapper.dart';
+
 import 'package:dio/dio.dart';
 import 'package:practica06/domain/entities/cast_member.dart';
 
@@ -6,33 +10,50 @@ import 'movie_datasource.dart';
 import '../../domain/entities/movie.dart';
 import '../mappers/movie_mapper.dart';
 import '../models/moviedb/moviedb_response.dart';
+import '../models/moviedb/movie_details.dart';
 
 class MoviedbDatasource extends MovieDatasource {
+  MoviedbDatasource({this.language = 'es-MX'});
+  final String language;
   @override
-  Future<Map<String, dynamic>?> getTrailer(int movieId) async {
+  Future<Movie> getMovieById(int id) async {
+    final response = await dio.get<Map<String, dynamic>>('/movie/$id');
+    return MovieMapper.movieDetailsToEntity(
+      MovieDetails.fromJson(response.data ?? {}),
+    );
+  }
+
+  @override
+  Future<List<Movie>> getSimilar(int id, {int page = 1}) =>
+      _getNowMovies('/movie/$id/similar', page: page);
+
+  @override
+  Future<List<Video>> getYoutubeVideosById(int movieId) async {
     final response = await dio.get<Map<String, dynamic>>(
       '/movie/$movieId/videos',
       queryParameters: {
-        'language': 'es-MX',
-        'include_video_language': 'es,en,null',
+        'language': language,
+        'include_video_language': '${language.split('-').first},en,null',
       },
     );
-    final results = response.data?['results'];
-    if (results is! List) return null;
-    final videos = results
+    final raw = response.data?['results'];
+    if (raw is! List) return [];
+    final videos = raw
         .whereType<Map<String, dynamic>>()
+        .map(MoviedbVideo.fromJson)
         .where(
-          (v) =>
-              v['site'] == 'YouTube' &&
-              v['type'] == 'Trailer' &&
-              v['key'] is String &&
-              RegExp(r'^[a-zA-Z0-9_-]+$').hasMatch(v['key'] as String),
+          (video) =>
+              video.site == 'YouTube' &&
+              RegExp(r'^[a-zA-Z0-9_-]+$').hasMatch(video.key),
         )
+        .map(VideoMapper.toEntity)
         .toList();
-    int rank(Map<String, dynamic> v) =>
-        (v['iso_639_1'] == 'es' ? 0 : 2) + (v['official'] == true ? 0 : 1);
+    int rank(Video video) =>
+        (video.type == 'Trailer' ? 0 : 4) +
+        (video.language == 'es' ? 0 : 2) +
+        (video.official ? 0 : 1);
     videos.sort((a, b) => rank(a).compareTo(rank(b)));
-    return videos.isEmpty ? null : videos.first;
+    return videos;
   }
 
   @override
@@ -42,7 +63,7 @@ class MoviedbDatasource extends MovieDatasource {
       queryParameters: {
         'with_origin_country': 'JP',
         'with_genres': '16',
-        'language': 'es-MX',
+        'language': language,
         'sort_by': 'popularity.desc',
         'include_adult': false,
       },
@@ -65,12 +86,14 @@ class MoviedbDatasource extends MovieDatasource {
         .toList();
   }
 
-  final Dio dio = Dio(
+  late final Dio dio = Dio(
     BaseOptions(
       baseUrl: 'https://api.themoviedb.org/3',
+      connectTimeout: const Duration(seconds: 15),
+      receiveTimeout: const Duration(seconds: 20),
       queryParameters: {
         'api_key': Environment.theMovieDbKey,
-        'language': 'es-MX',
+        'language': language,
       },
     ),
   );

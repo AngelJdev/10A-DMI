@@ -1,3 +1,4 @@
+import '../../domain/entities/video.dart';
 import '../../domain/entities/movie.dart';
 
 import 'package:practica06/domain/entities/cast_member.dart';
@@ -15,7 +16,10 @@ abstract class MovieDatasource {
 
   Future<String?> getCertification(int movieId, String countryCode);
 
+  Future<Movie> getMovieById(int id);
+  Future<List<Movie>> getSimilar(int id, {int page = 1});
+
+  Future<List<Video>> getYoutubeVideosById(int movieId);
   Future<List<Movie>> getAnime();
-  Future<Map<String, dynamic>?> getTrailer(int movieId);
   Future<List<CastMember>> getCast(int movieId);
 }

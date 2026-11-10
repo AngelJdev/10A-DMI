@@ -137,8 +137,11 @@ class _MoviesSlideshowState extends State<MoviesSlideshow> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        AspectRatio(
-          aspectRatio: 1.8,
+        SizedBox(
+          height: (MediaQuery.sizeOf(context).width / 1.8).clamp(
+            140.0,
+            (MediaQuery.sizeOf(context).height * 0.42).clamp(140.0, 420.0),
+          ),
           child: Stack(
             children: [
               Positioned.fill(

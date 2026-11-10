@@ -1,3 +1,12 @@
+import '../../../app_theme.dart';
+import '../../widgets/shared/media_selector.dart';
+import '../../widgets/shared/region_loading_overlay.dart';
+import '../../views/popular_view.dart';
+
+import 'package:go_router/go_router.dart';
+
+import '../../views/favorites_grid.dart';
+
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -6,33 +15,41 @@ import 'package:flutter_riverpod/legacy.dart';
 
 import '../../../domain/entities/movie.dart';
 import '../../../domain/entities/region_profile.dart';
-import '../../../infrastructure/repositories/movies_repository_provider.dart';
 import '../../localization/app_copy.dart';
 import '../../providers/providers.dart';
 import '../../widgets/widgets.dart';
-import 'movie_detail_screen.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   static const name = 'home-screen';
-  const HomeScreen({super.key});
+  const HomeScreen({
+    super.key,
+    this.child,
+    this.selectedIndex,
+    this.navigationShell,
+  });
+  final StatefulNavigationShell? navigationShell;
+  final Widget? child;
+  final int? selectedIndex;
   @override
   ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-  int _selectedIndex = 0;
-  int _catalogRevision = 0;
+  int _localIndex = 0;
+  int get _selectedIndex => widget.selectedIndex ?? _localIndex;
   int _regionRequest = 0;
   bool _isChangingRegion = false;
   RegionProfile? _loadingRegion;
-  late final Future<void> _initialLoad;
+  late Future<void> _initialLoad;
   @override
   void initState() {
     super.initState();
-    _initialLoad = _load(nowPlayingMoviesProvider);
-    _initialLoad.then((_) => _loadAdditionalMovies());
+    _initialLoad = _loadInitialCatalog();
   }
+
+  Future<void> _loadInitialCatalog() =>
+      Future.wait([_load(nowPlayingMoviesProvider), _loadAdditionalMovies()]);
 
   Future<void> _loadAdditionalMovies() async {
     for (final provider in [
@@ -49,8 +66,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   Future<void> _reloadRegionalCatalog(RegionProfile region) async {
+    ref.read(searchQueryProvider.notifier).state = '';
+    ref.read(searchedMoviesProvider.notifier).state = [];
     final request = ++_regionRequest;
-    final minimumTransition = Future<void>.delayed(const Duration(seconds: 3));
+    final minimumTransition = Future<void>.delayed(
+      const Duration(milliseconds: 650),
+    );
     setState(() {
       _isChangingRegion = true;
       _loadingRegion = region;
@@ -84,7 +105,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       if (mounted && request == _regionRequest) {
         setState(() {
           _isChangingRegion = false;
-          _catalogRevision++;
         });
       }
     }
@@ -98,30 +118,42 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     }
   }
 
-  void _openMovie(Movie movie) => Navigator.of(context)
-      .push(MaterialPageRoute(builder: (_) => MovieDetailScreen(movie: movie)));
+  void _openMovie(Movie movie) => context.push(movie.location, extra: movie);
   void _openSearch() {
-    final byId = <int, Movie>{};
-    for (final movie in [
-      ...ref.read(nowPlayingMoviesProvider),
-      ...ref.read(upcomingMoviesProvider),
-      ...ref.read(popularMoviesProvider),
-    ]) {
-      byId[movie.id] = movie;
-    }
+    if (!mounted) return;
+    final previous = ref.read(searchedMoviesProvider);
     showSearch<void>(
       context: context,
+      query: ref.read(searchQueryProvider),
       delegate: MovieSearchDelegate(
-        initialMovies: byId.values.toList(),
+        searchLabel: AppCopy.of(context).text(
+          ref.read(selectedMediaProvider) == MediaType.series
+              ? 'searchSeries'
+              : 'search',
+        ),
+        initialMovies: previous.isNotEmpty
+            ? previous
+            : ref.read(nowPlayingMoviesProvider),
         onMovieTap: _openMovie,
-        searchMovies: ref.read(movieRepositoryProvider).searchMovies,
+        searchMovies: ref.read(activeRepositoryProvider).searchMovies,
+        onResults: (query, movies) {
+          if (!mounted) return;
+          ref.read(searchQueryProvider.notifier).state = query;
+          ref.read(searchedMoviesProvider.notifier).state = movies;
+        },
       ),
     );
   }
 
   void _selectSection(int index) {
-    setState(() => _selectedIndex = index);
     _scaffoldKey.currentState?.closeDrawer();
+    if (widget.navigationShell != null) {
+      widget.navigationShell!.goBranch(index);
+    } else if (widget.child != null) {
+      context.go(['/home', '/categories', '/favorites'][index]);
+    } else {
+      setState(() => _localIndex = index);
+    }
   }
 
   void _chooseRegion() {
@@ -168,7 +200,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                   borderRadius: BorderRadius.circular(14),
                                 ),
                                 selected: selected.code == region.code,
-                                selectedTileColor: Color(region.accentValue)
+                                selectedTileColor: AppTheme.brandColor
                                     .withValues(alpha: 0.10),
                                 leading: RegionFlag(region: region),
                                 title: Text(
@@ -183,7 +215,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                 trailing: selected.code == region.code
                                     ? Icon(
                                         Icons.check_circle_rounded,
-                                        color: Color(region.accentValue),
+                                        color: AppTheme.brandColor,
                                       )
                                     : null,
                                 onTap: () {
@@ -211,12 +243,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final region = ref.watch(selectedRegionProvider);
-    final accent = Color(region.accentValue);
+    const accent = AppTheme.brandColor;
     final copy = AppCopy(region.locale);
     ref.listen<RegionProfile>(selectedRegionProvider, (previous, next) {
       if (previous?.code != next.code) {
         _reloadRegionalCatalog(next);
       }
+    });
+    ref.listen<MediaType>(selectedMediaProvider, (previous, next) {
+      if (previous == next) return;
+      ref.read(searchQueryProvider.notifier).state = '';
+      ref.read(searchedMoviesProvider.notifier).state = [];
+      setState(() {
+        _initialLoad = _loadInitialCatalog();
+      });
     });
     return Stack(
       children: [
@@ -319,10 +359,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ),
             ],
           ),
-          appBar: CustomAppBar(
-            onMenu: () => _scaffoldKey.currentState?.openDrawer(),
-            onSearch: _openSearch,
-            accentColor: accent,
+          appBar: PreferredSize(
+            preferredSize: const Size.fromHeight(kToolbarHeight + 64),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CustomAppBar(
+                  onMenu: () => _scaffoldKey.currentState?.openDrawer(),
+                  onSearch: _openSearch,
+                  accentColor: accent,
+                ),
+                const MediaSelector(),
+              ],
+            ),
           ),
           bottomNavigationBar: CustomBottomNavigationBar(
             currentIndex: _selectedIndex,
@@ -331,39 +380,45 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ),
           body: FutureBuilder<void>(
             future: _initialLoad,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState != ConnectionState.done) {
-                return const Center(child: CircularProgressIndicator());
-              }
-              if (snapshot.hasError) {
-                return Center(child: Text(copy.text('loadError')));
-              }
-              return AnimatedSwitcher(
-                duration: const Duration(milliseconds: 650),
-                switchInCurve: Curves.easeOutCubic,
-                transitionBuilder: (child, animation) => FadeTransition(
-                  opacity: animation,
-                  child: SlideTransition(
-                    position: Tween<Offset>(
-                      begin: const Offset(0.06, 0),
-                      end: Offset.zero,
-                    ).animate(animation),
-                    child: child,
+            builder: (context, snapshot) => Stack(
+              fit: StackFit.expand,
+              children: [
+                widget.child ??
+                    IndexedStack(
+                      index: _selectedIndex,
+                      children: [
+                        HomeView(onMovieTap: _openMovie),
+                        CategoriesView(onMovieTap: _openMovie),
+                        FavoritesView(onMovieTap: _openMovie),
+                      ],
+                    ),
+                if (_selectedIndex != 2 &&
+                    snapshot.connectionState != ConnectionState.done)
+                  const ColoredBox(
+                    color: Colors.white,
+                    child: Center(child: CircularProgressIndicator()),
                   ),
-                ),
-                child: KeyedSubtree(
-                  key: ValueKey(_catalogRevision),
-                  child: IndexedStack(
-                    index: _selectedIndex,
-                    children: [
-                      _HomeTab(onMovieTap: _openMovie),
-                      _CategoriesTab(onMovieTap: _openMovie),
-                      _FavoritesTab(onMovieTap: _openMovie),
-                    ],
+                if (_selectedIndex != 2 && snapshot.hasError)
+                  ColoredBox(
+                    color: Colors.white,
+                    child: Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(copy.text('loadError')),
+                          TextButton.icon(
+                            onPressed: () => setState(() {
+                              _initialLoad = _loadInitialCatalog();
+                            }),
+                            icon: const Icon(Icons.refresh),
+                            label: Text(copy.text('retry')),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
-              );
-            },
+              ],
+            ),
           ),
         ),
         Positioned.fill(
@@ -372,7 +427,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             child: AnimatedSwitcher(
               duration: const Duration(milliseconds: 350),
               child: _isChangingRegion && _loadingRegion != null
-                  ? _RegionLoadingOverlay(
+                  ? RegionLoadingOverlay(
                       key: ValueKey(_loadingRegion!.code),
                       region: _loadingRegion!,
                     )
@@ -385,157 +440,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 }
 
-class _RegionLoadingOverlay extends StatefulWidget {
-  const _RegionLoadingOverlay({super.key, required this.region});
-  final RegionProfile region;
-
-  @override
-  State<_RegionLoadingOverlay> createState() => _RegionLoadingOverlayState();
-}
-
-class _RegionLoadingOverlayState extends State<_RegionLoadingOverlay>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _controller = AnimationController(
-    vsync: this,
-    duration: const Duration(milliseconds: 1400),
-  )..repeat();
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final region = widget.region;
-    return TweenAnimationBuilder<double>(
-      tween: Tween(begin: 0, end: 1),
-      duration: const Duration(milliseconds: 650),
-      curve: Curves.easeOutBack,
-      builder: (context, value, child) => DecoratedBox(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: region.gradientValues
-                .map((value) => Color(value).withValues(alpha: 0.92))
-                .toList(),
-          ),
-        ),
-        child: Center(
-          child: Opacity(
-            opacity: value.clamp(0.0, 1.0),
-            child: Transform.scale(scale: 0.82 + (value * 0.18), child: child),
-          ),
-        ),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SizedBox(
-            width: 126,
-            height: 126,
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                AnimatedBuilder(
-                  animation: _controller,
-                  builder: (context, child) => Transform.rotate(
-                    angle: _controller.value * math.pi * 2,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: Colors.white.withValues(alpha: 0.18),
-                          width: 2,
-                        ),
-                        gradient: SweepGradient(
-                          colors: [
-                            Colors.white.withValues(alpha: 0),
-                            Colors.white,
-                            Colors.white.withValues(alpha: 0),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Container(
-                  width: 104,
-                  height: 104,
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.94),
-                    shape: BoxShape.circle,
-                    boxShadow: const [
-                      BoxShadow(color: Colors.black26, blurRadius: 30),
-                    ],
-                  ),
-                  child: Center(
-                    child: RegionFlag(
-                      region: region,
-                      width: 78,
-                      height: 52,
-                      borderRadius: 8,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 26),
-          Text(
-            switch (region.locale.split('-').first) {
-              'es' => 'Cambiando región…',
-              'pt' => 'Mudando região…',
-              'de' => 'Region wird gewechselt…',
-              'ja' => '地域を変更中…',
-              'fr' => 'Changement de région…',
-              _ => 'Switching region…',
-            },
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 20,
-              fontWeight: FontWeight.w800,
-              shadows: [Shadow(color: Colors.black38, blurRadius: 8)],
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            region.country,
-            style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const SizedBox(height: 24),
-          SizedBox(
-            width: 210,
-            child: LinearProgressIndicator(
-              minHeight: 5,
-              borderRadius: BorderRadius.circular(8),
-              color: Colors.white,
-              backgroundColor: Colors.white.withValues(alpha: 0.24),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _HomeTab extends ConsumerWidget {
-  const _HomeTab({required this.onMovieTap});
+class HomeView extends ConsumerWidget {
+  const HomeView({super.key, required this.onMovieTap});
   final ValueChanged<Movie> onMovieTap;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final copy = AppCopy.of(context);
+    final type = ref.watch(selectedMediaProvider);
+    final isSeries = type == MediaType.series;
     final now = ref.watch(nowPlayingMoviesProvider),
         upcoming = ref.watch(upcomingMoviesProvider);
     if (now.isEmpty) {
-      return Center(child: Text(copy.text('emptyRegion')));
+      return Center(
+        child: Text(copy.text(isSeries ? 'emptySeries' : 'emptyRegion')),
+      );
     }
     final featured = now.take(6).toList();
     final featuredIds = featured.map((movie) => movie.id).toSet();
@@ -547,23 +465,38 @@ class _HomeTab extends ConsumerWidget {
         .where((movie) => !usedIds.contains(movie.id))
         .toList();
     return CustomScrollView(
+      key: PageStorageKey(
+        'home-feed-${type.name}-${ref.watch(selectedRegionProvider).code}',
+      ),
       slivers: [
         SliverToBoxAdapter(
-          child: MoviesSlideshow(movies: featured, onMovieTap: onMovieTap),
-        ),
-        SliverToBoxAdapter(
-          child: MovieSection(
-            title: copy.text('localCinema'),
-            badge: ref.watch(selectedRegionProvider).country,
-            movies: inTheaters,
+          child: MoviesSlideshow(
+            key: ValueKey('featured-${type.name}'),
+            movies: featured,
             onMovieTap: onMovieTap,
           ),
         ),
         SliverToBoxAdapter(
           child: MovieSection(
-            title: copy.text('comingSoon'),
-            badge: copy.text('thisMonth'),
+            title: copy.text(isSeries ? 'onAir' : 'localCinema'),
+            badge: isSeries
+                ? copy.text('thisWeek')
+                : ref.watch(selectedRegionProvider).country,
+            movies: inTheaters,
+            loadNextPage: ref
+                .read(nowPlayingMoviesProvider.notifier)
+                .loadNextPage,
+            onMovieTap: onMovieTap,
+          ),
+        ),
+        SliverToBoxAdapter(
+          child: MovieSection(
+            title: copy.text(isSeries ? 'airingToday' : 'comingSoon'),
+            badge: copy.text(isSeries ? 'today' : 'thisMonth'),
             movies: comingSoon,
+            loadNextPage: ref
+                .read(upcomingMoviesProvider.notifier)
+                .loadNextPage,
             onMovieTap: onMovieTap,
           ),
         ),
@@ -593,72 +526,21 @@ class _HomeTab extends ConsumerWidget {
   }
 }
 
-class _CategoriesTab extends ConsumerWidget {
-  const _CategoriesTab({required this.onMovieTap});
+class CategoriesView extends ConsumerWidget {
+  const CategoriesView({super.key, required this.onMovieTap});
   final ValueChanged<Movie> onMovieTap;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final copy = AppCopy.of(context);
-    return ListView(
-      padding: const EdgeInsets.only(top: 8, bottom: 24),
-      children: [
-        MovieSection(
-          title: copy.text('popular'),
-          movies: ref.watch(popularMoviesProvider),
-          onMovieTap: onMovieTap,
-        ),
-        MovieSection(
-          title: copy.text('topRated'),
-          movies: ref.watch(topRatedMoviesProvider),
-          onMovieTap: onMovieTap,
-        ),
-        MovieSection(
-          title: copy.text('upcoming'),
-          movies: ref.watch(upcomingMoviesProvider),
-          onMovieTap: onMovieTap,
-        ),
-      ],
-    );
+    return PopularView(onMovieTap: onMovieTap);
   }
 }
 
-class _FavoritesTab extends ConsumerWidget {
-  const _FavoritesTab({required this.onMovieTap});
+class FavoritesView extends ConsumerWidget {
+  const FavoritesView({super.key, required this.onMovieTap});
   final ValueChanged<Movie> onMovieTap;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final copy = AppCopy.of(context);
-    final movies = ref.watch(favoriteMoviesProvider);
-    if (movies.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              Icons.favorite_border_rounded,
-              size: 64,
-              color: Color(0xffa0a3ad),
-            ),
-            SizedBox(height: 14),
-            Text(
-              copy.text('noFavorites'),
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-            ),
-            SizedBox(height: 6),
-            Text(copy.text('favoriteHint')),
-          ],
-        ),
-      );
-    }
-    return ListView(
-      children: [
-        MovieSection(
-          title: copy.text('yourFavorites'),
-          movies: movies,
-          onMovieTap: onMovieTap,
-        ),
-      ],
-    );
+    return FavoritesGrid(onMovieTap: onMovieTap);
   }
 }
 
@@ -667,13 +549,18 @@ class MovieSearchDelegate extends SearchDelegate<void> {
     required this.initialMovies,
     required this.onMovieTap,
     required this.searchMovies,
+    this.onResults,
+    this.searchLabel,
   });
+  final String? searchLabel;
   final List<Movie> initialMovies;
   final ValueChanged<Movie> onMovieTap;
   final Future<List<Movie>> Function(String query) searchMovies;
   final Map<String, Future<List<Movie>>> _searches = {};
+  final void Function(String query, List<Movie> movies)? onResults;
+
   @override
-  String get searchFieldLabel => 'Buscar películas';
+  String get searchFieldLabel => searchLabel ?? 'Buscar películas';
   @override
   List<Widget> buildActions(BuildContext context) => [
     IconButton(onPressed: () => query = '', icon: const Icon(Icons.clear)),
@@ -743,7 +630,7 @@ class MovieSearchDelegate extends SearchDelegate<void> {
                   ),
                   const SizedBox(height: 16),
                   const Text(
-                    'No encontramos esa película',
+                    'No encontramos resultados',
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 19, fontWeight: FontWeight.w600),
                   ),
@@ -766,12 +653,16 @@ class MovieSearchDelegate extends SearchDelegate<void> {
 
   Future<List<Movie>> _findMovies(String currentQuery) async {
     if (currentQuery.isEmpty) return initialMovies;
-    final results = searchMovies(currentQuery)
+    await Future<void>.delayed(const Duration(milliseconds: 350));
+    if (query.trim().toLowerCase() != currentQuery) {
+      _searches.remove(currentQuery);
+      return const [];
+    }
+    final results = await searchMovies(currentQuery)
         .timeout(const Duration(seconds: 20));
-    await Future.wait<void>([
-      results.then<void>((_) {}),
-      Future<void>.delayed(const Duration(seconds: 10)),
-    ]);
+    if (query.trim().toLowerCase() == currentQuery) {
+      onResults?.call(currentQuery, results);
+    }
     return results;
   }
 

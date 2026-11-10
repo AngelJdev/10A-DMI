@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 
 class AppTheme {
   const AppTheme._();
+  static const brandColor = Color(0xff246bfd);
 
   static ThemeData lightTheme() => ThemeData(
     colorScheme: ColorScheme.fromSeed(
-      seedColor: Colors.blue,
+      seedColor: brandColor,
+      primary: brandColor,
       brightness: Brightness.light,
     ),
     scaffoldBackgroundColor: Colors.white,
