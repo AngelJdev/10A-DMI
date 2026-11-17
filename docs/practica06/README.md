@@ -44,7 +44,25 @@ Cinemapedia es una aplicación Flutter para consultar y explorar películas y se
     <td><img src="screenshots/regiones.png" alt="Menú de navegación de Cinemapedia" width="230"></td>
     <td><img src="screenshots/paises.png" alt="Selector de región, idioma y clasificación" width="230"></td>
   </tr>
+  <tr>
+    <td align="center"><strong>Inicio de Series</strong></td>
+    <td align="center"><strong>Búsqueda de series</strong></td>
+    <td align="center"><strong>Detalle de Breaking Bad</strong></td>
+  </tr>
+  <tr>
+    <td><img src="screenshots/series-inicio-oppo.png" alt="OPPO: inicio de Series con En emisión y Episodios de hoy" width="230"></td>
+    <td><img src="screenshots/series-busqueda-oppo.png" alt="OPPO: resultados de búsqueda de Breaking en Series" width="230"></td>
+    <td><img src="screenshots/series-detalle-oppo.png" alt="OPPO: detalle de Breaking Bad y clasificación en México" width="230"></td>
+  </tr>
+  <tr>
+    <td colspan="3" align="center"><strong>Temporadas, episodios y tráiler de series</strong></td>
+  </tr>
+  <tr>
+    <td colspan="3" align="center"><img src="screenshots/series-temporadas-trailer-oppo.png" alt="OPPO: 5 temporadas, 62 episodios y tráiler de Breaking Bad" width="230"></td>
+  </tr>
 </table>
+
+Las capturas de Series se tomaron el **17 de noviembre de 2026** desde el **OPPO CPH2239** conectado por USB. Se verificó el selector Series, la carga del catálogo, la búsqueda de «Breaking» y el detalle de Breaking Bad con **5 temporadas y 62 episodios** y la vista previa del tráiler en español.
 
 La pantalla principal reúne el carrusel destacado, el cine del país seleccionado y los próximos estrenos. La búsqueda muestra resultados con año y calificación; el detalle incorpora portada, favoritos, clasificación regional y sinopsis. Desde el menú se accede a categorías, favoritos, búsqueda y a la configuración de país e idioma.
 
@@ -141,24 +159,5 @@ Las series usan los endpoints `/tv/on_the_air`, `/tv/popular`, `/tv/top_rated`, 
 La base de datos v2 identifica favoritos mediante el tipo de contenido y el ID de TMDB. La migración desde v1 conserva los favoritos de películas. Las reseñas de películas conservan sus claves anteriores; las de series usan claves distintas. Así, una serie y una película con el mismo número de ID no comparten favoritos ni comentarios.
 
 El detalle muestra el número total de temporadas y episodios informado por TMDB; no incluye reproducción de episodios completos. El tráiler se presenta mediante YouTube.
-
-### Evidencias de Series en dispositivo físico
-
-Capturas reales tomadas el **17 de noviembre de 2026** desde el **OPPO CPH2239** conectado por USB. Se verificó el selector Series, la carga del catálogo, la búsqueda de «Breaking» y la apertura del detalle de Breaking Bad, donde aparecen **5 temporadas y 62 episodios** y la vista previa del tráiler en español.
-
-<table>
-  <tr>
-    <th>Inicio de Series</th>
-    <th>Búsqueda</th>
-    <th>Detalle</th>
-    <th>Temporadas y tráiler</th>
-  </tr>
-  <tr>
-    <td><img src="screenshots/series-inicio-oppo.png" alt="OPPO: inicio de Series con En emisión y Episodios de hoy" width="230"></td>
-    <td><img src="screenshots/series-busqueda-oppo.png" alt="OPPO: resultados de búsqueda de Breaking en Series" width="230"></td>
-    <td><img src="screenshots/series-detalle-oppo.png" alt="OPPO: detalle de Breaking Bad y clasificación en México" width="230"></td>
-    <td><img src="screenshots/series-temporadas-trailer-oppo.png" alt="OPPO: 5 temporadas, 62 episodios y tráiler de Breaking Bad" width="230"></td>
-  </tr>
-</table>
 
 `StatefulShellRoute.indexedStack` mantiene las pestañas montadas. Cada feed tiene una clave de almacenamiento de desplazamiento por tipo y región, por lo que cambiar de pestaña no reinicia la lista ni su posición. Este estado dura durante la sesión; no se promete restaurar el scroll después de cerrar la app.
