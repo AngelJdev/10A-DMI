@@ -1,3 +1,5 @@
+[**LINK APPETIZE — Probar Cinemapedia**](https://appetize.io/app/b_iuj4himrsqejzl7bokeypcy25m?device=pixel7&osVersion=13.0&toolbar=true)
+
 # Práctica 06 — Cinemapedia
 
 Cinemapedia es una aplicación Flutter para consultar y explorar películas y series mediante la API de [The Movie Database (TMDB)](https://www.themoviedb.org/). El proyecto aplica una arquitectura por capas para separar la lógica de dominio, el acceso a datos y la interfaz de usuario.
@@ -137,5 +139,26 @@ La plataforma configurada en este repositorio es Android. La base de datos usa `
 Las series usan los endpoints `/tv/on_the_air`, `/tv/popular`, `/tv/top_rated`, `/tv/airing_today`, `/search/tv` y `/tv/:id` con el idioma seleccionado. «En emisión» corresponde a la programación de la semana y «Episodios de hoy» a las series con emisiones del día. El detalle tiene su propia ruta `/series/:id`.
 
 La base de datos v2 identifica favoritos mediante el tipo de contenido y el ID de TMDB. La migración desde v1 conserva los favoritos de películas. Las reseñas de películas conservan sus claves anteriores; las de series usan claves distintas. Así, una serie y una película con el mismo número de ID no comparten favoritos ni comentarios.
+
+El detalle muestra el número total de temporadas y episodios informado por TMDB; no incluye reproducción de episodios completos. El tráiler se presenta mediante YouTube.
+
+### Evidencias de Series en dispositivo físico
+
+Capturas reales tomadas el **17 de noviembre de 2026** desde el **OPPO CPH2239** conectado por USB. Se verificó el selector Series, la carga del catálogo, la búsqueda de «Breaking» y la apertura del detalle de Breaking Bad, donde aparecen **5 temporadas y 62 episodios** y la vista previa del tráiler en español.
+
+<table>
+  <tr>
+    <th>Inicio de Series</th>
+    <th>Búsqueda</th>
+    <th>Detalle</th>
+    <th>Temporadas y tráiler</th>
+  </tr>
+  <tr>
+    <td><img src="screenshots/series-inicio-oppo.png" alt="OPPO: inicio de Series con En emisión y Episodios de hoy" width="230"></td>
+    <td><img src="screenshots/series-busqueda-oppo.png" alt="OPPO: resultados de búsqueda de Breaking en Series" width="230"></td>
+    <td><img src="screenshots/series-detalle-oppo.png" alt="OPPO: detalle de Breaking Bad y clasificación en México" width="230"></td>
+    <td><img src="screenshots/series-temporadas-trailer-oppo.png" alt="OPPO: 5 temporadas, 62 episodios y tráiler de Breaking Bad" width="230"></td>
+  </tr>
+</table>
 
 `StatefulShellRoute.indexedStack` mantiene las pestañas montadas. Cada feed tiene una clave de almacenamiento de desplazamiento por tipo y región, por lo que cambiar de pestaña no reinicia la lista ni su posición. Este estado dura durante la sesión; no se promete restaurar el scroll después de cerrar la app.
