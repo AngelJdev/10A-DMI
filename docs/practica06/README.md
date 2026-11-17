@@ -113,6 +113,16 @@ flutter devices
 flutter run -d <id-del-dispositivo>
 ```
 
+## APK para Appetize
+
+Desde `docs/practica06`, genera un APK que incluya ARM, ARM64 y x86_64:
+
+```powershell
+flutter build apk --release --target-platform android-arm,android-arm64,android-x64
+```
+
+Sube `build/app/outputs/flutter-apk/app-release.apk` a Appetize. Un APK generado para el teléfono físico puede incluir únicamente el motor de Flutter para ARM64 y cerrarse en un emulador x86_64. Para actualizar la demo, reemplaza la compilación de la aplicación existente en Appetize y conserva su enlace.
+
 ## Verificación
 
 ```powershell
